@@ -309,8 +309,8 @@ rose_sketch/
 ## Known issues/limitations
 
 This demonstration is for Micro-XRCE-DDS Client TCP and UDP communication and no serial communication.  
-This demonstration does not support "uxr_flash_output_streams()" API of the Micro-XRCE-DDS Client which does not receive a message when transmit a message.  
-Message default size used for the demonstration was 20 Byte and no message type besides "std_msgs/String" has been confirmed.  
+This demonstration does not support "uxr_flash_output_streams()" API of the Micro-XRCE-DDS Client which does not receive a message when transmits a message.  
+Message default size used for the demonstration was 20 Byte and no message type other than "std_msgs/String" has been confirmed.  
 
 ## Disclaimer
 
