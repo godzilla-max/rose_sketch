@@ -1,18 +1,19 @@
 [Japanese version](./README.ja.md)
 
-This repository contains the code which integrates eProsima [Micro-XRCE-DDS Client](https://github.com/eProsima/Micro-XRCE-DDS-Client) and communicates with the Micro-XRCE-DDS Agent. Renesas RX65N is the target MCU and the code is implemented at the top of the [AWS FreeRTOS?](https://github.com/renesas-rx/amazon-freertos/tree/master/demos/renesas).
+This repository contains the code which integrates eProsima [Micro-XRCE-DDS Client](https://github.com/eProsima/Micro-XRCE-DDS-Client) and communicates with the Micro-XRCE-DDS Agent. Renesas RX65N is the target MCU and the code is implemented at the top of the [AWS FreeRTOS](https://github.com/renesas-rx/amazon-freertos/tree/master/demos/renesas).
 
 # DDS-XRCE demonstration for the Renesas RX65N MCU
 
 ## Demonstration overview
 
-This demonstration implements eProsima Micro-XRCE-DDS Client as a DDS-XRCE implementation to RX65N MCU. It was described in the [Renesas news release](https://www.renesas.com/jp/ja/about/press-center/news/2018/news20181029.html) . The software can send/receive ROS2 "std_msgs/String" to/from Micro-XRCE-DDS Agent. It is implemented at the top of the AWS FreeRTOS? and has room for other embedded applications to run.  
+This demonstration implements eProsima Micro-XRCE-DDS Client as a DDS-XRCE implementation to RX65N MCU. It was described in the [Renesas news release](https://www.renesas.com/us/en/about/press-center/news/2018/news20181029.html) . The software can send/receive ROS2 "std_msgs/String" to/from Micro-XRCE-DDS Agent. It is implemented at the top of the AWS FreeRTOS and has room for other embedded applications to run.  
 The below is the RX65N evaluation board line-up and GR-ROSE was used for this demonstration.  
 GR-ROSE (Will be available in March/2019 from Core Corporation)  
 Renesas RX65N Envision Kit (in mass production)  
 Renesas Starter Kit+ for RX65N (in mass production)  
 
 Useful reference:
+
 Renesas new release  
 [Renesas Electronics RX65N Microcontrollers Support DDS-XRCE Communication Protocol for ROS 2]( https://www.renesas.com/us/en/about/press-center/news/2018/news20181029.html)  
 [RX65N product homepage](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx600/rx65n-651.html)  
