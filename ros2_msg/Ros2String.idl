@@ -1,0 +1,4 @@
+struct Ros2String
+{
+    string data;
+};

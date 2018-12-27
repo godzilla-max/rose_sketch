@@ -1,0 +1,39 @@
+Please note that the following folders in the project window of IDEs are 
+so called 'linked' folders.
+
+--------------------------------------------
+Linked folders in the project window of IDEs
+--------------------------------------------
+
+src/compiler_support
+src/FIT_modified_code/r_bsp
+
+src/FIT_modified_code/r_byteq
+src/FIT_modified_code/r_cmt_rx
+src/FIT_modified_code/r_ether_rx
+src/FIT_modified_code/r_flash_rx
+src/FIT_modified_code/r_sci_rx
+
+----------------------------------------------------------
+Folders on the File System of the WINDOWS Operating System
+----------------------------------------------------------
+
+CC-RX/e2 studio & CC-RX/CS+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+amazon-freertos/lib/third_party/mcu_vendor/renesas/FIT/RDP_v1.15_modified/ccrx/compiler_support
+amazon-freertos/lib/third_party/mcu_vendor/renesas/FIT/RDP_v1.15_modified/ccrx/generic_rx65n/r_bsp
+
+GNURX/e2 studio
+~~~~~~~~~~~~~~~
+amazon-freertos/lib/third_party/mcu_vendor/renesas/FIT/RDP_v1.15_modified/gnurx/compiler_support
+amazon-freertos/lib/third_party/mcu_vendor/renesas/FIT/RDP_v1.15_modified/gnurx/generic_rx65n/r_bsp
+
+All
+~~~
+amazon-freertos/lib/third_party/mcu_vendor/renesas/FIT/RDP_v1.15_modified/r_byteq
+amazon-freertos/lib/third_party/mcu_vendor/renesas/FIT/RDP_v1.15_modified/r_cmt_rx
+amazon-freertos/lib/third_party/mcu_vendor/renesas/FIT/RDP_v1.15_modified/r_ether_rx
+amazon-freertos/lib/third_party/mcu_vendor/renesas/FIT/RDP_v1.15_modified/r_flash_rx
+amazon-freertos/lib/third_party/mcu_vendor/renesas/FIT/RDP_v1.15_modified/r_sci_rx
+
+[EOF]
