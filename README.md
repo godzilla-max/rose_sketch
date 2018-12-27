@@ -171,11 +171,11 @@ rose_sketch/
 |   |
 |   |-- tcp_listener_reliable.ino    [Listner: TCP/reliable stream]
 |   |
-|   |-- udp_talker_besteffort.ino    [Talker: UDP/best-effort stream��]
+|   |-- udp_talker_besteffort.ino    [Talker: UDP/best-effort stream]
 |   |
-|   |-- udp_talker_reliable.ino      [Talker: UDP/reliable stream ]
+|   |-- udp_talker_reliable.ino      [Talker: UDP/reliable stream]
 |   |
-|   |-- udp_listener_besteffort.ino  [Listner: UDP/best-effor steam ]
+|   |-- udp_listener_besteffort.ino  [Listner: UDP/best-effor steam]
 |   |
 |   `-- udp_listener_reliable.ino    [Listner: UDP/reliable stream]
 |
