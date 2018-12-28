@@ -36,12 +36,9 @@ extern "C" {
 #define STREAM_HISTORY  8
 #define BUFFER_SIZE     UXR_CONFIG_TCP_TRANSPORT_MTU * STREAM_HISTORY
 
-// TODO
-// Need to fix "bus error" using optimization -O2
-#pragma GCC optimize ("O0")
 uxrSession session;
-
 uxrTCPTransport transport;
+uxrTCPPlatform tcp_platform;
 uint16_t read_data_req;
 uxrStreamId output_stream;
 uxrStreamId input_stream;
@@ -74,7 +71,6 @@ void setup() {
     Serial.println(chosen.port);
 
     // Transport
-    uxrTCPPlatform tcp_platform;
     if (!uxr_init_tcp_transport(&transport, &tcp_platform, chosen.ip, chosen.port))
     {
         Serial.println("Error at create transport.");
