@@ -401,16 +401,16 @@ void resetPinMode(int pin)
 }
 
 typedef enum {
-    TimerTypeMTU1, // pin 1
     TimerTypeTPU5, // pin 3
 	TimerTypeMTU2, // pin 9
-	TimerTypeMTU4, // pin 21
+	TimerTypeMTU1, // pin 10
+	TimerTypeMTU4, // pin 13
     TimerTypeNum,
     TimerTypeErr = -1,
 } TimerType;
 
 static uint8_t pwmClockTpsc[TimerTypeNum] = {
-    0b011, 0b010, 0b011, 0b011,
+    0b010, 0b011, 0b011, 0b011
 };
 
 static float pwmClockMultiple[TimerTypeNum] = {
@@ -433,17 +433,17 @@ static TimerType pin2TimerType(int pin)
         TimerTypeErr,  // 7
         TimerTypeErr,  // 8
         TimerTypeMTU2, // 9
-        TimerTypeErr,  // 10
+		TimerTypeMTU1, // 10
         TimerTypeErr,  // 11
         TimerTypeErr,  // 12
-        TimerTypeErr,  // 13
+		TimerTypeMTU4, // 13
         TimerTypeErr,  // 14
         TimerTypeErr,  // 15
         TimerTypeErr,  // 16
         TimerTypeErr,  // 17
         TimerTypeErr,  // 18
         TimerTypeErr,  // 19
-        TimerTypeMTU4, // 20
+		TimerTypeErr,  // 20
         TimerTypeErr,  // 21
     };
     return (pin >= 0 && pin < (int)(sizeof(t) / sizeof(TimerType))) ? t[pin] : TimerTypeErr;
@@ -501,18 +501,6 @@ void setPinModeHardwarePWM(int pin, int period, int term, unsigned long length)
         int bit = digitalPinToBit(pin);
         switch (pin) {
 #ifdef GRROSE
-        case 1:
-            startModule(MstpIdMTU1);
-            assignPinFunction(pin, 0b00001, 0, 0);
-            BSET(portModeRegister(port), bit);
-            MTU.TSTRA.BIT.CST1 = 0;
-            MTU1.TCR2.BIT.TPSC2 = pwmClockTpsc[TimerTypeMTU1];
-            MTU1.TCR.BIT.CCLR = 0b001;
-            MTU1.TCR.BIT.CKEG = 0b01;
-            MTU1.TMDR1.BIT.MD = 0b0010;
-            changePinModeHardwarePWM(pin, period, term, length);
-            MTU.TSTRA.BIT.CST1 = 1;
-            break;
         case 3:
             startModule(MstpIdTPU5);
             assignPinFunction(pin, 0b00011, 0, 0);
@@ -537,12 +525,24 @@ void setPinModeHardwarePWM(int pin, int period, int term, unsigned long length)
             changePinModeHardwarePWM(pin, period, term, length);
             MTU.TSTRA.BIT.CST2 = 1;
             break;
-        case 20:
+        case 10:
+            startModule(MstpIdMTU1);
+            assignPinFunction(pin, 0b00010, 0, 0);
+            BSET(portModeRegister(port), bit);
+            MTU.TSTRA.BIT.CST1 = 0;
+            MTU1.TCR2.BIT.TPSC2 = pwmClockTpsc[TimerTypeMTU1];
+            MTU1.TCR.BIT.CCLR = 0b001;
+            MTU1.TCR.BIT.CKEG = 0b01;
+            MTU1.TMDR1.BIT.MD = 0b0010;
+            changePinModeHardwarePWM(pin, period, term, length);
+            MTU.TSTRA.BIT.CST1 = 1;
+            break;
+        case 13:
             startModule(MstpIdMTU4);
             assignPinFunction(pin, 0b00001, 0, 0);
             BSET(portModeRegister(port), bit);
             MTU.TSTRA.BIT.CST4 = 0;
-            MTU.TOERA.BIT.OE4A = 1;
+            MTU.TOERA.BIT.OE4C = 1;
             MTU4.TCR2.BIT.TPSC2 = pwmClockTpsc[TimerTypeMTU4];
             MTU4.TCR.BIT.CCLR = 0b001;
             MTU4.TCR.BIT.CKEG = 0b01;
@@ -564,20 +564,6 @@ void changePinModeHardwarePWM(int pin, int period, int term, unsigned long lengt
             return;
         }
         switch (pin) {
-        case 1:
-            MTU1.TIOR.BIT.IOB = 0b0001;
-            if (term <= 0) {
-                MTU1.TGRB = 0;
-                MTU1.TIOR.BIT.IOA = 0b0001;
-            } else if (term < period) {
-                MTU1.TGRB = term - 1;
-                MTU1.TIOR.BIT.IOA = 0b0010;
-            } else {
-                MTU1.TGRB = period - 1;
-                MTU1.TIOR.BIT.IOA = 0b0110;
-            }
-            MTU1.TGRA = period - 1;
-            break;
         case 3:
             TPU5.TIOR.BIT.IOB = 0b0101;
             if (term <= 0) {
@@ -603,19 +589,33 @@ void changePinModeHardwarePWM(int pin, int period, int term, unsigned long lengt
             }
             MTU2.TGRA = period - 1;
             break;
-        case 20:
-            MTU4.TIORH.BIT.IOB = 0b0001;
+        case 10:
+            MTU1.TIOR.BIT.IOB = 0b0001;
             if (term <= 0) {
-                MTU4.TGRB = 0;
-                MTU4.TIORH.BIT.IOA = 0b0001;
+                MTU1.TGRB = 0;
+                MTU1.TIOR.BIT.IOA = 0b0001;
             } else if (term < period) {
-                MTU4.TGRB = term - 1;
-                MTU4.TIORH.BIT.IOA = 0b0010;
+                MTU1.TGRB = term - 1;
+                MTU1.TIOR.BIT.IOA = 0b0010;
             } else {
-                MTU4.TGRB = period - 1;
-                MTU4.TIORH.BIT.IOA = 0b0110;
+                MTU1.TGRB = period - 1;
+                MTU1.TIOR.BIT.IOA = 0b0110;
             }
-            MTU4.TGRA = period - 1;
+            MTU1.TGRA = period - 1;
+            break;
+        case 13:
+            MTU4.TIORL.BIT.IOD = 0b0001;
+            if (term <= 0) {
+                MTU4.TGRD = 0;
+                MTU4.TIORL.BIT.IOC = 0b0001;
+            } else if (term < period) {
+                MTU4.TGRD = term - 1;
+                MTU4.TIORL.BIT.IOC = 0b0010;
+            } else {
+                MTU4.TGRD = period - 1;
+                MTU4.TIORL.BIT.IOC = 0b0110;
+            }
+            MTU4.TGRC = period - 1;
             break;
         }
     }

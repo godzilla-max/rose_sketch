@@ -65,7 +65,7 @@ static uint8_t i2c_txBuffer[IIC_CHANNEL_NUM][BUFFER_LENGTH];
 
 #if defined(GRROSE)
 static SoftI2cMaster wire(13, 12);
-static const uint8_t g_sci_i2c_channel_table[IIC_CHANNEL_NUM] = {0, 12, 2, 1};
+static const uint8_t g_sci_i2c_channel_table[IIC_CHANNEL_NUM] = {0, 2, 1};
 static bool g_sci_i2c_channel_inRepStart[IIC_CHANNEL_NUM] = { false };
 #else
 #error "no board is defined for Wire"
@@ -487,8 +487,5 @@ TwoWire Wire = TwoWire(1);
 #endif
 #ifdef HAVE_WIRE2
 TwoWire Wire2 = TwoWire(2);
-#endif
-#ifdef HAVE_WIRE3
-TwoWire Wire3 = TwoWire(3);
 #endif
 

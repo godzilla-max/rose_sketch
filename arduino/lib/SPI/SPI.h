@@ -10,6 +10,7 @@
  * or the GNU Lesser General Public License version 2.1, both as
  * published by the Free Software Foundation.
  */
+/* 25th Feb. 2019 : Modified for GR-ROSE by Yuuki Okamiya. */
 
 #ifndef _SPI_H_INCLUDED
 #define _SPI_H_INCLUDED

@@ -64,8 +64,7 @@ typedef struct {
 static const SciTable sciTable[] = {
 #if defined(GRROSE)
 	SCITABLE(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), // 0: SoftwareSerial
-    SCITABLE(12, &SYSTEM.MSTPCRB.LONG, 4, 21, 20, 0b01100, 0x1300, 116, 117, 16),	// SCI12
-    SCITABLE(2, &SYSTEM.MSTPCRB.LONG, 29, 33, 34, 0b01010, 0x40, 62, 63, 4),	// SCI2
+    SCITABLE(2, &SYSTEM.MSTPCRB.LONG, 29, PIN_WIRE_SDA, PIN_WIRE_SCL, 0b01010, 0x40, 62, 63, 4),	// SCI2
     SCITABLE(1, &SYSTEM.MSTPCRB.LONG, 30, 9, 8, 0b01010, 0x20, 60, 61, 2),	// SCI1
 #else
 #error "no board is defined"

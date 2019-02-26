@@ -27,16 +27,11 @@
 #ifndef TwoWire_h
 #define TwoWire_h
 
-#ifdef GRROSE
-#define IIC_CHANNEL_NUM 9
-#else
-#define IIC_CHANNEL_NUM 9
-#endif
+#define IIC_CHANNEL_NUM 3
 
 #define HAVE_WIRE0
 #define HAVE_WIRE1
 #define HAVE_WIRE2
-#define HAVE_WIRE3
 //#define HAVE_RIIC
 
 

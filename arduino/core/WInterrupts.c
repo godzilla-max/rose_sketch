@@ -227,11 +227,11 @@ void attachInterrupt(uint8_t interruptNum, void (*userFunc)(void), int mode) {
         break;
 
     // IRQ13 ------------------------------------------------------------------/
-    case 19:
+    case 24:
         *GET_ADR_IER(IRQ13) &= ~BIT_05;
         intFunc[2] = userFunc;
-        pinMode(19, INPUT_PULLUP);
-        assignPinFunction(19, 0, 1, 0);
+        pinMode(24, INPUT_PULLUP);
+        assignPinFunction(24, 0, 1, 0);
         *GET_ADR_IRQCR(IRQ13) |= mode_bitmask;
         *GET_ADR_IR(IRQ13) &= ~BIT_00;
         *GET_ADR_IPR(IRQ13) = DEFAULT_INT_PRIORITY;

@@ -54,15 +54,17 @@ struct SciInterruptRegistersTableStruct {
   uint8_t _rxir;
   uint8_t _txipr;
   uint8_t _rxipr;
-  uint8_t _rxgen;
+  uint8_t _eri_group;
+  uint8_t _eri_bit;
 };
 static const SciInterruptRegistersTableStruct SciInterruptRegistersTable[] = {
-        {IER_SCI0_TXI0, 3, IER_SCI0_RXI0, 2, IR_SCI0_TXI0, IR_SCI0_RXI0, IPR_SCI0_TXI0, IPR_SCI0_RXI0, 0},
-        {IER_SCI2_TXI2, 7, IER_SCI2_RXI2, 6, IR_SCI2_TXI2, IR_SCI2_RXI2, IPR_SCI2_TXI2, IPR_SCI2_RXI2, 2},
-        {IER_SCI5_TXI5, 5, IER_SCI5_RXI5, 4, IR_SCI5_TXI5, IR_SCI5_RXI5, IPR_SCI5_TXI5, IPR_SCI5_RXI5, 5},
-        {IER_SCI6_TXI6, 7, IER_SCI6_RXI6, 6, IR_SCI6_TXI6, IR_SCI6_RXI6, IPR_SCI6_TXI6, IPR_SCI6_RXI6, 6},
-        {IER_SCI1_TXI1, 5, IER_SCI1_RXI1, 4, IR_SCI1_TXI1, IR_SCI1_RXI1, IPR_SCI1_TXI1, IPR_SCI1_RXI1, 1},
-        {IER_SCI3_TXI3, 1, IER_SCI3_RXI3, 0, IR_SCI3_TXI3, IR_SCI3_RXI3, IPR_SCI3_TXI3, IPR_SCI3_RXI3, 3},
+        {IER_SCI0_TXI0, 3, IER_SCI0_RXI0, 2, IR_SCI0_TXI0, IR_SCI0_RXI0, IPR_SCI0_TXI0, IPR_SCI0_RXI0, 0, 1},
+        {IER_SCI2_TXI2, 7, IER_SCI2_RXI2, 6, IR_SCI2_TXI2, IR_SCI2_RXI2, IPR_SCI2_TXI2, IPR_SCI2_RXI2, 0, 5},
+        {IER_SCI5_TXI5, 5, IER_SCI5_RXI5, 4, IR_SCI5_TXI5, IR_SCI5_RXI5, IPR_SCI5_TXI5, IPR_SCI5_RXI5, 0, 11},
+        {IER_SCI6_TXI6, 7, IER_SCI6_RXI6, 6, IR_SCI6_TXI6, IR_SCI6_RXI6, IPR_SCI6_TXI6, IPR_SCI6_RXI6, 0, 13},
+        {IER_SCI1_TXI1, 5, IER_SCI1_RXI1, 4, IR_SCI1_TXI1, IR_SCI1_RXI1, IPR_SCI1_TXI1, IPR_SCI1_RXI1, 0, 3},
+        {IER_SCI3_TXI3, 1, IER_SCI3_RXI3, 0, IR_SCI3_TXI3, IR_SCI3_RXI3, IPR_SCI3_TXI3, IPR_SCI3_RXI3, 0, 7},
+        {IER_SCI8_TXI8, 5, IER_SCI8_RXI8, 4, IR_SCI8_TXI8, IR_SCI8_RXI8, IPR_SCI8_TXI8, IPR_SCI8_RXI8, 1, 25},
 };
 
 // TODO
@@ -96,15 +98,16 @@ const baud_divisor_t async_baud[NUM_DIVISORS_ASYNC]=
 
 // this next line disables the entire HardwareSerial.cpp, 
 // this is so I can support Attiny series and any other chip without a uart
-#if defined(HAVE_HWSERIAL0) || defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) || defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6)
+#if defined(HAVE_HWSERIAL0) || defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) || defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6)  || defined(HAVE_HWSERIAL7)
 
-HardwareSerial Serial(0, NULL, MstpIdINVALID, INVALID_IO, INVALID_IO);
-HardwareSerial Serial1(1, &SCI0, MstpIdSCI0, 1, 0);
-HardwareSerial Serial2(2, &SCI2, MstpIdSCI2, 3, 2);
-HardwareSerial Serial3(3, &SCI5, MstpIdSCI5, 5, 4);
-HardwareSerial Serial4(4, &SCI6, MstpIdSCI6, 7, 6);
-HardwareSerial Serial5(5, &SCI1, MstpIdSCI1, 9, 8);
-HardwareSerial Serial6(6, &SCI3, MstpIdSCI3, 31, 32);
+HardwareSerial Serial(0, NULL, MstpIdINVALID, INVALID_IO, INVALID_IO, INVALID_IO);
+HardwareSerial Serial1(1, &SCI0, MstpIdSCI0, 1, 0, OUTPUT_OPENDRAIN);
+HardwareSerial Serial2(2, &SCI2, MstpIdSCI2, 3, 2, OUTPUT_OPENDRAIN);
+HardwareSerial Serial3(3, &SCI5, MstpIdSCI5, 5, 4, OUTPUT_OPENDRAIN);
+HardwareSerial Serial4(4, &SCI6, MstpIdSCI6, 7, 6, OUTPUT_OPENDRAIN);
+HardwareSerial Serial5(5, &SCI1, MstpIdSCI1, 9, 8, OUTPUT);
+HardwareSerial Serial6(6, &SCI3, MstpIdSCI3, PIN_ESP_TX, PIN_ESP_RX, OUTPUT);
+HardwareSerial Serial7(7, &SCI8, MstpIdSCI8, PIN_RS485_TX, PIN_RS485_RX, OUTPUT_OPENDRAIN);
 
 // SerialEvent functions are weak, so when the user doesn't define them,
 // the linker just sets their address to 0 (which is checked below).
@@ -147,6 +150,11 @@ HardwareSerial Serial6(6, &SCI3, MstpIdSCI3, 31, 32);
   bool Serial6_available() __attribute__((weak));
 #endif
 
+#if defined(HAVE_HWSERIAL7)
+  void serialEvent7() __attribute__((weak));
+  bool Serial7_available() __attribute__((weak));
+#endif
+
 #endif
 
 void serialEventRun(void)
@@ -172,6 +180,9 @@ void serialEventRun(void)
 #endif
 #if defined(HAVE_HWSERIAL6)
   if (Serial6_available && serialEvent6 && Serial6_available()) serialEvent6();
+#endif
+#if defined(HAVE_HWSERIAL7)
+  if (Serial7_available && serialEvent7 && Serial7_available()) serialEvent7();
 #endif
 #endif/*__RX600__*/
 }
@@ -280,12 +291,14 @@ void HardwareSerial::begin(unsigned long baud, byte config)
 #endif
 #if defined(HAVE_HWSERIAL6)
   case 6:
-
 #endif
-#if defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) || defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6)
+#if defined(HAVE_HWSERIAL7)
+  case 7:
+#endif
+#if defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) || defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6) || defined(HAVE_HWSERIAL7)
     {
-      pinMode(_txpin, OUTPUT);
       digitalWrite(_txpin, HIGH);
+      pinMode(_txpin, _output_mode);
       pinMode(_rxpin, INPUT_PULLUP);
 
       startModule(_module);
@@ -356,7 +369,6 @@ void HardwareSerial::begin(unsigned long baud, byte config)
         }
       }
 
-#if 1
       /* FIND DIVISOR; table has associated ABCS, BGDM and CKS values */
       /* BRR must be 255 or less */
       /* the "- 1" is ignored in some steps for approximations */
@@ -412,29 +424,6 @@ void HardwareSerial::begin(unsigned long baud, byte config)
           _sci->SEMR.BIT.BRME = 1;          // enable MDDR
       }
 
-
-
-#else
-      if (baud <= (PCLK / ((16 << 7) * 256)) || baud > (PCLK / 16)) {
-        baud = 9600;
-      }
-      {
-        int n;
-        int abcs;
-        int N;
-        for (int i = 0; i < 8; i++) {
-          n = i / 2;
-          abcs = (i & 1) ? 0 : 1;
-          N = (2 * PCLK / ((16 << i) * baud) + 1) / 2 - 1;
-          if (N >= 0 && N <= 255) {
-            _sci->SMR.BIT.CKS = n;
-            _sci->SEMR.BIT.ABCS = abcs;
-            _sci->BRR = N;
-            break;
-          }
-        }
-      }
-#endif
       {
       	_sci->SSR.BIT.ORER = 0;
     	_sci->SSR.BIT.FER = 0;
@@ -462,7 +451,19 @@ void HardwareSerial::begin(unsigned long baud, byte config)
         ICU.IER[0xD].BIT.IEN6 = 1; // GROUP BL0 interrupt for error communication
         ICU.IPR[110].BIT.IPR = 2;
         ICU.IR[110].BIT.IR = 0;
-        ICU.GENBL0.LONG |= (1 << (t->_rxgen * 2 + 1));
+        ICU.IER[0xD].BIT.IEN7 = 1; // GROUP BL1 interrupt for error communication
+        ICU.IPR[111].BIT.IPR = 2;
+        ICU.IR[110].BIT.IR = 0;
+        switch(t->_eri_group){
+        case 0 :
+            ICU.GENBL0.LONG |= (1 << t->_eri_bit);
+        	break;
+        case 1 :
+            ICU.GENBL1.LONG |= (1 << t->_eri_bit);
+        	break;
+        default :
+        	break;
+        }
       }
 
       {
@@ -557,8 +558,16 @@ void HardwareSerial::end()
         ICU.IPR[t->_txipr].BIT.IPR = 0;
         ICU.IPR[t->_rxipr].BIT.IPR = 0;
 
-        ICU.GENBL0.LONG &= ~(1 << (t->_rxgen * 2));
-
+        switch(t->_eri_group){
+        case 0 :
+            ICU.GENBL0.LONG &= ~(1 << t->_eri_bit);
+        	break;
+        case 1 :
+            ICU.GENBL1.LONG &= ~(1 << t->_eri_bit);
+        	break;
+        default :
+        	break;
+        }
       }
 
       stopModule(_module);
@@ -574,41 +583,58 @@ void HardwareSerial::end()
 
 void HardwareSerial::direction(uint8_t dir){
 	// TODO : Fix to remove magic number
-	if(_serial_channel == 3){
+	switch(_serial_channel) {
+	case 1 :
+		if(dir == DUPLEX){
+			while(!_sci->SSR.BIT.TEND);
+			pinMode(PIN_S1_SEL, INPUT);
+//			digitalWrite(PIN_S1_SEL, LOW);  // pull-down by hardware
+		} else {
+			pinMode(PIN_S1_SEL, OUTPUT);
+			digitalWrite(PIN_S1_SEL, HIGH);
+		}
+		break;
+	case 2 :
+		if(dir == DUPLEX){
+			while(!_sci->SSR.BIT.TEND);
+			pinMode(PIN_S2_SEL, INPUT);
+//			digitalWrite(PIN_S2_SEL, LOW);  // pull-down by hardware
+		} else {
+			pinMode(PIN_S2_SEL, OUTPUT);
+			digitalWrite(PIN_S2_SEL, HIGH);
+		}
+		break;
+	case 3 :
+		if(dir == DUPLEX){
+			while(!_sci->SSR.BIT.TEND);
+			pinMode(PIN_S3_SEL, INPUT);
+//			digitalWrite(PIN_S3_SEL, LOW);  // pull-down by hardware
+		} else {
+			pinMode(PIN_S3_SEL, OUTPUT);
+			digitalWrite(PIN_S3_SEL, HIGH);
+		}
+		break;
+	case 4 :
+		if(dir == DUPLEX){
+			while(!_sci->SSR.BIT.TEND);
+			pinMode(PIN_S4_SEL, INPUT);
+//			digitalWrite(PIN_S4_SEL, LOW);  // pull-down by hardware
+		} else {
+			pinMode(PIN_S4_SEL, OUTPUT);
+			digitalWrite(PIN_S4_SEL, HIGH);
+		}
+		break;
+	case 7 :
 		if(dir == OUTPUT){
-			pinMode(24, OUTPUT);
-			digitalWrite(24, HIGH);
+			pinMode(PIN_RS485_SEL, OUTPUT);
+			digitalWrite(PIN_RS485_SEL, HIGH);
 		} else {
 			while(!_sci->SSR.BIT.TEND);
-			pinMode(24, INPUT); // pull-down by hardware
+			pinMode(PIN_RS485_SEL, INPUT); // pull-down by hardware
 		}
-	}
-	if(_serial_channel == 4){
-		if(dir == OUTPUT){
-			pinMode(25, OUTPUT);
-			digitalWrite(25, HIGH);
-		} else {
-			while(!_sci->SSR.BIT.TEND);
-			pinMode(25, INPUT); // pull-down by hardware
-		}
-	}
-	if(_serial_channel == 1){
-		if(dir == DUPLEX){
-			pinMode(22, INPUT); // pull-down by hardware
-//			digitalWrite(22, LOW);
-		} else {
-			pinMode(22, OUTPUT);
-			digitalWrite(22, HIGH);
-		}
-	}
-	if(_serial_channel == 2){
-		if(dir == DUPLEX){
-			pinMode(23, INPUT); // pull-down by hardware
-//			digitalWrite(23, LOW);
-		} else {
-			pinMode(23, OUTPUT);
-			digitalWrite(23, HIGH);
-		}
+		break;
+	default :
+		break;
 	}
 }
 
@@ -668,8 +694,9 @@ void HardwareSerial::flush()
   while (_sending) {
     ;
   }
-
-  while(!_sci->SSR.BIT.TEND);
+  if(_serial_channel != 0){
+	  while(!_sci->SSR.BIT.TEND);
+  }
 
 #endif/*__RX600__*/
 }
@@ -754,7 +781,10 @@ size_t HardwareSerial::write(uint8_t c)
 #if defined(HAVE_HWSERIAL6)
   case 6:
 #endif
-#if defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) || defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6)
+#if defined(HAVE_HWSERIAL7)
+  case 7:
+#endif
+#if defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) || defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6) || defined(HAVE_HWSERIAL7)
     {
       unsigned int i = (_tx_buffer_head + 1) % SERIAL_BUFFER_SIZE;
       // If the output buffer is full, there's nothing for it other than to
@@ -1007,6 +1037,27 @@ bool Serial6_available() {
 
 #endif/*HAVE_HWSERIAL6*/
 
+#ifdef HAVE_HWSERIAL7
+extern "C"
+void isr_serial7_receive() __attribute__((interrupt(".rvectors", VECT(SCI8, RXI8)), used));
+void isr_serial7_receive()
+{
+  Serial7._rx_complete_irq();
+}
+
+extern "C"
+void isr_serial7_transmit() __attribute__((interrupt(".rvectors", VECT(SCI8, TXI8)), used));
+void isr_serial7_transmit()
+{
+  Serial7._tx_udr_empty_irq();
+}
+
+bool Serial7_available() {
+  return Serial7.available();
+}
+
+#endif/*HAVE_HWSERIAL7*/
+
 extern "C"
 void group_bl0_handler_isr(void) __attribute__((interrupt(".rvectors", VECT(ICU, GROUPBL0)), used));
 void group_bl0_handler_isr(void){
@@ -1036,3 +1087,10 @@ void group_bl0_handler_isr(void){
     }
 }
 
+extern "C"
+void group_bl1_handler_isr(void) __attribute__((interrupt(".rvectors", VECT(ICU, GROUPBL1)), used));
+void group_bl1_handler_isr(void){
+    if(ICU.GRPBL1.BIT.IS25 == 1){
+        SCI8.SSR.BYTE &= 0b11000111;
+    }
+}

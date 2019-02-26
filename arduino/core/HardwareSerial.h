@@ -90,6 +90,7 @@ class HardwareSerial : public Stream
     uint8_t _txpin;
     uint8_t _rxpin;
     int8_t _serial_channel;
+    uint8_t _output_mode;
     volatile bool _sending;
     volatile bool _begin;
 #endif/*__RX600__*/
@@ -120,10 +121,13 @@ class HardwareSerial : public Stream
       volatile uint8_t *ucsrc, volatile uint8_t *udr);
 #else /*__RX600__*/
      HardwareSerial(
-      int serial_channel,
+      int8_t serial_channel,
       volatile st_sci0* sci,
       MstpId module,
-      int txpin, int rxpin);
+	  uint8_t txpin,
+	  uint8_t rxpin,
+	  uint8_t output_mode
+	  );
      virtual ~HardwareSerial(){};// added to remove warning in __RX600__
 #endif/*__RX600__*/
     void begin(unsigned long baud) { begin(baud, SERIAL_8N1); }
@@ -161,6 +165,7 @@ class HardwareSerial : public Stream
 #define HAVE_HWSERIAL4
 #define HAVE_HWSERIAL5
 #define HAVE_HWSERIAL6
+#define HAVE_HWSERIAL7
 
 #if defined(HAVE_HWSERIAL0)
   extern HardwareSerial Serial;
@@ -182,6 +187,9 @@ class HardwareSerial : public Stream
 #endif
 #if defined(HAVE_HWSERIAL6)
   extern HardwareSerial Serial6;
+#endif
+#if defined(HAVE_HWSERIAL7)
+  extern HardwareSerial Serial7;
 #endif
 
 #endif/*__RX600__*/

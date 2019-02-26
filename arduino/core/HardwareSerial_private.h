@@ -26,7 +26,7 @@
 
 // this next line disables the entire HardwareSerial.cpp, 
 // this is so I can support Attiny series and any other chip without a uart
-#if defined(HAVE_HWSERIAL0) || defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) || defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6)
+#if defined(HAVE_HWSERIAL0) || defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) || defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6)  || defined(HAVE_HWSERIAL7)
 
 #ifndef __RX600__
 // Ensure that the various bit positions we use are available with a 0
@@ -96,13 +96,17 @@ HardwareSerial::HardwareSerial(
 }
 #else /*__RX600__*/
 HardwareSerial::HardwareSerial(
-  int serial_channel,
+  int8_t serial_channel,
   volatile st_sci0* sci,
   MstpId module,
-  int txpin, int rxpin) :
+  uint8_t txpin,
+  uint8_t rxpin,
+  uint8_t output_mode) :
     _sci(sci),
     _module(module),
-    _txpin(txpin), _rxpin(rxpin),
+    _txpin(txpin),
+	_rxpin(rxpin),
+	_output_mode(output_mode),
     _serial_channel(serial_channel),
     _sending(false),
     _begin(false),

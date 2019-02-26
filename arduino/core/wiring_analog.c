@@ -34,6 +34,7 @@
 #endif/*__RX600__*/
 
 static uint8_t analog_reference = DEFAULT;
+static uint16_t table_ansa[NUM_ANALOG_INPUTS] = {10, 11, 12, 13, 6, 7}; // ex A0 = PD2/AN110, A1 = PD3/AN111
 
 void analogReference(uint8_t mode)
 {
@@ -46,22 +47,11 @@ void analogReference(uint8_t mode)
 #ifdef __RX600__
 void setPinModeAnalogRead(int pin)
 {
-	int an0 = pin - PIN_AN000;
-	if (an0 >= 0 && an0 <= 7) {
-		BCLR(&PORT4.PDR.BYTE, an0);
-		BSET(&PORT4.PMR.BYTE, an0);
-	} else if (an0 >= 8 && an0 <= 13) {
-#ifdef HAVE_EXTRA_ANALOG_PIN
-		BCLR(&PORTD.PDR.BYTE, an0 - 8);
-		BSET(&PORTD.PMR.BYTE, an0 - 8);
-#endif
-	}
-	if (an0 >= 0 && an0 <= 7) {
-		assignPinFunction(A0 + an0, 0, 0, 1);
-	} else if (an0 >= 8 && an0 <= 13) {
-#ifdef HAVE_EXTRA_ANALOG_PIN
-		assignPinFunction(A? + an0 - 8, 0, 0, 1);
-#endif
+	int an = pin - PIN_A0;
+	if (an >= 0 && an <= (NUM_ANALOG_INPUTS - 1)) {
+		BCLR(&PORTD.PDR.BYTE, an + 2); // Analog pins are from PD2 to PD7
+		BSET(&PORTD.PMR.BYTE, an + 2);
+		assignPinFunction(pin, 0, 0, 1);
 	}
 }
 
@@ -136,23 +126,22 @@ int analogRead(uint8_t pin)
 	if (pin >= A0 && pin <= (A0 + NUM_ANALOG_INPUTS)) {
 	    if (getPinMode(pin) != PinModeAnalogRead){
 			setPinMode(pin, PinModeAnalogRead);
-			startModule(MstpIdS12AD0);
-			S12AD.ADCSR.WORD = 0x00;
-			S12AD.ADADC.BIT.ADC = 0b00;
-			S12AD.ADCER.BIT.ADRFMT = 0;
-			S12AD.ADCER.BIT.ACE = 0;
+			startModule(MstpIdS12AD1);
+			S12AD1.ADCSR.WORD = 0x00;
+			S12AD1.ADADC.BIT.ADC = 0b000;
+			S12AD1.ADCER.BIT.ADRFMT = 0;
+			S12AD1.ADCER.BIT.ACE = 0;
 	    }
-		int an0 = pin - A0; // for setting offset of register address and bit
-		S12AD.ADANSA0.WORD = 1 << an0;
-		adcdr = (volatile uint16_t*)&S12AD.ADDR0 + an0;
+		int an = pin - A0; // for setting offset of register address and bit
+		S12AD1.ADANSA0.WORD = 1 << table_ansa[an];
+		adcdr = (volatile uint16_t*)&S12AD1.ADDR0 + table_ansa[an];
 	}
-	// TODO
-#if 0
 	if (pin == PIN_ANINT) {
 		startModule(MstpIdS12AD1);
 		S12AD1.ADEXICR.BIT.TSSA = 1;
 		S12AD1.ADEXICR.BIT.OCSA = 0;
-		S12AD1.ADEXICR.BIT.TSSAD = 0;
+		S12AD1.ADEXICR.BIT.TSSAD = 1;
+		S12AD1.ADEXICR.BIT.OCSAD = 0;
 		S12AD.ADANSA0.WORD = 0;
 		S12AD1.ADANSA1.WORD = 0;
 		adcdr = &S12AD1.ADOCDR;
@@ -161,14 +150,14 @@ int analogRead(uint8_t pin)
 		startModule(MstpIdS12AD1);
 		S12AD1.ADEXICR.BIT.TSSA = 0;
 		S12AD1.ADEXICR.BIT.OCSA = 1;
-		S12AD1.ADEXICR.BIT.OCSAD = 0;
+		S12AD1.ADEXICR.BIT.TSSAD = 0;
+		S12AD1.ADEXICR.BIT.OCSAD = 1;
 		S12AD.ADANSA0.WORD = 0;
 		S12AD1.ADANSA1.WORD = 0;
 		adcdr = &S12AD1.ADTSDR;
 	}
-#endif
-	S12AD.ADCSR.BIT.ADST = 1;
-	while (S12AD.ADCSR.BIT.ADST) {
+	S12AD1.ADCSR.BIT.ADST = 1;
+	while (S12AD1.ADCSR.BIT.ADST) {
 		;
 	}
 
@@ -458,7 +447,7 @@ void analogWriteDAC(int pin, int val)
 
 void setPinModeDac(int pin)
 {
-	if (pin == 19) {
+	if (isDACPin(pin)) {
 		int port = digitalPinToPort(pin);
 		int bit = digitalPinToBit(pin);
 		startModule(MstpIdDA);
@@ -470,7 +459,7 @@ void setPinModeDac(int pin)
 
 void resetPinModeDac(int pin)
 {
-    if (pin == 19) {
+    if (isDACPin(pin)) {
 		stopModule(MstpIdDA);
 		pinMode(pin, INPUT);
 	}
