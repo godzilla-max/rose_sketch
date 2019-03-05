@@ -184,6 +184,7 @@ void resetPinModeSoftwarePWM(int pin);
 #define isHardwarePWMPin(pin) \
 ( \
 	    ((pin) == 3) \
+	    || ((pin) == 7) \
 	    || ((pin) == 9) \
 	    || ((pin) == 10) \
 	    || ((pin) == 13) \

@@ -402,6 +402,7 @@ void resetPinMode(int pin)
 
 typedef enum {
     TimerTypeTPU5, // pin 3
+	TimerTypeMTU0, // pin 7
 	TimerTypeMTU2, // pin 9
 	TimerTypeMTU1, // pin 10
 	TimerTypeMTU4, // pin 13
@@ -410,27 +411,28 @@ typedef enum {
 } TimerType;
 
 static uint8_t pwmClockTpsc[TimerTypeNum] = {
-    0b010, 0b011, 0b011, 0b011
+    0b010, 0b011, 0b011, 0b011, 0b011
 };
 
 static float pwmClockMultiple[TimerTypeNum] = {
-    HardwarePWMFreq / SoftwarePWMFreq,
-    HardwarePWMFreq / SoftwarePWMFreq,
-    HardwarePWMFreq / SoftwarePWMFreq,
-    HardwarePWMFreq / SoftwarePWMFreq,
+		HardwarePWMFreq / SoftwarePWMFreq,
+		HardwarePWMFreq / SoftwarePWMFreq,
+		HardwarePWMFreq / SoftwarePWMFreq,
+		HardwarePWMFreq / SoftwarePWMFreq,
+		HardwarePWMFreq / SoftwarePWMFreq,
 };
 
 static TimerType pin2TimerType(int pin)
 {
     static const TimerType t[] = {
         TimerTypeErr,  // 0
-        TimerTypeMTU1, // 1
+		TimerTypeErr,  // 1
         TimerTypeErr,  // 2
         TimerTypeTPU5, // 3
         TimerTypeErr,  // 4
         TimerTypeErr,  // 5
         TimerTypeErr,  // 6
-        TimerTypeErr,  // 7
+		TimerTypeMTU0, // 7
         TimerTypeErr,  // 8
         TimerTypeMTU2, // 9
 		TimerTypeMTU1, // 10
@@ -445,6 +447,9 @@ static TimerType pin2TimerType(int pin)
         TimerTypeErr,  // 19
 		TimerTypeErr,  // 20
         TimerTypeErr,  // 21
+        TimerTypeErr,  // 22
+        TimerTypeErr,  // 23
+        TimerTypeErr,  // 24
     };
     return (pin >= 0 && pin < (int)(sizeof(t) / sizeof(TimerType))) ? t[pin] : TimerTypeErr;
 }
@@ -513,13 +518,25 @@ void setPinModeHardwarePWM(int pin, int period, int term, unsigned long length)
             changePinModeHardwarePWM(pin, period, term, length);
             TPUA.TSTR.BIT.CST5 = 1;
             break;
+        case 7:
+            startModule(MstpIdMTU0);
+            assignPinFunction(pin, 0b00001, 0, 0);
+            BSET(portModeRegister(port), bit);
+            MTU.TSTRA.BIT.CST0 = 0;
+            MTU0.TCR2.BIT.TPSC2 = pwmClockTpsc[TimerTypeMTU0];
+            MTU0.TCR.BIT.CCLR = 0b101;
+            MTU0.TCR.BIT.CKEG = 0b01;
+            MTU0.TMDR1.BIT.MD = 0b0010;
+            changePinModeHardwarePWM(pin, period, term, length);
+            MTU.TSTRA.BIT.CST0 = 1;
+            break;
         case 9:
             startModule(MstpIdMTU2);
             assignPinFunction(pin, 0b00001, 0, 0);
             BSET(portModeRegister(port), bit);
             MTU.TSTRA.BIT.CST2 = 0;
             MTU2.TCR2.BIT.TPSC2 = pwmClockTpsc[TimerTypeMTU2];
-            MTU2.TCR.BIT.CCLR = 0b01;
+            MTU2.TCR.BIT.CCLR = 0b001;
             MTU2.TCR.BIT.CKEG = 0b01;
             MTU2.TMDR1.BIT.MD = 0b0010;
             changePinModeHardwarePWM(pin, period, term, length);
@@ -544,7 +561,7 @@ void setPinModeHardwarePWM(int pin, int period, int term, unsigned long length)
             MTU.TSTRA.BIT.CST4 = 0;
             MTU.TOERA.BIT.OE4C = 1;
             MTU4.TCR2.BIT.TPSC2 = pwmClockTpsc[TimerTypeMTU4];
-            MTU4.TCR.BIT.CCLR = 0b001;
+            MTU4.TCR.BIT.CCLR = 0b101;
             MTU4.TCR.BIT.CKEG = 0b01;
             MTU4.TMDR1.BIT.MD = 0b0010;
             changePinModeHardwarePWM(pin, period, term, length);
@@ -574,6 +591,20 @@ void changePinModeHardwarePWM(int pin, int period, int term, unsigned long lengt
                 TPU5.TIOR.BIT.IOA = 0b0110;
             }
             TPU5.TGRA = period - 1;
+            break;
+        case 7:
+            MTU0.TIORL.BIT.IOD = 0b0001;
+            if (term <= 0) {
+                MTU0.TGRD = 0;
+                MTU0.TIORL.BIT.IOC = 0b0001;
+            } else if (term < period) {
+                MTU0.TGRD = term - 1;
+                MTU0.TIORL.BIT.IOC = 0b0010;
+            } else {
+                MTU0.TGRD = period - 1;
+                MTU0.TIORL.BIT.IOC = 0b0110;
+            }
+            MTU0.TGRC = period - 1;
             break;
         case 9:
             MTU2.TIOR.BIT.IOB = 0b0001;

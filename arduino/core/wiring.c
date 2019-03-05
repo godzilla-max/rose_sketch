@@ -438,7 +438,10 @@ void init()
 	UCSR0B = 0;
 #endif
 #else /*__RX600__*/
+#ifdef GRROSE
+	PORT2.PDR.BIT.B4 = 1;
+	PORT2.PODR.BIT.B4 = 0; // Disable ESP8266
+#endif
 	R_CMT_CreatePeriodic(1000, ms_timer, 1);
-
 #endif/*__RX600__*/
 }

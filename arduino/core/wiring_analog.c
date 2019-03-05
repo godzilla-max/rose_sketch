@@ -403,10 +403,11 @@ void analogWrite(uint8_t pin, int val)
 void analogWriteFrequency(uint32_t freq)
 {
     uint32_t clock = 255 * freq;
-    analogWriteClock(1, clock);
     analogWriteClock(3, clock);
+    analogWriteClock(7, clock);
     analogWriteClock(9, clock);
-    analogWriteClock(20, clock);
+    analogWriteClock(10, clock);
+    analogWriteClock(13, clock);
 }
 
 void analogWriteClock(uint8_t pin, uint32_t clock)
