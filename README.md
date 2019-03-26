@@ -8,12 +8,12 @@ This repository contains the code which integrates eProsima [Micro-XRCE-DDS Clie
 
 This demonstration implements eProsima Micro-XRCE-DDS Client as a DDS-XRCE implementation to RX65N MCU. It was described in the [Renesas news release](https://www.renesas.com/us/en/about/press-center/news/2018/news20181029.html) . The software can send/receive ROS2 "std_msgs/String" to/from Micro-XRCE-DDS Agent. It is implemented at the top of the AWS FreeRTOS and has room for other embedded applications to run.  
 The below is the RX65N evaluation board line-up and GR-ROSE was used for this demonstration.  
-[GR-ROSE](http://gadget.renesas.com/en/product/rose.html) (Will be available from Core Corporation)  
+* [GR-ROSE](http://gadget.renesas.com/en/product/rose.html) (Will be available from Core Corporation)  
 
 ![スライド1](https://user-images.githubusercontent.com/32696676/54973245-6bb10300-4fd2-11e9-843a-045367a17b18.JPG)
 
-Renesas RX65N Envision Kit (in mass production)  
-Renesas Starter Kit+ for RX65N (in mass production)  
+* Renesas RX65N Envision Kit (in mass production)  
+* Renesas Starter Kit+ for RX65N (in mass production)  
 
 Useful reference:
 
