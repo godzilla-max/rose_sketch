@@ -133,40 +133,6 @@ void attachIntervalTimerHandler(void (*fFunction)(unsigned long));
  ***************************************************************************/
 void detachIntervalTimerHandler();
 
-/****************************************************************************
- * Attach cyclic handler
- *
- * Attached handler is called every specified interval u32CyclicTime
- *
- * @param[in] u8HandlerNumber Specify ID from 0 to 7
- * @param[in] fFunction       Specify handler
- * @param[in] u32CyclicTime   Specify interval [ms]
- *
- * @return none
- *
- ***************************************************************************/
-void attachCyclicHandler(uint8_t u8HandlerNumber, void (*fFunction)(unsigned long u32Milles), uint32_t u32CyclicTime);
-
-/****************************************************************************
- * Detach cyclic handler
- *
- * @param[in] ID from 0 to 7
- *
- * @return none
- *
- ***************************************************************************/
-void detachCyclicHandler(uint8_t u8HandlerNumber);
-
-/****************************************************************************
- * Execution cyclic handler
- *
- * @param[in] none
- *
- * @return none
- *
- ***************************************************************************/
-void execCyclicHandler();
-
 /**
  * Initialise the USB stack and start its scheduler.
  * @param   mode : USB_MODE_DEVICE or USB_MODE_HOST.

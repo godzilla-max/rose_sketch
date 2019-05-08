@@ -38,7 +38,7 @@
 #define F_CPU (120 * 1000 * 1000)
 #define PCLK  (60 * 1000 * 1000)
 #define _BV(bit) (1 << (bit))
-#include "rx65n/iodefine.h"
+#include "iodefine.h"
 #include "rx65n/specific_instructions.h"
 #include "Types.h"
 #include "binary.h"

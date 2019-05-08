@@ -120,7 +120,6 @@ current_param_t g_current_parameters = {
                                          false, /* DF BGO Disabled */
                                          false, /* CF BGO Disabled */
                                         };
-
 static bool g_driver_opened=false;
 static flash_err_t flash_interrupt_config(bool state, void *pcfg);
 static flash_err_t get_erase_flash_type(flash_block_address_t block_start_address, uint32_t num_blocks, flash_type_t *type);
@@ -166,17 +165,20 @@ flash_err_t r_flash_open(void)
         return FLASH_ERR_FREQUENCY;
     }
 #endif
+#ifndef GRROSE //TODO: would be always busy
     /* Lock driver to initialize */
     if (FLASH_SUCCESS != flash_lock_state(FLASH_INITIALIZATION))
     {
         return FLASH_ERR_BUSY;      // should never happen
     }
-
+#endif
+#ifndef GRROSE //TODO: g_driver_opened would be always bss section
     if (g_driver_opened == true)
     {
         flash_release_state();
         return FLASH_ERR_ALREADY_OPEN;
     }
+#endif
 
     /* Initialize the FCU */
 #ifdef FLASH_HAS_FCU
@@ -288,11 +290,13 @@ flash_err_t flash_interrupt_config(bool state, void *pcfg)
 flash_err_t r_flash_close(void)
 {
 
+#ifndef GRROSE //TODO: would be always busy
     /* Lock driver */
     if (FLASH_SUCCESS != flash_lock_state(FLASH_UNINITIALIZED))
     {
         return FLASH_ERR_BUSY;
     }
+#endif
 
     /* Disable interrupts */
     flash_interrupt_config(false, NULL);
@@ -309,7 +313,7 @@ flash_err_t r_flash_close(void)
 
 /* FUNCTIONS WHICH MUST BE RUN FROM RAM FOLLOW */
 #if (FLASH_CFG_CODE_FLASH_ENABLE == 1)
-#define FLASH_PE_MODE_SECTION    R_ATTRIB_SECTION_CHANGE_F(FRAM)
+#define FLASH_PE_MODE_SECTION    R_ATTRIB_SECTION_CHANGE(P, FRAM)
 #define FLASH_SECTION_CHANGE_END R_ATTRIB_SECTION_CHANGE_END
 #else
 #define FLASH_PE_MODE_SECTION
@@ -342,12 +346,13 @@ flash_err_t r_flash_erase(flash_block_address_t block_start_address, uint32_t nu
     flash_type_t    flash_type;
 
 
+#ifndef GRROSE //TODO: would be always busy
     /* Lock flash driver and set state to ERASING */
     if (FLASH_SUCCESS != flash_lock_state(FLASH_ERASING))
     {
         return FLASH_ERR_BUSY;
     }
-
+#endif
     /* Get flash type (DF or CF) based upon start address */
     err = get_erase_flash_type(block_start_address, num_blocks, &flash_type);
     if (err != FLASH_SUCCESS)
@@ -808,11 +813,13 @@ flash_err_t r_flash_blankcheck(uint32_t address, uint32_t num_bytes, flash_res_t
     flash_type_t    flash_type;
 
 
+#ifndef GRROSE //TODO: would be always busy
     /* Lock flash driver and set state to BLANKCHECK */
     if (FLASH_SUCCESS != flash_lock_state(FLASH_BLANKCHECK))
     {
         return FLASH_ERR_BUSY;
     }
+#endif
 
     /* Get flash type (DF or CF) based upon start address */
     err = get_bc_pgm_flash_type(address, num_bytes, &flash_type);
@@ -909,7 +916,7 @@ flash_err_t set_blankcheck_params(uint32_t address, uint32_t num_bytes, flash_ty
         }
 
         /* WAIT constant may be for 1, 2, or 4 bytes at a time */
-        g_current_parameters.wait_cnt = (WAIT_MAX_BLANK_CHECK * (num_bytes / FLASH_DF_MIN_PGM_SIZE));
+        g_current_parameters.wait_cnt = (uint32_t) (WAIT_MAX_BLANK_CHECK * (num_bytes / FLASH_DF_MIN_PGM_SIZE));
 #endif
     }
     else // CODE FLASH
@@ -927,7 +934,7 @@ flash_err_t set_blankcheck_params(uint32_t address, uint32_t num_bytes, flash_ty
         }
 
         /* CF 4-byte check takes same time as DF 1-byte check */
-        g_current_parameters.wait_cnt = (WAIT_MAX_BLANK_CHECK * (num_bytes / FLASH_CF_MIN_PGM_SIZE));
+        g_current_parameters.wait_cnt = (uint32_t) (WAIT_MAX_BLANK_CHECK * (num_bytes / FLASH_CF_MIN_PGM_SIZE));
 #endif
     }
 
@@ -975,11 +982,13 @@ flash_err_t r_flash_write(uint32_t src_address, uint32_t dest_address, uint32_t 
     flash_type_t    flash_type;
 
 
+#ifndef GRROSE //TODO: would be always busy
     /* Lock flash driver and set state to WRITING */
     if (FLASH_SUCCESS != flash_lock_state(FLASH_WRITING))
     {
         return FLASH_ERR_BUSY;
     }
+#endif
 
     /* Get flash type (DF or CF) based upon start address */
     err = get_bc_pgm_flash_type(dest_address, num_bytes, &flash_type);
@@ -1164,7 +1173,7 @@ flash_err_t set_write_params(uint32_t address, uint32_t num_bytes, flash_type_t 
             g_current_parameters.current_operation = FLASH_CUR_DF_WRITE;
         }
 
-        g_current_parameters.wait_cnt = (WAIT_MAX_DF_WRITE * (num_bytes / FLASH_DF_MIN_PGM_SIZE));
+        g_current_parameters.wait_cnt = (uint32_t) (WAIT_MAX_DF_WRITE * (num_bytes / FLASH_DF_MIN_PGM_SIZE));
 #ifdef FLASH_HAS_FCU
         g_current_parameters.fcu_min_write_cnt = (FLASH_DF_MIN_PGM_SIZE >> 1);
 #endif
@@ -1184,7 +1193,7 @@ flash_err_t set_write_params(uint32_t address, uint32_t num_bytes, flash_type_t 
             g_current_parameters.current_operation = FLASH_CUR_CF_WRITE;
         }
 
-        g_current_parameters.wait_cnt = (WAIT_MAX_ROM_WRITE * (num_bytes / FLASH_CF_MIN_PGM_SIZE));
+        g_current_parameters.wait_cnt = (uint32_t) (WAIT_MAX_ROM_WRITE * (num_bytes / FLASH_CF_MIN_PGM_SIZE));
 #ifdef FLASH_HAS_FCU
         g_current_parameters.fcu_min_write_cnt = (FLASH_CF_MIN_PGM_SIZE >> 1);
 #endif
@@ -1243,25 +1252,25 @@ FLASH_PE_MODE_SECTION
 flash_err_t r_flash_control(flash_cmd_t cmd, void *pcfg)
 {
 #if (FLASH_CFG_CODE_FLASH_ENABLE == 1)
-#if (FLASH_HAS_BOOT_SWAP)
+#ifdef FLASH_HAS_BOOT_SWAP
     uint8_t *pSwapInfo = pcfg;
 #endif
-#if (FLASH_HAS_CF_ACCESS_WINDOW)
+#ifdef FLASH_HAS_CF_ACCESS_WINDOW
     flash_access_window_config_t *pAccessInfo = pcfg;
 #endif
-#if (FLASH_HAS_SEQUENTIAL_CF_BLOCKS_LOCK)
+#ifdef FLASH_HAS_SEQUENTIAL_CF_BLOCKS_LOCK
     flash_lockbit_config_t *pLockbitCfg = pcfg;
 #endif
-#if (FLASH_HAS_ROM_CACHE)
+#ifdef FLASH_HAS_ROM_CACHE
     uint8_t *pCacheStatus = pcfg;
 #endif
-#if (FLASH_IN_DUAL_BANK_MODE)
+#ifdef FLASH_IN_DUAL_BANK_MODE
     uint32_t        banksel_val;
     flash_bank_t    *pBank = pcfg;
 #endif
 #endif // FLASH_CFG_CODE_FLASH_ENABLE
 
-#if (FLASH_HAS_FCU)
+#ifdef FLASH_HAS_FCU
     uint32_t *pFlashClkHz = pcfg, speed_mhz;
 #endif
     flash_err_t err = FLASH_SUCCESS;
@@ -1307,7 +1316,7 @@ flash_err_t r_flash_control(flash_cmd_t cmd, void *pcfg)
     break;
 
 
-#if (FLASH_HAS_ROM_CACHE && FLASH_CFG_CODE_FLASH_ENABLE)
+#if (defined(FLASH_HAS_ROM_CACHE) && FLASH_CFG_CODE_FLASH_ENABLE)
     case FLASH_CMD_ROM_CACHE_ENABLE:
         FLASH.ROMCIV.BIT.ROMCIV = 1;                // start invalidation
         while (FLASH.ROMCIV.BIT.ROMCIV != 0)        // wait for invalidation to complete
@@ -1331,7 +1340,7 @@ flash_err_t r_flash_control(flash_cmd_t cmd, void *pcfg)
 #endif // FLASH_HAS_ROM_CACHE
 
 
-#if (FLASH_HAS_BOOT_SWAP && FLASH_CFG_CODE_FLASH_ENABLE)
+#if (defined(FLASH_HAS_BOOT_SWAP) && FLASH_CFG_CODE_FLASH_ENABLE)
 
     case FLASH_CMD_SWAPSTATE_GET:
         /* GET CURRENT STARTUP AREA (NOT NECESSARILY PRESERVED THROUGH RESET */
@@ -1377,7 +1386,7 @@ flash_err_t r_flash_control(flash_cmd_t cmd, void *pcfg)
 #endif // FLASH_HAS_BOOT_SWAP
 
 
-#if (FLASH_HAS_CF_ACCESS_WINDOW && FLASH_CFG_CODE_FLASH_ENABLE)
+#if (defined(FLASH_HAS_CF_ACCESS_WINDOW) && FLASH_CFG_CODE_FLASH_ENABLE)
 
     case FLASH_CMD_ACCESSWINDOW_GET:
         FLASH_RETURN_IF_PCFG_NULL;
@@ -1417,7 +1426,7 @@ flash_err_t r_flash_control(flash_cmd_t cmd, void *pcfg)
 #endif // FLASH_HAS_CF_ACCESS_WINDOW
 
 
-#if (FLASH_HAS_SEQUENTIAL_CF_BLOCKS_LOCK && FLASH_CFG_CODE_FLASH_ENABLE)
+#if (defined(FLASH_HAS_SEQUENTIAL_CF_BLOCKS_LOCK) && FLASH_CFG_CODE_FLASH_ENABLE)
     case FLASH_CMD_LOCKBIT_ENABLE:
         g_lkbit_mode = FLASH_LOCKBIT_MODE_NORMAL;
         break;
@@ -1437,10 +1446,10 @@ flash_err_t r_flash_control(flash_cmd_t cmd, void *pcfg)
         FLASH_RETURN_IF_BGO_AND_NO_CALLBACK;
         err = flash_api_lockbit_set(pLockbitCfg->block_start_address, pLockbitCfg->num_blocks);
         break;
-#endif
+#endif // FLASH_HAS_SEQUENTIAL_CF_BLOCKS_LOCK
 
 
-#if (FLASH_HAS_FCU)
+#ifdef FLASH_HAS_FCU
     case FLASH_CMD_CONFIG_CLOCK:
         FLASH_RETURN_IF_PCFG_NULL;
         if ((*pFlashClkHz > FLASH_FREQ_HI) || (*pFlashClkHz < FLASH_FREQ_LO))
@@ -1455,7 +1464,7 @@ flash_err_t r_flash_control(flash_cmd_t cmd, void *pcfg)
                 speed_mhz++;    // must round up to nearest MHz
             }
 
-            FLASH.FPCKAR.WORD = (uint16_t)(0x1E00) + (uint16_t)speed_mhz;
+            FLASH.FPCKAR.WORD = (uint16_t)(0x1E00 + speed_mhz);
 #if ((FLASH_TYPE == 4) && (MCU_DATA_FLASH_SIZE_BYTES != 0))
             FLASH.EEPFCLK = (uint8_t)speed_mhz;
 #endif
@@ -1464,7 +1473,7 @@ flash_err_t r_flash_control(flash_cmd_t cmd, void *pcfg)
 #endif
 
 
-#if (FLASH_IN_DUAL_BANK_MODE)
+#ifdef FLASH_IN_DUAL_BANK_MODE
     case FLASH_CMD_BANK_TOGGLE:
         err = flash_toggle_banksel_reg();
         break;

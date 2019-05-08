@@ -39,6 +39,10 @@
 #ifndef R_ETHER_RX_IF_H
     #define R_ETHER_RX_IF_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /***********************************************************************************************************************
  Includes   <System Includes> , "Project Includes"
  ***********************************************************************************************************************/
@@ -198,5 +202,9 @@ ether_return_t R_ETHER_WakeOnLAN (uint32_t channel);
 ether_return_t R_ETHER_CheckWrite (uint32_t channel);
 ether_return_t R_ETHER_Control (ether_cmd_t const cmd, ether_param_t const control);
 uint32_t R_ETHER_GetVersion (void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* R_ETHER_RX_IF_H*/

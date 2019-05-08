@@ -49,8 +49,8 @@ System Includes
 User Includes (Project Level Includes)
 *******************************************************************************/
 //#include "platform.h"
-/* Defines RX63N port registers */
-#include "rx65n/iodefine.h"
+/* Defines RX65N port registers */
+#include "iodefine.h"
 /* Following header file defines common USB definitions. */
 #include "usb_common.h"
 /* Following header file defines USB HAL definitions. */

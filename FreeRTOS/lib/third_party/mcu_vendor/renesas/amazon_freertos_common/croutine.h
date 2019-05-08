@@ -1,1 +1,0 @@
-/* dummy file for experiment of aws demos project with renesas rx mcu */

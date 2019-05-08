@@ -46,13 +46,13 @@ Macro definitions
 #elif (MCU_CFG_PART_MEMORY_SIZE == 0x9 )    // 1 Mb
      #define FLASH_NUM_BLOCKS_CF (30+8)
 #elif (MCU_CFG_PART_MEMORY_SIZE == 0xC)
-    #if FLASH_IN_DUAL_BANK_MODE
+    #ifdef FLASH_IN_DUAL_BANK_MODE
         #define FLASH_NUM_BLOCKS_CF (22+8)  // .75 Mb per bank dual mode
     #else
         #define FLASH_NUM_BLOCKS_CF (46+8)  // 1.5 Mb linear mode
     #endif
 #elif (MCU_CFG_PART_MEMORY_SIZE == 0xE)
-    #if FLASH_IN_DUAL_BANK_MODE
+    #ifdef FLASH_IN_DUAL_BANK_MODE
         #define FLASH_NUM_BLOCKS_CF (30+8)  // 1 Mb per bank dual mode
     #else
         #define FLASH_NUM_BLOCKS_CF (62+8)  // 2 Mb linear mode
@@ -800,9 +800,9 @@ typedef struct _rom_block_info
 #define NUM_BLOCK_TABLE_ENTRIES 3
 static rom_block_sizes_t g_flash_RomBlockSizes[NUM_BLOCK_TABLE_ENTRIES] =
 {
-    8,  8192,   // 8 blocks of 8K
-    30, 32768,  // 30 blocks of 32K
-    0,  0
+    {8,  8192},     // 8 blocks of 8K
+    {30, 32768},    // 30 blocks of 32K
+    {0,  0}
 };
 
 

@@ -32,6 +32,10 @@
 #ifndef BYTEQ_IF_H
 #define BYTEQ_IF_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /***********************************************************************************************************************
 Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
@@ -91,6 +95,10 @@ byteq_err_t R_BYTEQ_Unused(byteq_hdl_t const    hdl,
 
 uint32_t R_BYTEQ_GetVersion(void);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* BYTEQ_IF_H */
 

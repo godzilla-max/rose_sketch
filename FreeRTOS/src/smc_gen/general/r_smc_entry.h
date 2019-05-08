@@ -14,19 +14,19 @@
 * following link:
 * http://www.renesas.com/disclaimer
 *
-* Copyright (C) 2016, 2017 Renesas Electronics Corporation. All rights reserved.
+* Copyright (C) 2018 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
 * File Name    : r_smc_entry.h
-* Version      : 1.2.0
+* Version      : 1.2.3
 * Device(s)    : R5F565NEDxFP
 * Description  : SMC platform header file.
-* Creation Date: 2018-08-10
+* Creation Date: 2019-03-02
 ***********************************************************************************************************************/
 
-#ifndef SMC_PLATFORM_H
-#define SMC_PLATFORM_H
+#ifndef SMC_ENTRY_H
+#define SMC_ENTRY_H
 
 /***********************************************************************************************************************
 Includes

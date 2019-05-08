@@ -41,6 +41,10 @@
 #ifndef SCI_IF_H
 #define SCI_IF_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /***********************************************************************************************************************
 Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
@@ -291,5 +295,9 @@ sci_err_t R_SCI_Close(sci_hdl_t const hdl);
 uint32_t  R_SCI_GetVersion(void);
 
                                     
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* SCI_IF_H */
 

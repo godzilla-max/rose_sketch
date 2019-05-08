@@ -14,7 +14,7 @@
 * following link:
 * http://www.renesas.com/disclaimer
 *
-* Copyright (C) . All rights reserved.
+* Copyright (C) 2018 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -22,7 +22,7 @@
 * Version      : 1.0.2
 * Device(s)    : R5F565NEDxFP
 * Description  : This file implements SMC pin code generation.
-* Creation Date: 2018-09-08
+* Creation Date: 2019-03-02
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -36,6 +36,7 @@ Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 /* Start user code for include. Do not edit comment generated here */
+#include "Pin.h"
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
 
@@ -96,14 +97,14 @@ void R_Pins_Create(void)
     MPC.PB4PFS.BYTE = 0x12U;
     PORTB.PMR.BYTE |= 0x10U;
 
-    /* Set RXD12 pin */
-    MPC.PE2PFS.BYTE = 0x0CU;
-    PORTE.PMR.BYTE |= 0x04U;
+    /* Set RXD2 pin */
+    MPC.P52PFS.BYTE = 0x0AU;
+    PORT5.PMR.BYTE |= 0x04U;
 
-    /* Set TXD12 pin */
-    PORTE.PODR.BYTE |= 0x02U;
-    MPC.PE1PFS.BYTE = 0x0CU;
-    PORTE.PDR.BYTE |= 0x02U;
+    /* Set TXD2 pin */
+    PORT5.PODR.BYTE |= 0x01U;
+    MPC.P50PFS.BYTE = 0x0AU;
+    PORT5.PDR.BYTE |= 0x01U;
 
     R_BSP_RegisterProtectEnable(BSP_REG_PROTECT_MPC);
 }

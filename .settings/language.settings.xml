@@ -3,7 +3,7 @@
 	<configuration id="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.1768375829" name="HardwareDebug">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider copy-of="extension" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider"/>
-			<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="808024106693967761" id="com.renesas.cdt.managedbuild.gcc.rx.ui.languageprovider" keep-relative-paths="false" name="Renesas GCCBuildinCompilerSettings" parameter="rx-elf-gcc -E -P -v -dD ${INPUTS}" prefer-non-shared="true">
+			<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="177242020772825592" id="com.renesas.cdt.managedbuild.gcc.rx.ui.languageprovider" keep-relative-paths="false" name="Renesas GCCBuildinCompilerSettings" parameter="${COMMAND} ${toolchain_flags} ${FLAGS} -E -P -v -dD &quot;${INPUTS}&quot;" prefer-non-shared="true">
 				<language-scope id="org.eclipse.cdt.core.gcc"/>
 				<language-scope id="org.eclipse.cdt.core.g++"/>
 			</provider>
@@ -13,7 +13,7 @@
 	<configuration id="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.1768375829.1768411202" name="ReleaseBin">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider copy-of="extension" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider"/>
-			<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="808024106693967761" id="com.renesas.cdt.managedbuild.gcc.rx.ui.languageprovider" keep-relative-paths="false" name="Renesas GCCBuildinCompilerSettings" parameter="rx-elf-gcc -E -P -v -dD ${INPUTS}" prefer-non-shared="true">
+			<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="-119599644834035650" id="com.renesas.cdt.managedbuild.gcc.rx.ui.languageprovider" keep-relative-paths="false" name="Renesas GCCBuildinCompilerSettings" parameter="${COMMAND} ${toolchain_flags} ${FLAGS} -E -P -v -dD &quot;${INPUTS}&quot;" prefer-non-shared="true">
 				<language-scope id="org.eclipse.cdt.core.gcc"/>
 				<language-scope id="org.eclipse.cdt.core.g++"/>
 			</provider>

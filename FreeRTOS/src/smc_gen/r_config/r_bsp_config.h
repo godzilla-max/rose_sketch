@@ -143,32 +143,38 @@ Configuration Options
  * 0 = Use 1 stack. Disable user stack. User stack size set below will be ignored.
  * 1 = Use 2 stacks. User stack and interrupt stack will both be used.
  */
+#ifndef GRROSE
+#define BSP_CFG_USER_STACK_ENABLE       (0)
+#else
 #define BSP_CFG_USER_STACK_ENABLE       (1)
+#endif
 
-#if defined(__CCRX__)
+#if defined(__CCRX__) || defined(__GNUC__)
 
 /* When using the user startup program, disable the following code. */
 #if (BSP_CFG_STARTUP_DISABLE == 0)
 
-/* The 'BSP_DECLARE_STACK' macro is checked so that the stack is only declared in one place (resetprg.c). Every time a 
-   '#pragma stacksize' is encountered, the stack size is increased. This prevents multiplication of stack size. */
-#if defined(BSP_DECLARE_STACK)
-    /* If only 1 stack is chosen using BSP_CFG_USER_STACK_ENABLE then no RAM will be allocated for the user stack. */
-    #if (BSP_CFG_USER_STACK_ENABLE == 1)
-    /* User Stack size in bytes. The Renesas RX toolchain sets the stack size using the #pragma stacksize directive. */
-    #pragma stacksize su=0x3000
-    #endif
+/* If only 1 stack is chosen using BSP_CFG_USER_STACK_ENABLE then no RAM will be allocated for the user stack. */
+#if (BSP_CFG_USER_STACK_ENABLE == 1)
+/* User Stack size in bytes. The Renesas RX toolchain sets the stack size using the #pragma stacksize directive. */
+#ifndef GRROSE
+#define BSP_CFG_USTACK_BYTES            (0)
+#else
+#define BSP_CFG_USTACK_BYTES            (0x1000)
+#endif
+#endif
 
 /* Interrupt Stack size in bytes. The Renesas RX toolchain sets the stack size using the #pragma stacksize directive.
  * If the interrupt stack is the only stack being used then the user will likely want to increase the default size
  * below.
  */
-#pragma stacksize si=0x3000
+#ifndef GRROSE
+#define BSP_CFG_ISTACK_BYTES            (0x1000)
+#else
+#define BSP_CFG_ISTACK_BYTES            (0x400)
 #endif
 
 #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
-
-#endif /* defined(__CCRX__) */
 
 /* Heap size in bytes.
    To disable the heap you must follow these steps:
@@ -179,7 +185,9 @@ Configuration Options
       choose 'Contents' in E2Studio. This will present a list of modules that can be included. Uncheck the box for
       stdio.h. 
 */
-#define BSP_CFG_HEAP_BYTES              (0x2000)
+#define BSP_CFG_HEAP_BYTES              (0)
+
+#endif /* defined(__CCRX__) || defined(__GNUC__) */
 
 #if defined(__CCRX__)
 
@@ -623,13 +631,9 @@ Configuration Options
 */
 #define BSP_CFG_FIT_IPL_MAX                         (0xF)
 
-/* There are multiple versions of the RSKRX65N-2MB. Choose which board is currently being used below.
-   0 = 1st Prototype Board (RTK50565N2CxxxxxBR)
-   1 = rev. 1.00 Board (RTK50565N2C00000BE)
-   2 = RX65N Envision Kit
-   3 = RX65N GR-ROSE
-*/
-#define BSP_CFG_BOARD_REVISION                      (3)
+/* This macro is used to select which SCI channel used for debug serial terminal.
+ */
+#define MY_BSP_CFG_SERIAL_TERM_SCI                  (2)
 
 #endif /* R_BSP_CONFIG_REF_HEADER_FILE */
 

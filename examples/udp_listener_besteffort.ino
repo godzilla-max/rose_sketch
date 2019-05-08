@@ -14,6 +14,7 @@
 // limitations under the License.
 
 #include <Arduino.h>
+#include <Ethernet.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -35,11 +36,17 @@ extern "C" {
 
 #define BUFFER_SIZE     UXR_CONFIG_UDP_TRANSPORT_MTU
 
+byte mac[] = { 0x74, 0x90, 0x50, 0x00, 0x79, 0x03 };
+IPAddress ip(192, 168, 2, 52);
+
 uxrSession session;
 uxrUDPTransport transport;
 uxrUDPPlatform udp_platform;
 uxrStreamId output_stream;
 uxrStreamId input_stream;
+
+uint8_t output_best_effort_stream_buffer[BUFFER_SIZE];
+uint8_t input_best_effort_stream_buffer[BUFFER_SIZE];
 
 void on_topic(uxrSession* session, uxrObjectId object_id, uint16_t request_id, uxrStreamId stream_id, struct ucdrBuffer* mb, void* args);
 bool on_agent_found(const uxrAgentAddress* address, int64_t timestamp, void* args);
@@ -51,6 +58,9 @@ void setup() {
 
     // Serial output to USB
     Serial.begin(9600);
+
+    // Setting IP
+    Ethernet.begin(mac, ip);
 
     // Wait for network configuration
     vTaskDelay(5000);
@@ -84,10 +94,7 @@ void setup() {
     }
 
     // Streams
-    uint8_t output_best_effort_stream_buffer[BUFFER_SIZE];
     output_stream = uxr_create_output_best_effort_stream(&session, output_best_effort_stream_buffer, BUFFER_SIZE);
-
-    uint8_t input_best_effort_stream_buffer[BUFFER_SIZE];
     input_stream = uxr_create_input_best_effort_stream(&session);
 
     // Create entities

@@ -874,11 +874,7 @@ uint32_t R_CMT_GetVersion (void)
 *                    Which channel this is for.
 * Return Value : none
 ***********************************************************************************************************************/
-#ifndef GRROSE
-R_ATTRIB_STATIC_INLINE
-#else
-inline static
-#endif
+R_PRAGMA_STATIC_INLINE(cmt_isr_common)
 void cmt_isr_common (uint32_t channel)
 {
     /* If this is one-shot mode then stop timer. */

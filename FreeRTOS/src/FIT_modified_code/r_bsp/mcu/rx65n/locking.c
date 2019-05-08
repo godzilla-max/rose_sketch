@@ -76,7 +76,7 @@ bool R_BSP_SoftwareLock (BSP_CFG_USER_LOCKING_TYPE * const plock)
        we just need to check the value of 'is_locked' after this instruction finishes. */
 
     /* Try to acquire semaphore to obtain lock */
-    R_EXCHANGE(((R_EXCHANGE_CAST_ARGS1)&is_locked), ((R_EXCHANGE_CAST_ARGS2)&plock->lock));
+    R_EXCHANGE(&is_locked, &plock->lock);
 
     /* Check to see if semaphore was successfully taken */
     if (is_locked == false)

@@ -202,10 +202,34 @@ void attachInterrupt(uint8_t interruptNum, void (*userFunc)(void), int mode) {
     // Some pin choices are unavailable on the Sakura.
     switch (interruptNum)
     {
+    // IRQ2 -------------------------------------------------------------------/
+    case 2 :
+        *GET_ADR_IER(IRQ2) &= ~BIT_02;
+        intFunc[0] = userFunc;
+        pinMode(2, INPUT_PULLUP);
+        assignPinFunction(2, 0, 1, 0);
+        *GET_ADR_IRQCR(IRQ2) |= mode_bitmask;
+        *GET_ADR_IR(IRQ2) &= ~BIT_00;
+        *GET_ADR_IPR(IRQ2) = DEFAULT_INT_PRIORITY;
+        *GET_ADR_IER(IRQ2) |= BIT_02;
+        break;
+
+    // IRQ3 -------------------------------------------------------------------/
+    case 6 :
+        *GET_ADR_IER(IRQ3) &= ~BIT_03;
+        intFunc[1] = userFunc;
+        pinMode(6, INPUT_PULLUP);
+        assignPinFunction(6, 0, 1, 0);
+        *GET_ADR_IRQCR(IRQ3) |= mode_bitmask;
+        *GET_ADR_IR(IRQ3) &= ~BIT_00;
+        *GET_ADR_IPR(IRQ3) = DEFAULT_INT_PRIORITY;
+        *GET_ADR_IER(IRQ3) |= BIT_03;
+        break;
+
     // IRQ6 -------------------------------------------------------------------/
     case 11 :
         *GET_ADR_IER(IRQ6) &= ~BIT_06;
-        intFunc[0] = userFunc;
+        intFunc[2] = userFunc;
         pinMode(11, INPUT_PULLUP);
         assignPinFunction(11, 0, 1, 0);
         *GET_ADR_IRQCR(IRQ6) |= mode_bitmask;
@@ -217,7 +241,7 @@ void attachInterrupt(uint8_t interruptNum, void (*userFunc)(void), int mode) {
     // IRQ7 -------------------------------------------------------------------/
     case 12 :
         *GET_ADR_IER(IRQ7) &= ~BIT_07;
-        intFunc[1] = userFunc;
+        intFunc[3] = userFunc;
         pinMode(12, INPUT_PULLUP);
         assignPinFunction(12, 0, 1, 0);
         *GET_ADR_IRQCR(IRQ7) |= mode_bitmask;
@@ -229,7 +253,7 @@ void attachInterrupt(uint8_t interruptNum, void (*userFunc)(void), int mode) {
     // IRQ13 ------------------------------------------------------------------/
     case 24:
         *GET_ADR_IER(IRQ13) &= ~BIT_05;
-        intFunc[2] = userFunc;
+        intFunc[4] = userFunc;
         pinMode(24, INPUT_PULLUP);
         assignPinFunction(24, 0, 1, 0);
         *GET_ADR_IRQCR(IRQ13) |= mode_bitmask;
@@ -330,10 +354,28 @@ void detachInterrupt(uint8_t interruptNum) {
     // be disabled.
     switch (interruptNum)
     {
+    // IRQ2 -------------------------------------------------------------------/
+    case 2 :
+        *GET_ADR_IER(IRQ2) &= ~BIT_02;
+        intFunc[0] = NULL;
+        assignPinFunction(2, 0, 0, 0);
+        *GET_ADR_IPR(IRQ2) = 0U;
+        *GET_ADR_IR(IRQ2) &= ~BIT_00;
+        break;
+
+    // IRQ3 -------------------------------------------------------------------/
+    case 6 :
+        *GET_ADR_IER(IRQ3) &= ~BIT_03;
+        intFunc[1] = NULL;
+        assignPinFunction(6, 0, 0, 0);
+        *GET_ADR_IPR(IRQ3) = 0U;
+        *GET_ADR_IR(IRQ3) &= ~BIT_00;
+        break;
+
     // IRQ6 -------------------------------------------------------------------/
     case 11 :
         *GET_ADR_IER(IRQ6) &= ~BIT_06;
-        intFunc[0] = NULL;
+        intFunc[2] = NULL;
         assignPinFunction(11, 0, 0, 0);
         *GET_ADR_IPR(IRQ6) = 0U;
         *GET_ADR_IR(IRQ6) &= ~BIT_00;
@@ -342,17 +384,17 @@ void detachInterrupt(uint8_t interruptNum) {
     // IRQ7 -------------------------------------------------------------------/
     case 12 :
         *GET_ADR_IER(IRQ7) &= ~BIT_07;
-        intFunc[1] = NULL;
+        intFunc[3] = NULL;
         assignPinFunction(12, 0, 0, 0);
         *GET_ADR_IPR(IRQ7) = 0U;
         *GET_ADR_IR(IRQ7) &= ~BIT_00;
         break;
 
     // IRQ13 ------------------------------------------------------------------/
-    case 19 :
+    case 24 :
         *GET_ADR_IER(IRQ13) &= ~BIT_05;
-        intFunc[2] = NULL;
-        assignPinFunction(12, 0, 0, 0);
+        intFunc[4] = NULL;
+        assignPinFunction(24, 0, 0, 0);
         *GET_ADR_IPR(IRQ13) = 0U;
         *GET_ADR_IR(IRQ13) &= ~BIT_00;
         break;
@@ -456,8 +498,8 @@ ISR(INT1_vect) {
 // NMI and IRQ interrupt handlers. Note that all of these are declared in
 // interrupts_handlers.h but defined here for clarity.
 
-void isr_irq6(void) __attribute__((interrupt(".rvectors", VECT(ICU, IRQ6)), used));
-void isr_irq6(void)
+void isr_irq2(void) __attribute__((interrupt(".rvectors", VECT(ICU, IRQ2)), used));
+void isr_irq2(void)
 {
     if (intFunc[0] != NULL)
     {
@@ -465,8 +507,8 @@ void isr_irq6(void)
     }
 }
 
-void isr_irq7(void) __attribute__((interrupt(".rvectors", VECT(ICU, IRQ7)), used));
-void isr_irq7(void)
+void isr_irq3(void) __attribute__((interrupt(".rvectors", VECT(ICU, IRQ3)), used));
+void isr_irq3(void)
 {
     if (intFunc[1] != NULL)
     {
@@ -474,12 +516,30 @@ void isr_irq7(void)
     }
 }
 
-void isr_irq13(void) __attribute__((interrupt(".rvectors", VECT(ICU, IRQ13)), used));
-void isr_irq13(void)
+void isr_irq6(void) __attribute__((interrupt(".rvectors", VECT(ICU, IRQ6)), used));
+void isr_irq6(void)
 {
     if (intFunc[2] != NULL)
     {
         intFunc[2]();
+    }
+}
+
+void isr_irq7(void) __attribute__((interrupt(".rvectors", VECT(ICU, IRQ7)), used));
+void isr_irq7(void)
+{
+    if (intFunc[3] != NULL)
+    {
+        intFunc[3]();
+    }
+}
+
+void isr_irq13(void) __attribute__((interrupt(".rvectors", VECT(ICU, IRQ13)), used));
+void isr_irq13(void)
+{
+    if (intFunc[4] != NULL)
+    {
+        intFunc[4]();
     }
 }
 

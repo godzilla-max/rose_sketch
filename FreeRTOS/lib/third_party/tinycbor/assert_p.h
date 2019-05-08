@@ -23,7 +23,11 @@
 ****************************************************************************/
 
 #include <assert.h>
-#ifdef NDEBUG
+#if defined(__RX)
+void vAssertCalled(void);
+#  undef assert
+#  define assert(cond)      do { if (!(cond)) vAssertCalled(); } while (0)
+#elif defined(NDEBUG)
 #  undef assert
 #  define assert(cond)      do { if (!(cond)) unreachable(); } while (0)
 #endif

@@ -134,7 +134,7 @@ bool R_BSP_CpuInterruptLevelWrite (uint32_t level)
     /* Use the compiler intrinsic function to set the CPU IPL. */
     psw_value = level << 24;
     psw_value = psw_value | ((uint32_t)R_GET_PSW() & 0xf0ffffff);
-    R_SET_PSW((R_SET_PSW_CAST_ARGS1)psw_value);
+    R_SET_PSW(psw_value);
 
     return true;
 }

@@ -34,7 +34,7 @@ extern "C" {
 
 #include "Wire.h"
 #else
-#include "rx65n/iodefine.h"
+#include "iodefine.h"
 extern "C" {
 #include <stdlib.h>
 #include <string.h>

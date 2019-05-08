@@ -60,7 +60,7 @@ static flash_err_t flash_write_faw_reg(fawreg_t faw);
 
 
 #if (FLASH_IN_DUAL_BANK_MODE)
-R_ATTRIB_SECTION_CHANGE_F(FRAM2)
+R_ATTRIB_SECTION_CHANGE(P, FRAM2)
 
 
 flash_err_t flash_toggle_banksel_reg()
@@ -130,7 +130,7 @@ flash_err_t flash_toggle_banksel_reg()
 
 #endif // FLASH_IN_DUAL_BANK_MODE
 
-#define FLASH_PE_MODE_SECTION    R_ATTRIB_SECTION_CHANGE_F(FRAM)
+#define FLASH_PE_MODE_SECTION    R_ATTRIB_SECTION_CHANGE(P, FRAM)
 #define FLASH_SECTION_CHANGE_END R_ATTRIB_SECTION_CHANGE_END
 #else // #if (FLASH_CFG_CODE_FLASH_ENABLE == 1)
 #define FLASH_PE_MODE_SECTION

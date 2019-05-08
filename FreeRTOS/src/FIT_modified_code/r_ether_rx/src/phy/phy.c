@@ -230,6 +230,7 @@ void phy_start_autonegotiate (uint32_t ether_channel, uint8_t pause)
     PHY_CONTROL_AN_RESTART));
 
     reg = phy_read(ether_channel, PHY_REG_AN_ADVERTISEMENT);
+    R_INTERNAL_NOT_USED(&reg); /* The '&' is for the volatile declaration of the "reg". */
 
 } /* End of function phy_start_autonegotiate() */
 
@@ -467,13 +468,13 @@ static void phy_reg_set (uint32_t ether_channel, uint16_t reg_addr, int32_t opti
         data |= (PHY_MII_WRITE << 12); /* OP code(WT)  */
     }
 
-    phy_acc_channel = g_eth_control_ch[ether_channel].phy_access;
+    phy_acc_channel = (int8_t) g_eth_control_ch[ether_channel].phy_access;
 
     pether_control = g_eth_control_ch[ether_channel].pether_control;
 
     data |= (uint16_t) (pether_control[phy_acc_channel].phy_address << 7); /* PHY Address  */
 
-    data |= (reg_addr << 2); /* Reg Address  */
+    data |= (uint16_t) (reg_addr << 2); /* Reg Address  */
 
     i = 14;
     while (i > 0)

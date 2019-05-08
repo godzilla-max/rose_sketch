@@ -68,7 +68,7 @@ extern "C"{
 #define EXTERNAL_NUM_INTERRUPTS 2
 #endif
 #else
-#define EXTERNAL_NUM_INTERRUPTS 3
+#define EXTERNAL_NUM_INTERRUPTS 5
 /** IRQ numbers for address offset. */
 #define IRQ0    0U
 #define IRQ1    1U

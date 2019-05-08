@@ -71,8 +71,8 @@ bsp_int_err_t bsp_interrupt_group_enable_disable(bsp_int_src_t vector, bool enab
 
 #ifndef GRROSE
 R_PRAGMA_INTERRUPT(group_bl0_handler_isr, VECT(ICU,GROUPBL0))
-#endif
 R_PRAGMA_INTERRUPT(group_bl1_handler_isr, VECT(ICU,GROUPBL1))
+#endif
 R_PRAGMA_INTERRUPT(group_bl2_handler_isr, VECT(ICU,GROUPBL2))
 R_PRAGMA_INTERRUPT(group_al0_handler_isr, VECT(ICU,GROUPAL0))
 R_PRAGMA_INTERRUPT(group_al1_handler_isr, VECT(ICU,GROUPAL1))
@@ -286,12 +286,12 @@ bsp_int_err_t bsp_interrupt_enable_disable (bsp_int_src_t vector, bool enable)
             if (true == enable)
             {
                 /* Set the FPU exception flags. */
-                R_SET_FPSW((R_SET_FPSW_CAST_ARGS1)(temp_fpsw | (uint32_t)FPU_EXCEPTIONS_ENABLE));
+                R_SET_FPSW(temp_fpsw | (uint32_t)FPU_EXCEPTIONS_ENABLE);
             }
             else
             {
                 /* Clear only the FPU exception flags. */
-                R_SET_FPSW((R_SET_FPSW_CAST_ARGS1)(temp_fpsw & (uint32_t)~FPU_EXCEPTIONS_ENABLE));
+                R_SET_FPSW(temp_fpsw & (uint32_t)~FPU_EXCEPTIONS_ENABLE);
             }
 
         break;
@@ -478,7 +478,7 @@ bsp_int_err_t bsp_interrupt_group_enable_disable (bsp_int_src_t vector, bool ena
     return err;
 }
 
-
+#ifndef GRROSE
 /***********************************************************************************************************************
 * Function Name: group_bl0_handler_isr
 * Description  : Interrupt handler for Group BL0 interrupts. The way this code works is that for each possible interrupt
@@ -489,7 +489,6 @@ bsp_int_err_t bsp_interrupt_group_enable_disable (bsp_int_src_t vector, bool ena
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-#ifndef GRROSE
 R_ATTRIB_INTERRUPT void group_bl0_handler_isr (void)
 {
     if (1 == ICU.GRPBL0.BIT.IS1)
@@ -637,7 +636,6 @@ R_ATTRIB_INTERRUPT void group_bl0_handler_isr (void)
         R_BSP_InterruptControl(BSP_INT_SRC_BL0_PDC_PCFEI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
     }
 }
-#endif
 
 /***********************************************************************************************************************
 * Function Name: group_bl1_handler_isr
@@ -772,7 +770,7 @@ R_ATTRIB_INTERRUPT void group_bl1_handler_isr (void)
     }
 
 }
-
+#endif
 /***********************************************************************************************************************
 * Function Name: group_bl2_handler_isr
 * Description  : Interrupt handler for Group BL1 interrupts. The way this code works is that for each possible interrupt

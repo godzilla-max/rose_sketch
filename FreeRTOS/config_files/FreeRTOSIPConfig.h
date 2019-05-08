@@ -1,6 +1,6 @@
 /*
  * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -35,18 +35,11 @@
 #ifndef FREERTOS_IP_CONFIG_H
 #define FREERTOS_IP_CONFIG_H
 
-/* Prototype for the function used to print out.  In this case it prints to the
- * console before the network is connected then a UDP port after the network has
- * connected. */
-//extern void vLoggingPrintf( const char * pcFormatString,
-//                            ... );
-
 /* Set to 1 to print out debug messages.  If ipconfigHAS_DEBUG_PRINTF is set to
  * 1 then FreeRTOS_debug_printf should be defined to the function used to print
  * out the debugging messages. */
 #define ipconfigHAS_DEBUG_PRINTF    1
 #if ( ipconfigHAS_DEBUG_PRINTF == 1 )
-    //#define FreeRTOS_debug_printf( X )    vLoggingPrintf( X )
     #define FreeRTOS_debug_printf( X )    configPRINTF( X )
 #endif
 
@@ -107,7 +100,7 @@
  * number generation is performed via this macro to allow applications to use their
  * own random number generation method.  For example, it might be possible to
  * generate a random number by sampling noise on an analogue input. */
-extern uint32_t ulRand();
+uint32_t ulRand(void);
 #define ipconfigRAND32()    ulRand()
 
 /* If ipconfigUSE_NETWORK_EVENT_HOOK is set to 1 then FreeRTOS+TCP will call the
@@ -145,6 +138,7 @@ extern uint32_t ulRand();
 #endif
 #define ipconfigDHCP_REGISTER_HOSTNAME           1
 #define ipconfigDHCP_USES_UNICAST                1
+#define ipconfigDHCP_SEND_DISCOVER_AFTER_AUTO_IP 0
 
 /* If ipconfigDHCP_USES_USER_HOOK is set to 1 then the application writer must
  * provide an implementation of the DHCP callback function,
@@ -193,11 +187,7 @@ extern uint32_t ulRand();
  * ipconfigINCLUDE_FULL_INET_ADDR is set to 1 then both FreeRTOS_inet_addr() and
  * FreeRTOS_indet_addr_quick() are available.  If ipconfigINCLUDE_FULL_INET_ADDR is
  * not set to 1 then only FreeRTOS_indet_addr_quick() is available. */
-#ifndef USING_UXR
-#define ipconfigINCLUDE_FULL_INET_ADDR            0
-#else
 #define ipconfigINCLUDE_FULL_INET_ADDR            1
-#endif
 
 /* ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS defines the total number of network buffer that
  * are available to the IP stack.  The total number of network buffers is limited
@@ -317,6 +307,17 @@ extern uint32_t ulRand();
 
 #define ipconfigZERO_COPY_TX_DRIVER              ( 0 )
 #define ipconfigZERO_COPY_RX_DRIVER              ( 0 )
+
+/* Possible optimisation for expert users - requires network driver support.
+ * When ipconfigUSE_LINKED_RX_MESSAGES is set to non-zero value then
+ * instead of passing received packets into the IP task one at a time the
+ * network interface can chain received packets together and pass them into
+ * the IP task in one go.  The packets are chained using the pxNextBuffer
+ * member. This optimisation is useful when there is high network traffic.
+ * When ipconfigUSE_LINKED_RX_MESSAGES is set to 0 then only one buffer will
+ * be sent at a time.  This is the default way for +TCP to pass messages from
+ * the MAC to the TCP/IP stack. */
+#define ipconfigUSE_LINKED_RX_MESSAGES           ( 0 )
 
 #define portINLINE                               __inline
 

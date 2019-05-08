@@ -40,6 +40,10 @@
 #ifndef CMT_HEADER_FILE
 #define CMT_HEADER_FILE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /***********************************************************************************************************************
 Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
@@ -76,6 +80,10 @@ bool R_CMT_CreateOneShot(uint32_t period_us, void (* callback)(void * pdata), ui
 bool R_CMT_Control(uint32_t channel, cmt_commands_t command, void * pdata);
 bool R_CMT_Stop(uint32_t channel);
 uint32_t  R_CMT_GetVersion(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CMT_HEADER_FILE */
 

@@ -1,5 +1,5 @@
 /*
- * Amazon FreeRTOS Shadow Demo V1.4.1
+ * Amazon FreeRTOS Shadow Demo V1.4.7
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -433,8 +433,6 @@ static void prvShadowInitTask( void * pvParameters )
     ShadowCallbackParams_t xCallbackParams;
 
     ( void ) pvParameters;
-
-    vTaskDelay(10000);	// todo: this is renesas issue.
 
     /* Initialize the update queue and Shadow client; set all pending updates to false. */
     xUpdateQueue = xQueueCreateStatic( shadowDemoUPDATE_QUEUE_LENGTH,

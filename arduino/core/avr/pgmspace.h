@@ -23,6 +23,7 @@
  ***************************************************************************/
 /*
   Modified 13 July 2014 by Nozomu Fujita
+  Modified 11 Apr 2019 by Yuuki Okamiya
 */
 /**
  * @file  pgmspace.h
@@ -98,7 +99,8 @@
 #define strstr_PF strstr
 #define strlcpy_PF strlcpy
 #define memcmp_PF memcmp
-
+#define sprintf_P sprintf
+#define vsnprintf_P vsnprintf
 
 /***************************************************************************/
 /*    Type  Definitions                                                    */

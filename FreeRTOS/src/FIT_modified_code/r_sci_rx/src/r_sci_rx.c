@@ -631,9 +631,9 @@ static sci_err_t sci_init_async(sci_hdl_t const      hdl,
     }
     else
     {
-        /* Use external clock for baud rate */
+        /* Use external clock for baud rate (The cast to uint8_t is for GNURX's -Wconversion) */
         hdl->rom->regs->SCR.BIT.CKE = 0x02;
-        hdl->rom->regs->SEMR.BIT.ABCS = (SCI_CLK_EXT8X == p_cfg->clk_src) ? 1 : 0;
+        hdl->rom->regs->SEMR.BIT.ABCS = (uint8_t)((SCI_CLK_EXT8X == p_cfg->clk_src) ? 1 : 0);
     }
 
     *p_priority = p_cfg->int_priority;
@@ -1688,8 +1688,8 @@ static void sci_error(sci_hdl_t const hdl)
             SCI_RDR(byte);
 
             reg      = SCI_SSR;
-            reg     &= (~SCI_RCVR_ERR_MASK);
-            reg     |= SCI_SSR_CLR_MASK;
+            reg     &= (uint8_t) (~SCI_RCVR_ERR_MASK);
+            reg     |= (uint8_t) SCI_SSR_CLR_MASK;
             SCI_SSR  = reg;
 
             if (0 != (SCI_SSR & SCI_RCVR_ERR_MASK))
@@ -1903,7 +1903,7 @@ sci_err_t R_SCI_Control(sci_hdl_t const     hdl,
 #if (SCI_CFG_ASYNC_INCLUDED)
         hdl->pclk_speed = baud->pclk;           // save for break generation
 #endif
-        hdl->rom->regs->SCR.BYTE &= (~SCI_EN_XCVR_MASK);
+        hdl->rom->regs->SCR.BYTE &= (uint8_t) (~SCI_EN_XCVR_MASK);
         SCI_SCR_DUMMY_READ;
         bit_err = sci_init_bit_rate(hdl, baud->pclk, baud->rate);
         SCI_IR_TXI_CLEAR;
@@ -1922,7 +1922,7 @@ sci_err_t R_SCI_Control(sci_hdl_t const     hdl,
         if (hdl->mode != SCI_MODE_SSPI)
         {
             /* PFS & port pins must be configured for CTS prior to calling this */
-            hdl->rom->regs->SCR.BYTE &= (~SCI_EN_XCVR_MASK);
+            hdl->rom->regs->SCR.BYTE &= (uint8_t) (~SCI_EN_XCVR_MASK);
             SCI_SCR_DUMMY_READ;
             hdl->rom->regs->SPMR.BIT.CTSE = 1;      // enable CTS input
             SCI_IR_TXI_CLEAR;

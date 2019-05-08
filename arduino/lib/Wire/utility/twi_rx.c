@@ -27,7 +27,7 @@
 #include "utilities.h"
 #include "util.h"
 #include "rx65n/interrupt_handlers.h"
-#include "rx65n/iodefine.h"
+#include "iodefine.h"
 
 static uint8_t twi_rxBuffer[TWI_BUFFER_LENGTH];
 static volatile uint8_t twi_rxBufferIndex;

@@ -88,31 +88,18 @@ R_PRAGMA_INLINE(R_BSP_GetVersion) uint32_t R_BSP_GetVersion (void)
 *              :
 * Return Value : None
 ***********************************************************************************************************************/
-R_PRAGMA_INLINE_STATIC_ASM(delayWait)
+R_PRAGMA_STATIC_INLINE_ASM(delayWait)
 void delayWait (unsigned long loop_cnt)
 {
-#if defined(__CCRX__)
-    BRA ?+
-    NOP
-    ?:
-    NOP
-    SUB #01H, R1
-    BNE ?-
-#elif defined(__GNUC__)
-    __asm("BRA ?+");
-    __asm("NOP");
-    __asm("?:");
-    __asm("NOP");
-    __asm("SUB #01H, R1");
-    __asm("BNE ?-");
-#elif defined(__ICCRX__)
-    asm("BRA.B _lab\n"
-        "NOP\n"
-        "_lab:\n"
-        "NOP\n"
-        "SUB #01H, R1\n"
-        "BNE.B _lab");
-#endif /* defined(__CCRX__), defined(__GNUC__), defined(__ICCRX__) */
+    R_ASM_INTERNAL_USED(loop_cnt)
+    R_ASM_BEGIN
+    R_ASM(    BRA.B    R_LAB_NEXT(0)    )
+    R_ASM(    NOP                       ) // FIXME: What is the purpose of this NOP?
+    R_LAB(0:                            )
+    R_ASM(    NOP                       )
+    R_ASM(    SUB     #01H, R1          )
+    R_ASM(    BNE.B   R_LAB_PREV(0)     )
+    R_ASM_END
 }
 
 
@@ -221,38 +208,34 @@ bool R_BSP_SoftwareDelay(uint32_t delay, bsp_delay_units_t units)
     return(true);
 }
 
+
 /***********************************************************************************************************************
-* Function name: Change_PSW_PM_to_UserMode
-* Description  : Switches to user mode.
+* Function name: R_BSP_Change_PSW_PM_to_UserMode
+* Description  : Switches to user mode. The PSW will be changed as following.
+*                Before Execution                                       After Execution
+*                PSW.PM                 PSW.U                           PSW.PM              PSW.U
+*                0 (supervisor mode)    0 (interrupt stack)     -->     1 (user mode)       1 (user stack)
+*                0 (supervisor mode)    1 (user stack)          -->     1 (user mode)       1 (user stack)
+*                1 (user mode)          1 (user stack)          -->     NO CHANGE
+*                1 (user mode)          0 (interrupt stack))    <==     N/A
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-#if BSP_CFG_RUN_IN_USER_MODE==1
-#if defined(__GNUC__)
-void Change_PSW_PM_to_UserMode(void)
+R_PRAGMA_INLINE_ASM(R_BSP_Change_PSW_PM_to_UserMode)
+void R_BSP_Change_PSW_PM_to_UserMode(void)
 {
-    __asm__("MVFC   PSW,R1");
-    __asm__("OR     #00100000h,R1");
-    __asm__("PUSH.L R1");
-    __asm__("MVFC   PC,R1");
-    __asm__("ADD    #10,R1");
-    __asm__("PUSH.L R1");
-    __asm__("RTE");
-    __asm__("NOP");
-    __asm__("NOP");
+    R_ASM_BEGIN
+    R_ASM(;_R_BSP_Change_PSW_PM_to_UserMode:                                           )
+    R_ASM(    mvfc    psw, r1     ; get the current PSW value                          )
+    R_ASM(    btst    #20, r1     ; check PSW.PM                                       )
+    R_ASM(    bne.b   R_LAB_NEXT(0);_psw_pm_is_user_mode                               )
+    R_ASM(;_psw_pm_is_supervisor_mode:                                                 )
+    R_ASM(    pop     r2          ; pop the return address value of caller             )
+    R_ASM(    bset    #20, r1     ; change PM = 0(Supervisor Mode) --> 1(User Mode)    )
+    R_ASM(    push.l  r1          ; push new PSW value which will be changed           )
+    R_ASM(    push.l  r2          ; push return address value                          )
+    R_ASM(    rte                                                                      )
+    R_LAB(0:;_psw_pm_is_user_mode:                                                     )
+    R_ASM(    ;rts                                                                     )
+    R_ASM_END
 }
-#elif defined(__ICCRX__)
-void Change_PSW_PM_to_UserMode(void)
-{
-    asm("MVFC   PSW,R1\n"
-        "OR     #0x00100000,R1\n"
-        "PUSH.L R1\n"
-        "MVFC   PC,R1\n"
-        "ADD    #10,R1\n"
-        "PUSH.L R1\n"
-        "RTE\n"
-        "NOP\n"
-        "NOP\n");
-}
-#endif /* defined(__GNUC__), defined(__ICCRX__) */
-#endif

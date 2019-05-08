@@ -28,6 +28,8 @@
 #  define __STDC_LIMIT_MACROS 1
 #endif
 
+#if !defined(__STDC_HOSTED__) || (__STDC_HOSTED__-0 == 1 && !defined(__RX))
+
 #include "cbor.h"
 #include "compilersupport_p.h"
 #include "math_support_p.h"
@@ -122,7 +124,7 @@ static int hexDump(FILE *out, const uint8_t *buffer, size_t n)
 
 /* This function decodes buffer as UTF-8 and prints as escaped UTF-16.
  * On UTF-8 decoding error, it returns CborErrorInvalidUtf8TextString */
-static int utf8EscapedDump(FILE *out, const char *buffer, size_t n)
+static CborError utf8EscapedDump(FILE *out, const char *buffer, size_t n)
 {
     uint32_t uc;
     while (n--) {
@@ -467,5 +469,7 @@ CborError cbor_value_to_pretty_advance(FILE *out, CborValue *value)
 {
     return value_to_pretty(out, value);
 }
+
+#endif /* __STDC_HOSTED__ and __RX check */
 
 /** @} */

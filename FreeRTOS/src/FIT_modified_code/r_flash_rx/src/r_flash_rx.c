@@ -109,18 +109,27 @@ flash_err_t R_FLASH_Open(void)
 void R_FlashCodeCopy(void)
 {
 #if (FLASH_CFG_CODE_FLASH_ENABLE == 1)
-
+#if 0
     uint8_t * p_rom_section;    // ROM source location
     uint8_t * p_ram_section;    // RAM copy destination
     uint32_t  bytes_copied;
+#if (FLASH_CFG_CODE_FLASH_RUN_FROM_ROM == 0)
+    R_EXTERN_SEC(RPFRAM)
+    R_EXTERN_SEC(PFRAM)
+#endif
+#ifdef FLASH_IN_DUAL_BANK_MODE
+    R_EXTERN_SEC(RPFRAM2)
+    R_EXTERN_SEC(PFRAM2)
+#endif
+
 
 #if (FLASH_CFG_CODE_FLASH_RUN_FROM_ROM == 0)
     /* Initialize pointers */
-    p_ram_section = (uint8_t *)__sectop("RPFRAM");
-    p_rom_section = (uint8_t *)__sectop("PFRAM");
+    p_ram_section = (uint8_t *)R_SECTOP(RPFRAM);
+    p_rom_section = (uint8_t *)R_SECTOP(PFRAM);
 
     /* Copy code from ROM to RAM. */
-    for (bytes_copied = 0; bytes_copied < __secsize("PFRAM"); bytes_copied++)
+    for (bytes_copied = 0; bytes_copied < R_SECSIZE(PFRAM); bytes_copied++)
     {
         p_ram_section[bytes_copied] = p_rom_section[bytes_copied];
     }
@@ -128,16 +137,17 @@ void R_FlashCodeCopy(void)
 
 #ifdef FLASH_IN_DUAL_BANK_MODE
     /* Initialize pointers */
-    p_ram_section = (uint8_t *)__sectop("RPFRAM2");
-    p_rom_section = (uint8_t *)__sectop("PFRAM2");
+    p_ram_section = (uint8_t *)R_SECTOP(RPFRAM2);
+    p_rom_section = (uint8_t *)R_SECTOP(PFRAM2);
 
     /* Copy code from ROM to RAM. */
-    for (bytes_copied = 0; bytes_copied < __secsize("PFRAM2"); bytes_copied++)
+    for (bytes_copied = 0; bytes_copied < R_SECSIZE(PFRAM2); bytes_copied++)
     {
         p_ram_section[bytes_copied] = p_rom_section[bytes_copied];
     }
 #endif
 
+#endif
 #endif
 }
 
@@ -161,7 +171,7 @@ flash_err_t R_FLASH_Close(void)
 
 /* FUNCTIONS WHICH MUST BE RUN FROM RAM FOLLOW */
 #if (FLASH_CFG_CODE_FLASH_ENABLE == 1)
-#define FLASH_PE_MODE_SECTION    R_ATTRIB_SECTION_CHANGE_F(FRAM)
+#define FLASH_PE_MODE_SECTION    R_ATTRIB_SECTION_CHANGE(P, FRAM)
 #define FLASH_SECTION_CHANGE_END R_ATTRIB_SECTION_CHANGE_END
 #else
 #define FLASH_PE_MODE_SECTION
@@ -333,7 +343,7 @@ bool flash_softwareLock(int32_t * const plock)
     int32_t is_locked = true;
 
     /* Try to acquire semaphore to obtain lock */
-    R_EXCHANGE((R_EXCHANGE_CAST_ARGS1)&is_locked, (R_EXCHANGE_CAST_ARGS2)plock);
+    R_EXCHANGE(&is_locked, plock);
 
     /* Check to see if semaphore was successfully taken */
     if (is_locked == false)

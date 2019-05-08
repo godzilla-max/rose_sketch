@@ -97,7 +97,8 @@ uint32_t get_iclk_freq_hz(void)
         case CKSEL_PLL:
             /* The RX65N have two possible sources for the PLL */
 
-            pll_multiplier = (uint32_t)(((SYSTEM.PLLCR.BIT.STC + 1) * NORMALIZE_X10) / 2);
+            /* (The cast to uint32_t is for GNURX's -Wconversion or -Wsign-conversion and other two casts are the same) */
+            pll_multiplier = ((((uint32_t)(SYSTEM.PLLCR.BIT.STC + 1)) * NORMALIZE_X10) / 2);
 
             pll_source_freq = BSP_CFG_XTAL_HZ; // Default to the MAIN OSC as the PLL source
             if (SYSTEM.PLLCR.BIT.PLLSRCSEL == 0x1) // If 1 then the HOCO is the PLL source
@@ -105,7 +106,7 @@ uint32_t get_iclk_freq_hz(void)
                 pll_source_freq = hoco_frequency[SYSTEM.HOCOCR2.BIT.HCFRQ];
             }
 
-            sysClockSrcFreq = (uint32_t)((pll_source_freq / ((SYSTEM.PLLCR.BIT.PLIDIV + 1) * NORMALIZE_X10)) * pll_multiplier);
+            sysClockSrcFreq = ((pll_source_freq / (((uint32_t)(SYSTEM.PLLCR.BIT.PLIDIV + 1)) * NORMALIZE_X10)) * pll_multiplier);
 
             break;
 
@@ -114,5 +115,5 @@ uint32_t get_iclk_freq_hz(void)
     }
 
     /* Finally, divide the system clock source frequency by the currently set ICLK divider to get the ICLK frequency */
-    return (sysClockSrcFreq / (1 << SYSTEM.SCKCR.BIT.ICK));
+    return (sysClockSrcFreq / (uint32_t)(1 << SYSTEM.SCKCR.BIT.ICK));
 }

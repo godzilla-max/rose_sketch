@@ -43,7 +43,7 @@
   #define SERIAL_BUFFER_SIZE 64
 #endif
 #else /*__RX600__*/
-  #define SERIAL_BUFFER_SIZE 256
+  #define SERIAL_BUFFER_SIZE 1024
 #endif/*__RX600__*/
 
 // Define config for Serial.begin(baud, config);

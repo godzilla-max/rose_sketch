@@ -36,6 +36,7 @@ See file LICENSE.txt for further informations on licensing terms.
 
  ******************************************************************************/
 /*
+ *  Modified 18 Apr 2019 by Yuuki Okamiya, using FreeRTOS timers for GR-ROSE.
  *  Modified 10 Jul 2018 by Yuuki Okamiya, for GR-ROSE.
  *  Modified 9 May 2014 by Yuuki Okamiya, for remove warnings, fixed timer frequency.
  *  Modified 12 May 2014 by Yuuki Okamiya, modify for analogWriteFrequency
@@ -51,8 +52,13 @@ See file LICENSE.txt for further informations on licensing terms.
 #include "Time.h"
 
 #include "rx65n/interrupt_handlers.h"
-#include "rx65n/iodefine.h"
+#include "iodefine.h"
 #include "util.h"
+extern "C" {
+#include "FreeRTOS.h"
+#include "task.h"
+#include "timers.h"
+}
 
 // DEFINITIONS ****************************************************************/
 /** The counter period required to give ~490Hz PWM frequency for 12MHz PCLK. */
@@ -76,13 +82,7 @@ See file LICENSE.txt for further informations on licensing terms.
 /** The current conversion reference. */
 static word g_frequency_analogwrite = 490;
 static fITInterruptFunc_t   g_fITInterruptFunc = NULL;  //!< ユーザー定義インターバルタイマハンドラ
-// 周期起動ハンドラ関数テーブル
-static fITInterruptFunc_t   g_afCyclicHandler[MAX_CYCLIC_HANDLER] =
-{NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-static uint32_t g_au32CyclicTime[MAX_CYCLIC_HANDLER] =
-{ 0, 0, 0, 0, 0, 0, 0, 0};
-static uint32_t g_au32CyclicHandlerLastTime[MAX_CYCLIC_HANDLER] =
-{ 0, 0, 0, 0, 0, 0, 0, 0};
+static TimerHandle_t xTimers;
 
 /** This module's name. */
 //static const char *MODULE = "UTILITIES"; //comment out to remove warning
@@ -119,39 +119,18 @@ void generate_brk()
  * @return none
  *
  ***************************************************************************/
+
+static void vTimerCallback( TimerHandle_t xTimer ){
+    if (g_fITInterruptFunc != NULL) {
+        (*g_fITInterruptFunc)(millis());
+    }
+}
+
 void attachIntervalTimerHandler(void (*fFunction)(unsigned long u32Milles))
 {
-    g_fITInterruptFunc = fFunction;
-
-    startModule(MstpIdTPU0);
-
-    // Stop the timer.
-    TPUA.TSTR.BIT.CST5 = 0U;
-    // Set the counter to run at the desired frequency.
-    TPU5.TCR.BIT.TPSC = 0b011;
-    // Set TGRA compare match to clear TCNT.
-    TPU5.TCR.BIT.CCLR = 0b001;
-    // Set the count to occur on rising edge of PCLK.
-    TPU5.TCR.BIT.CKEG = 0b01;
-    // Set Normal.
-    TPU5.TMDR.BIT.MD = 0b0000;
-    // Set the period.
-    TPU5.TGRA = 750 - 1; //1ms setting at PCLK/64(750kHz)
-
-    // Set the count to occur on rising edge of PCLK.
-    TPU5.TSR.BIT.TGFA = 0U;
-
-    /* Set TGI6A interrupt priority level to 5*/
-    IPR(PERIB, INTB133) = 0x5;
-    /* Enable TGI6A interrupts */
-    IEN(PERIB, INTB133) = 0x1;
-    /* Clear TGI6A interrupt flag */
-    IR(PERIB, INTB133) = 0x0;
-    // Enable the module interrupt for the ms timer.
-    TPU5.TIER.BIT.TGIEA = 1U;
-
-    // Start the timer.
-    TPUA.TSTR.BIT.CST5 = 1U;
+	g_fITInterruptFunc = fFunction;
+	xTimers = xTimerCreate("Timer", 1, pdTRUE, ( void * ) 0, vTimerCallback);
+	xTimerStart(xTimers, 0);
 }
 
 
@@ -166,75 +145,9 @@ void attachIntervalTimerHandler(void (*fFunction)(unsigned long u32Milles))
 void detachIntervalTimerHandler()
 {
     g_fITInterruptFunc = NULL;
-    // Stop the timer.
-    TPUA.TSTR.BIT.CST5 = 0U;
-
+	xTimerStop(xTimers, 0);
 }
 
-/****************************************************************************
- * Attach cyclic handler
- *
- * Attached handler is called every specified interval u32CyclicTime
- *
- * @param[in] u8HandlerNumber Specify ID from 0 to 7
- * @param[in] fFunction       Specify handler
- * @param[in] u32CyclicTime   Specify interval [ms]
- *
- * @return none
- *
- ***************************************************************************/
-void attachCyclicHandler(uint8_t u8HandlerNumber, void (*fFunction)(unsigned long u32Milles), uint32_t u32CyclicTime)
-{
-
-    if (u8HandlerNumber < MAX_CYCLIC_HANDLER) {
-        g_afCyclicHandler[u8HandlerNumber]              = fFunction;
-        g_au32CyclicTime[u8HandlerNumber]               = u32CyclicTime;
-        g_au32CyclicHandlerLastTime[u8HandlerNumber]    = millis();
-    }
-
-}
-
-/****************************************************************************
- * Detach cyclic handler
- *
- * @param[in] ID from 0 to 7
- *
- * @return none
- *
- ***************************************************************************/
-void detachCyclicHandler(uint8_t u8HandlerNumber)
-{
-
-    if (u8HandlerNumber < MAX_CYCLIC_HANDLER) {
-        g_afCyclicHandler[u8HandlerNumber]              = NULL;
-        g_au32CyclicTime[u8HandlerNumber]               = 0;
-        g_au32CyclicHandlerLastTime[u8HandlerNumber]    = 0;
-    }
-}
-
-/****************************************************************************
- * Execution cyclic handler
- *
- * @param[in] none
- *
- * @return none
- *
- ***************************************************************************/
-
-void execCyclicHandler()
-{
-    int i;
-
-    for (i = 0; i < MAX_CYCLIC_HANDLER; i++) {
-        if (g_afCyclicHandler[i] != NULL) {
-            unsigned long currentTime = millis();
-            if ((currentTime - g_au32CyclicHandlerLastTime[i]) >= g_au32CyclicTime[i]) {
-                g_au32CyclicHandlerLastTime[i] = currentTime;
-                (*g_afCyclicHandler[i])(currentTime);
-            }
-        }
-    }
-}
 
 /****************************************************************************
  * Attach interval timer function
@@ -253,15 +166,4 @@ unsigned long timer_regist_userfunc(void (*fFunction)(void))
         detachIntervalTimerHandler();
     }
     return 1;
-}
-
-// INTERRUPT HANDLERS *********************************************************/
-// Note that these are declared in interrupts_handlers.h but defined here for
-// clarity.
-
-// TPU5 TGI5A
-void INT_Excep_TPU5_TGI5A(void){
-    if (g_fITInterruptFunc != NULL) {
-        (*g_fITInterruptFunc)(millis());
-    }
 }

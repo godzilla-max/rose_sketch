@@ -157,7 +157,7 @@ flash_err_t flash_fcuram_codecopy(void)
 
 
 #if (FLASH_CFG_CODE_FLASH_ENABLE == 1)
-#define FLASH_PE_MODE_SECTION    R_ATTRIB_SECTION_CHANGE_F(FRAM)
+#define FLASH_PE_MODE_SECTION    R_ATTRIB_SECTION_CHANGE(P, FRAM)
 #define FLASH_SECTION_CHANGE_END R_ATTRIB_SECTION_CHANGE_END
 #else
 #define FLASH_PE_MODE_SECTION
@@ -416,8 +416,10 @@ flash_err_t flash_get_status (void)
  * Description  : Function erases a block of Code or Data Flash
  * Arguments    : block address -
  *                    Block address to start erasing from
+ *                    This is not used here but used in same function of the src\flash_type_1\r_flash_utils.c.
  *                num_blocks -
  *                    Number of blocks to erase in ascending order (descending addresses)
+ *                    This is not used here but used in same function of the src\flash_type_1\r_flash_utils.c.
  * Return Value : FLASH_SUCCESS -
  *                    Block Erased successfully.
  *                FLASH_ERR_TIMEOUT -
@@ -437,6 +439,9 @@ flash_err_t flash_erase(uint32_t block_address, uint32_t num_blocks)
     uint32_t    size_boundary;
 #endif
     flash_err_t err = FLASH_SUCCESS;
+
+    R_INTERNAL_NOT_USED(block_address);
+    R_INTERNAL_NOT_USED(num_blocks);
 
 
     /* Set Erasure Priority Mode */
@@ -615,6 +620,9 @@ flash_err_t flash_write(uint32_t src_start_address,
 
 
     /* TOTAL NUMBER OF BYTES TO WRITE LOOP */
+#ifdef GRROSE
+    g_current_parameters.wait_cnt = wait_cnt;
+#endif
     while (g_current_parameters.total_count > 0)
     {
         /* Setup fcu command */

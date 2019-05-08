@@ -39,7 +39,7 @@
 #include "util.h"
 /// For USB receive /////////////////////////////
 /// The definitions are copied from usb_hal.c ///
-#include "rx65n/iodefine.h"
+#include "iodefine.h"
 /*NOTE USB0 is defined in iodefine.h file*/
 #define USBIO USB0
 #define PID_BUF     1
@@ -480,8 +480,7 @@ void HardwareSerial::begin(unsigned long baud, byte config)
       }
       _begin = true;
 
-	  // TODO : Fix to remove magic number
-	  // initialize ESP8266
+	  // for initialization of ESP8266 AT commands
       if(_serial_channel == 6){
     		pinMode(PIN_ESP_EN, OUTPUT);
     		pinMode(PIN_ESP_IO0, OUTPUT);
@@ -492,7 +491,6 @@ void HardwareSerial::begin(unsigned long baud, byte config)
     		digitalWrite(PIN_ESP_EN, LOW);
     		delay(100);
     		digitalWrite(PIN_ESP_EN, HIGH);
-    		delay(500);
       }
     }
     break;
@@ -626,11 +624,11 @@ void HardwareSerial::direction(uint8_t dir){
 		break;
 	case 7 :
 		if(dir == OUTPUT){
-			pinMode(PIN_RS485_SEL, OUTPUT);
-			digitalWrite(PIN_RS485_SEL, HIGH);
+			pinMode(PIN_RS485_DIR, OUTPUT);
+			digitalWrite(PIN_RS485_DIR, HIGH);
 		} else {
 			while(!_sci->SSR.BIT.TEND);
-			pinMode(PIN_RS485_SEL, INPUT); // pull-down by hardware
+			pinMode(PIN_RS485_DIR, INPUT); // pull-down by hardware
 		}
 		break;
 	default :

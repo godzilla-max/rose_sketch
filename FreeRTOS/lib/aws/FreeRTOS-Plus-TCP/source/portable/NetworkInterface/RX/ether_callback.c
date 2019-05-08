@@ -40,14 +40,11 @@ static void callback_wakeon_lan(uint32_t channel);
 static void callback_link_on(uint32_t channel);
 static void callback_link_off(uint32_t channel);
 
-/***********************************************************************************************************************
-Private global variables and functions
-***********************************************************************************************************************/
 volatile uint8_t  pause_enable = ETHER_FLAG_OFF;
 volatile uint8_t  magic_packet_detect[ETHER_CHANNEL_MAX];
 volatile uint8_t  link_detect[ETHER_CHANNEL_MAX];
 
-extern void EINT_Trig_isr(void *);
+void EINT_Trig_isr(void *);
 
 /***********************************************************************************************************************
 * Function Name: callback_ether
@@ -99,17 +96,17 @@ void callback_ether(void * pparam)
 
     switch (pdecode->event_id)
     {
-            /* Callback function that notifies user to have detected magic packet. */
+        /* Callback function that notifies user to have detected magic packet. */
         case ETHER_CB_EVENT_ID_WAKEON_LAN:
             callback_wakeon_lan(channel);
             break;
 
-            /* Callback function that notifies user to have become Link up. */
+        /* Callback function that notifies user to have become Link up. */
         case ETHER_CB_EVENT_ID_LINK_ON:
             callback_link_on(channel);
             break;
 
-            /* Callback function that notifies user to have become Link down. */
+        /* Callback function that notifies user to have become Link down. */
         case ETHER_CB_EVENT_ID_LINK_OFF:
             callback_link_off(channel);
             break;

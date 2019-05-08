@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +26,7 @@
  */
 
 /*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the SH2A port.
+ * Implementation of functions defined in portable.h for the RX600 port.
  *----------------------------------------------------------*/
 
 /* Scheduler includes. */
@@ -72,7 +72,7 @@ static void prvStartFirstTask( void ) __attribute__((naked));
  * required.
  */
 #if defined(configTICK_VECTOR)
-void vSoftwareInterruptISR( void ) __attribute__((naked, vector( ".rvectors", VECT_ICU_SWINT )));
+void vSoftwareInterruptISR( void ) __attribute__((naked, vector( R_SECNAME_INTVECTTBL, VECT_ICU_SWINT )));
 #else
 void vSoftwareInterruptISR( void ) __attribute__((naked));
 #endif
@@ -81,7 +81,7 @@ void vSoftwareInterruptISR( void ) __attribute__((naked));
  * The tick interrupt handler.
  */
 #if defined(configTICK_VECTOR)
-void vTickISR( void ) __attribute__((interrupt( ".rvectors", _VECT( configTICK_VECTOR ) )));
+void vTickISR( void ) __attribute__((interrupt( R_SECNAME_INTVECTTBL, _VECT( configTICK_VECTOR ) )));
 #else
 void vTickISR( void ) __attribute__((interrupt));
 #endif
@@ -405,6 +405,9 @@ uint32_t ulPortGetIPL( void )
 
 void vPortSetIPL( uint32_t ulNewIPL )
 {
+	/* Avoid compiler warning about unreferenced parameter. */
+	( void ) ulNewIPL;
+
 	__asm volatile
 	(
 		"PUSH	R5				\n" \

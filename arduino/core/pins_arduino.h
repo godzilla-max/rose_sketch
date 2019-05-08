@@ -75,7 +75,7 @@
 #define PIN_S2_SEL    (34)
 #define PIN_S3_SEL    (35)
 #define PIN_S4_SEL    (36)
-#define PIN_RS485_SEL (37)
+#define PIN_RS485_DIR (37)
 #define PIN_ANINT     (38)
 #define PIN_ANTMP     (39)
 

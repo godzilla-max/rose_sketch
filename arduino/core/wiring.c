@@ -30,6 +30,9 @@
 #include <stdint.h>
 #include "platform.h"
 #include "util.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
 #endif /*__RX600__*/
 
 #ifndef __RX600__
@@ -202,6 +205,7 @@ void delay(unsigned long ms)
 		}
 	}
 #else /*__RX600__*/
+#if 0
 	while (ms > 0) {
 		const unsigned long msmax = UINT32_MAX / TicksForMillis;
 		unsigned long ticks;
@@ -214,6 +218,9 @@ void delay(unsigned long ms)
 		}
 		delayTicks(ticks);
 	}
+#else
+	vTaskDelay(ms);
+#endif
 #endif/*__RX600__*/
 }
 

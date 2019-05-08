@@ -75,6 +75,8 @@ Macro definitions
 
 #if (SCI_CFG_CH10_FIFO_INCLUDED) || (SCI_CFG_CH11_FIFO_INCLUDED)
     #define SCI_CFG_FIFO_INCLUDED (1)
+#else
+    #define SCI_CFG_FIFO_INCLUDED (0) /* It is better for XXXX_CFG_YYYY to be defined as 0 rather than not defined. */
 #endif
 
 #if SCI_CFG_FIFO_INCLUDED
