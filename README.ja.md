@@ -1,49 +1,52 @@
 [English version](./README.md)
 
-‚±‚ÌƒŠƒ|ƒWƒgƒŠ‚ÍA[ƒ‹ƒlƒTƒXMCU RX65N‚ÉƒCƒ“ƒvƒŠ‚³‚ê‚éAWS FreeRTOS](https://github.com/renesas-rx/amazon-freertos/tree/master/demos/renesas)ã‚ÉeProsima»‚Ì[Micro-XRCE-DDS-Client](https://github.com/eProsima/Micro-XRCE-DDS-Client)‚ðŽÀ‘•‚µADDS-XRCE’ÊM‚ðŽÀŒ»‚·‚é‚à‚Ì‚Å‚·B
+ã“ã®ãƒªãƒã‚¸ãƒˆãƒªã¯ã€[ãƒ«ãƒã‚µã‚¹MCU RX65Nã«ã‚¤ãƒ³ãƒ—ãƒªã•ã‚Œã‚‹AWS FreeRTOS](https://github.com/renesas-rx/amazon-freertos/tree/master/demos/renesas)ä¸Šã«eProsimaè£½ã®[Micro-XRCE-DDS-Client](https://github.com/eProsima/Micro-XRCE-DDS-Client)ã‚’å®Ÿè£…ã—ã€DDS-XRCEé€šä¿¡ã‚’å®Ÿç¾ã™ã‚‹ã‚‚ã®ã§ã™ã€‚
 
-# Micro-XRCE-DDS-Client‚ðŽg—p‚µ‚½ƒ‹ƒlƒTƒXRX65N‚Ö‚ÌROS2ŽÀ‘•ƒfƒ‚
+# Micro-XRCE-DDS-Clientã‚’ä½¿ç”¨ã—ãŸãƒ«ãƒã‚µã‚¹RX65Nã¸ã®ROS2å®Ÿè£…ãƒ‡ãƒ¢
 
-## ƒfƒ‚‚ÌŠT—v
+## ãƒ‡ãƒ¢ã®æ¦‚è¦
 
-ƒ‹ƒlƒTƒX‚ÌRX65N‚ðŽg—p‚µ‚ÄMicro-XRCE-DDS-Client‚ðŽÀ‘•‚µ‚½ƒfƒ‚‚Å‚·Bƒ‹ƒlƒTƒX‚©‚çƒjƒ…[ƒXƒŠƒŠ[ƒX‚³‚ê‚Ä‚¢‚éƒfƒ‚‚ÅAROS2‚Ì•¶Žš—ñ—pƒƒbƒZ[ƒWŒ^"std_msgs/String"‚Ì‘—ŽóMs‚¤‚à‚Ì‚Å‚·B
-RX65N—p‚Ì•]‰¿ƒ{[ƒhƒ‰ƒCƒ“ƒAƒbƒv‚ÍˆÈ‰º‚Å‚·‚ªA‚±‚±‚Å‚ÍAGR-ROSEã‚Åƒfƒ‚‚ðŽÀs‚·‚éŽè‡‚ðŽ¦‚µ‚Ü‚·B  
+ãƒ«ãƒã‚µã‚¹ã®RX65Nã‚’ä½¿ç”¨ã—ã¦Micro-XRCE-DDS-Clientã‚’å®Ÿè£…ã—ãŸãƒ‡ãƒ¢ã§ã™ã€‚ãƒ«ãƒã‚µã‚¹ã‹ã‚‰ãƒ‹ãƒ¥ãƒ¼ã‚¹ãƒªãƒªãƒ¼ã‚¹ã•ã‚Œã¦ã„ã‚‹ãƒ‡ãƒ¢ã§ã€ROS2ã®æ–‡å­—åˆ—ç”¨ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸åž‹"std_msgs/String"ã®é€å—ä¿¡è¡Œã†ã‚‚ã®ã§ã™ã€‚
+RX65Nç”¨ã®è©•ä¾¡ãƒœãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ³ã‚¢ãƒƒãƒ—ã¯ä»¥ä¸‹ã§ã™ãŒã€ã“ã“ã§ã¯ã€GR-ROSEä¸Šã§ãƒ‡ãƒ¢ã‚’å®Ÿè¡Œã™ã‚‹æ‰‹é †ã‚’ç¤ºã—ã¾ã™ã€‚  
 
-GR-ROSE (Š”Ž®‰ïŽÐƒRƒA‚æ‚è2019”N3ŒŽ‚É—ÊŽYo‰×—\’è)  
-RX65N Envision Kit (—ÊŽY’†)  
-Renesas Starter Kit+ for RX65N (—ÊŽY’†)  
+* [GR-ROSE](http://gadget.renesas.com/ja/product/rose.html) (æ ªå¼ä¼šç¤¾ã‚³ã‚¢ã‚ˆã‚Šé‡ç”£å‡ºè·äºˆå®š)  
 
-ŽQlF  
-ƒ‹ƒlƒTƒXƒjƒ…[ƒXƒŠƒŠ[ƒX  
-ˆê‰Æ‚É‚P‘äƒT[ƒrƒXƒƒ{ƒbƒg‚ª•‹y‚·‚éŽž‘ã‚ÉŒü‚¯‚ÄARX65Nƒ}ƒCƒRƒ“‚ªAƒƒ{ƒbƒg—pƒtƒŒ[ƒ€ƒ[ƒNuROS 2vŒü‚¯’ÊM‹KŠiDDS-XRCE‚ðƒTƒ|[ƒg  
+![ã‚¹ãƒ©ã‚¤ãƒ‰1](https://user-images.githubusercontent.com/32696676/54973245-6bb10300-4fd2-11e9-843a-045367a17b18.JPG)
+
+* RX65N Envision Kit (é‡ç”£ä¸­)  
+* Renesas Starter Kit+ for RX65N (é‡ç”£ä¸­)  
+
+å‚è€ƒï¼š  
+ãƒ«ãƒã‚µã‚¹ãƒ‹ãƒ¥ãƒ¼ã‚¹ãƒªãƒªãƒ¼ã‚¹  
+ä¸€å®¶ã«ï¼‘å°ã‚µãƒ¼ãƒ“ã‚¹ãƒ­ãƒœãƒƒãƒˆãŒæ™®åŠã™ã‚‹æ™‚ä»£ã«å‘ã‘ã¦ã€RX65Nãƒžã‚¤ã‚³ãƒ³ãŒã€ãƒ­ãƒœãƒƒãƒˆç”¨ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã€ŒROS 2ã€å‘ã‘é€šä¿¡è¦æ ¼DDS-XRCEã‚’ã‚µãƒãƒ¼ãƒˆ  
 https://www.renesas.com/jp/ja/about/press-center/news/2018/news20181029.html  
-RX65Nƒ}ƒCƒRƒ“ƒz[ƒ€ƒy[ƒW  
+RX65Nãƒžã‚¤ã‚³ãƒ³ãƒ›ãƒ¼ãƒ ãƒšãƒ¼ã‚¸  
 https://www.renesas.com/jp/ja/products/microcontrollers-microprocessors/rx/rx600/rx65n-651.html  
 
 
-## ƒfƒ‚ŽÀsŠÂ‹«
+## ãƒ‡ãƒ¢å®Ÿè¡Œç’°å¢ƒ
 
-ƒfƒ‚‚ÌŽÀs‚É•K—v‚È€–Ú‚ÍˆÈ‰º‚Ì‚Æ‚¨‚è‚Å‚·B  
+ãƒ‡ãƒ¢ã®å®Ÿè¡Œã«å¿…è¦ãªé …ç›®ã¯ä»¥ä¸‹ã®ã¨ãŠã‚Šã§ã™ã€‚  
 
-### [ƒn[ƒhƒEƒFƒA]
+### [ãƒãƒ¼ãƒ‰ã‚¦ã‚§ã‚¢]
 
-(1) GR-ROSE 1–‡  
-ì¬‚µ‚½ƒCƒ[ƒW‚ª“®ì‚·‚éƒ^[ƒQƒbƒgƒ{[ƒh‚Å‚·B  
+(1) GR-ROSE 1æžš  
+ä½œæˆã—ãŸã‚¤ãƒ¡ãƒ¼ã‚¸ãŒå‹•ä½œã™ã‚‹ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒœãƒ¼ãƒ‰ã§ã™ã€‚  
 
 (2) Linux PC  
-ROS2 Bouncy BolsonAMicro-XRCE-DDS-Agent‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚é•K—v‚ª‚ ‚è‚Ü‚·B  
+ROS2 Bouncy Bolsonã€Micro-XRCE-DDS-AgentãŒã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚  
 
 (3) Windows PC  
-GR-ROSE‚ÉƒXƒPƒbƒ`‚ð‘‚«ž‚Þ‚½‚ß‚É•K—v‚Å‚·B  
-‚Ü‚½AWindows PC‚Å‹N“®‚µ‚½ƒ^[ƒ~ƒiƒ‹ƒ\ƒtƒg‚ÅGR-ROSE‚ÌƒƒOo—Í‚ðs‚¢‚Ü‚·B  
+GR-ROSEã«ã‚¹ã‚±ãƒƒãƒã‚’æ›¸ãè¾¼ã‚€ãŸã‚ã«å¿…è¦ã§ã™ã€‚  
+ã¾ãŸã€Windows PCã§èµ·å‹•ã—ãŸã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‚½ãƒ•ãƒˆã§GR-ROSEã®ãƒ­ã‚°å‡ºåŠ›ã‚’è¡Œã„ã¾ã™ã€‚  
 
-(4) EthernetƒP[ƒuƒ‹ 1–{  
-GR-ROSE‚ÆLinux PC‚ðÚ‘±‚·‚é‚½‚ß‚É•K—v‚Å‚·B  
+(4) Ethernetã‚±ãƒ¼ãƒ–ãƒ« 1æœ¬  
+GR-ROSEã¨Linux PCã‚’æŽ¥ç¶šã™ã‚‹ãŸã‚ã«å¿…è¦ã§ã™ã€‚  
 
-(5) USBƒP[ƒuƒ‹ 1–{  
-A(ƒIƒX) - MicroB(ƒIƒX)ƒ^ƒCƒv‚ÌUSBƒP[ƒuƒ‹‚Å‚·BGR-ROSE‚ÆWindows PC‚ðÚ‘±‚·‚é‚½‚ß‚É•K—v‚Å‚·B  
+(5) USBã‚±ãƒ¼ãƒ–ãƒ« 1æœ¬  
+A(ã‚ªã‚¹) - MicroB(ã‚ªã‚¹)ã‚¿ã‚¤ãƒ—ã®USBã‚±ãƒ¼ãƒ–ãƒ«ã§ã™ã€‚GR-ROSEã¨Windows PCã‚’æŽ¥ç¶šã™ã‚‹ãŸã‚ã«å¿…è¦ã§ã™ã€‚  
 
-‚±‚Ìƒfƒ‚‚Å‚ÍAã‹L(1)`(5)‚Ì‹@Ší‚ÍˆÈ‰º‚Ì‚æ‚¤‚ÉÚ‘±‚µ‚Ü‚·B  
+ã“ã®ãƒ‡ãƒ¢ã§ã¯ã€ä¸Šè¨˜(1)ï½ž(5)ã®æ©Ÿå™¨ã¯ä»¥ä¸‹ã®ã‚ˆã†ã«æŽ¥ç¶šã—ã¾ã™ã€‚  
 
 ```
 
@@ -61,84 +64,84 @@ A(ƒIƒX) - MicroB(ƒIƒX)ƒ^ƒCƒv‚ÌUSBƒP[ƒuƒ‹‚Å‚·BGR-ROSE‚ÆWindows PC‚ðÚ‘±‚·‚é‚½‚ß
 ```
 
 
-### [ƒ\ƒtƒgƒEƒFƒA]
+### [ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢]
 
 #### Linux PC
 
-ˆÈ‰º‚Ìƒ\ƒtƒgƒEƒFƒA‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚é•K—v‚ª‚ ‚è‚Ü‚·B  
+ä»¥ä¸‹ã®ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ãŒã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚  
 
 (1) ROS2 (Bouncy Bolson)  
-ƒCƒ“ƒXƒg[ƒ‹•û–@‚É‚Â‚¢‚Ä‚ÍWebƒy[ƒWã‚ÌƒhƒLƒ…ƒƒ“ƒg‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B  
+ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«æ–¹æ³•ã«ã¤ã„ã¦ã¯Webãƒšãƒ¼ã‚¸ä¸Šã®ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‚’å‚ç…§ã—ã¦ãã ã•ã„ã€‚  
 https://index.ros.org/doc/ros2/Installation/  
 
 (2) Micro-XRCE-DDS-Agent  
-ˆÈ‰º‚©‚çƒ_ƒEƒ“ƒ[ƒh‚µ‚Ü‚·BƒCƒ“ƒXƒg[ƒ‹•û–@‚É‚Â‚¢‚Ä‚ÍWebƒy[ƒWã‚ÌƒhƒLƒ…ƒƒ“ƒg‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B  
+ä»¥ä¸‹ã‹ã‚‰ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ã€‚ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«æ–¹æ³•ã«ã¤ã„ã¦ã¯Webãƒšãƒ¼ã‚¸ä¸Šã®ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‚’å‚ç…§ã—ã¦ãã ã•ã„ã€‚  
 https://github.com/eProsima/Micro-XRCE-DDS-Agent  
 
-“®ìŠm”F‚ðs‚Á‚½ƒo[ƒWƒ‡ƒ“‚Íuv1.0.1v‚Å‚·B  
+å‹•ä½œç¢ºèªã‚’è¡Œã£ãŸãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¯ã€Œv1.0.1ã€ã§ã™ã€‚  
 
 #### Windows PC
 
-ˆÈ‰º‚Ìƒ\ƒtƒgƒEƒFƒA‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚é•K—v‚ª‚ ‚è‚Ü‚·B  
+ä»¥ä¸‹ã®ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ãŒã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚  
 
 (1) e2studio  
-ˆÈ‰º‚©‚çƒ_ƒEƒ“ƒ[ƒh‚µ‚Ü‚·BƒCƒ“ƒXƒg[ƒ‹•û–@‚É‚Â‚¢‚Ä‚ÍWebƒy[ƒWã‚ÌƒhƒLƒ…ƒƒ“ƒg‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B  
+ä»¥ä¸‹ã‹ã‚‰ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ã€‚ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«æ–¹æ³•ã«ã¤ã„ã¦ã¯Webãƒšãƒ¼ã‚¸ä¸Šã®ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‚’å‚ç…§ã—ã¦ãã ã•ã„ã€‚  
 https://www.renesas.com/jp/ja/products/software-tools/tools/ide/e2studio.html  
 
-“®ìŠm”F‚ðs‚Á‚½ƒo[ƒWƒ‡ƒ“‚ÍuV.7.0.0v‚Å‚·B  
+å‹•ä½œç¢ºèªã‚’è¡Œã£ãŸãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¯ã€ŒV.7.0.0ã€ã§ã™ã€‚  
 
 (2) GCC for Renesas 4.8.4.201801-GNURX Windows Toolchain(ELF)  
-ˆÈ‰º‚©‚çƒ_ƒEƒ“ƒ[ƒh‚µ‚Ü‚·BƒCƒ“ƒXƒg[ƒ‹•û–@‚É‚Â‚¢‚Ä‚ÍWebƒy[ƒWã‚ÌƒhƒLƒ…ƒƒ“ƒg‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B  
+ä»¥ä¸‹ã‹ã‚‰ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ã€‚ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«æ–¹æ³•ã«ã¤ã„ã¦ã¯Webãƒšãƒ¼ã‚¸ä¸Šã®ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‚’å‚ç…§ã—ã¦ãã ã•ã„ã€‚  
 https://gcc-renesas.com/ja/rx-download-toolchains/  
 
-“®ìŠm”F‚ðs‚Á‚½ƒo[ƒWƒ‡ƒ“‚Íu4.8.4.201801v‚Å‚·B  
+å‹•ä½œç¢ºèªã‚’è¡Œã£ãŸãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¯ã€Œ4.8.4.201801ã€ã§ã™ã€‚  
 
 
-## ƒfƒ‚ŽÀsŽè‡
+## ãƒ‡ãƒ¢å®Ÿè¡Œæ‰‹é †
 
-### [ƒvƒƒWƒFƒNƒg‚ÌŽæ“¾]
+### [ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—]
 
-[Clone or download]‚©‚ç[Download ZIP]‚ð‘I‘ð‚µ‚Äzipƒtƒ@ƒCƒ‹‚ðƒ_ƒEƒ“ƒ[ƒh‚µ‚Ä‚­‚¾‚³‚¢B  
+[Clone or download]ã‹ã‚‰[Download ZIP]ã‚’é¸æŠžã—ã¦zipãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ã¦ãã ã•ã„ã€‚  
 
-### [ƒXƒPƒbƒ`‚Ìƒrƒ‹ƒh]
+### [ã‚¹ã‚±ãƒƒãƒã®ãƒ“ãƒ«ãƒ‰]
 
-(1) e2studio‚Ìuƒtƒ@ƒCƒ‹vƒƒjƒ…[‚ÌuƒCƒ“ƒ|[ƒgv‚©‚çAzipƒtƒ@ƒCƒ‹‚ðƒCƒ“ƒ|[ƒg‚µ‚Ä‚­‚¾‚³‚¢B  
+(1) e2studioã®ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã€ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã€Œã‚¤ãƒ³ãƒãƒ¼ãƒˆã€ã‹ã‚‰ã€zipãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¤ãƒ³ãƒãƒ¼ãƒˆã—ã¦ãã ã•ã„ã€‚  
 
-(2) ƒvƒƒWƒFƒNƒg‚ðƒrƒ‹ƒh‚µ‚Ä‚­‚¾‚³‚¢BReleaseBinƒtƒHƒ‹ƒ_‚Érose_sketch.bin‚ª¶¬‚³‚ê‚Ü‚·B  
+(2) ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ“ãƒ«ãƒ‰ã—ã¦ãã ã•ã„ã€‚ReleaseBinãƒ•ã‚©ãƒ«ãƒ€ã«rose_sketch.binãŒç”Ÿæˆã•ã‚Œã¾ã™ã€‚  
 
-### [ƒXƒPƒbƒ`‚Ì‘‚«ž‚Ý]
+### [ã‚¹ã‚±ãƒƒãƒã®æ›¸ãè¾¼ã¿]
 
-(1) GR-ROSE‚ÆWindows PC‚ðUSBƒP[ƒuƒ‹‚ÅÚ‘±‚µ‚Ä‚­‚¾‚³‚¢B  
+(1) GR-ROSEã¨Windows PCã‚’USBã‚±ãƒ¼ãƒ–ãƒ«ã§æŽ¥ç¶šã—ã¦ãã ã•ã„ã€‚  
 
-(2) Ú‘±ŒãAGR-ROSE‚ÌƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢BGR-ROSE‚ªUSBƒƒ‚ƒŠ‚Æ‚µ‚Ä”FŽ¯‚³‚ê‚Ü‚·B  
+(2) æŽ¥ç¶šå¾Œã€GR-ROSEã®ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚GR-ROSEãŒUSBãƒ¡ãƒ¢ãƒªã¨ã—ã¦èªè­˜ã•ã‚Œã¾ã™ã€‚  
 
-(3) rose_sketch.bin‚ðGR-ROSEƒhƒ‰ƒCƒu‚ÉƒRƒs[‚µ‚Ä‚­‚¾‚³‚¢BGR-ROSE‚ÉƒXƒPƒbƒ`‚ª‘‚«ž‚Ü‚êLED‚ª“_–Å‚µ‚Ü‚·B  
+(3) rose_sketch.binã‚’GR-ROSEãƒ‰ãƒ©ã‚¤ãƒ–ã«ã‚³ãƒ”ãƒ¼ã—ã¦ãã ã•ã„ã€‚GR-ROSEã«ã‚¹ã‚±ãƒƒãƒãŒæ›¸ãè¾¼ã¾ã‚ŒLEDãŒç‚¹æ»…ã—ã¾ã™ã€‚  
 
-### [“®ìŠm”F]
+### [å‹•ä½œç¢ºèª]
 
-(1) Linux PCã‚ÅMicro-XRCE-DDS-Agent‚ð‹N“®‚µ‚Ü‚·BLinux PC‚Åƒ^[ƒ~ƒiƒ‹‚ð‹N“®‚µAˆÈ‰º‚ÌƒRƒ}ƒ“ƒh‚ðŽÀs‚µ‚Ä‚­‚¾‚³‚¢B  
+(1) Linux PCä¸Šã§Micro-XRCE-DDS-Agentã‚’èµ·å‹•ã—ã¾ã™ã€‚Linux PCã§ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‚’èµ·å‹•ã—ã€ä»¥ä¸‹ã®ã‚³ãƒžãƒ³ãƒ‰ã‚’å®Ÿè¡Œã—ã¦ãã ã•ã„ã€‚  
 
 ```
-$ cd <Micro-XRCE-DDS-Agent‚ÌbuildƒfƒBƒŒƒNƒgƒŠ>
+$ cd <Micro-XRCE-DDS-Agentã®buildãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª>
 $ ./MicroXRCEAgent tcp 2020
 ```
 
-Micro-XRCE-DDS-Agent‚ÌƒƒO‚ªˆÈ‰º‚Ì‚æ‚¤‚É•\Ž¦‚³‚ê‚Ü‚·B  
+Micro-XRCE-DDS-Agentã®ãƒ­ã‚°ãŒä»¥ä¸‹ã®ã‚ˆã†ã«è¡¨ç¤ºã•ã‚Œã¾ã™ã€‚  
 
 ```
 TCP agent initialization... OK
 Enter 'q' for exit
 ```
 
-(2) Linux PCã‚ÌROS2•t‘®ƒfƒ‚listener‚ð‹N“®‚µ‚Ü‚·BLinux PC‚Å•Ê‚Ìƒ^[ƒ~ƒiƒ‹‚ð‹N“®‚µAˆÈ‰º‚ÌƒRƒ}ƒ“ƒh‚ðŽÀs‚µ‚Ä‚­‚¾‚³‚¢B  
+(2) Linux PCä¸Šã®ROS2ä»˜å±žãƒ‡ãƒ¢listenerã‚’èµ·å‹•ã—ã¾ã™ã€‚Linux PCã§åˆ¥ã®ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‚’èµ·å‹•ã—ã€ä»¥ä¸‹ã®ã‚³ãƒžãƒ³ãƒ‰ã‚’å®Ÿè¡Œã—ã¦ãã ã•ã„ã€‚  
 
 ```
-$ cd <ROS2‚ðƒrƒ‹ƒh‚µ‚½ƒ[ƒNƒXƒy[ƒX>
+$ cd <ROS2ã‚’ãƒ“ãƒ«ãƒ‰ã—ãŸãƒ¯ãƒ¼ã‚¯ã‚¹ãƒšãƒ¼ã‚¹>
 $ source install/setup.bash
 $ ros2 run demo_nodes_cpp listener
 ```
 
-Listener‚ÌƒƒbƒZ[ƒW‚ªˆÈ‰º‚Ì‚æ‚¤‚É•\Ž¦‚³‚ê‚Ü‚·B  
+Listenerã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒä»¥ä¸‹ã®ã‚ˆã†ã«è¡¨ç¤ºã•ã‚Œã¾ã™ã€‚  
 
 ```
 [INFO] [listener]: I heard: [Hello DDS world!: 0]
@@ -149,7 +152,7 @@ Listener‚ÌƒƒbƒZ[ƒW‚ªˆÈ‰º‚Ì‚æ‚¤‚É•\Ž¦‚³‚ê‚Ü‚·B
 ....(SNIPPED)....
 ```
 
-(3) GR-ROSE‚ÉÚ‘±‚³‚ê‚½PC‚Åƒ^[ƒ~ƒiƒ‹ƒ\ƒtƒg‚ð‹N“®‚·‚é‚ÆATalker‚ÌƒƒbƒZ[ƒW‚ªˆÈ‰º‚Ì‚æ‚¤‚É•\Ž¦‚³‚ê‚Ü‚·B  
+(3) GR-ROSEã«æŽ¥ç¶šã•ã‚ŒãŸPCã§ã‚¿ãƒ¼ãƒŸãƒŠãƒ«ã‚½ãƒ•ãƒˆã‚’èµ·å‹•ã™ã‚‹ã¨ã€Talkerã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒä»¥ä¸‹ã®ã‚ˆã†ã«è¡¨ç¤ºã•ã‚Œã¾ã™ã€‚  
 
 ```
 ....(SNIPPED)....
@@ -164,31 +167,31 @@ Chosen agent => ip: 192.168.2.101, port: 2020
 ```
 
 
-## ƒfƒ‚‚ÌØ‚è‘Ö‚¦•û–@
+## ãƒ‡ãƒ¢ã®åˆ‡ã‚Šæ›¿ãˆæ–¹æ³•
 
-ŽÀs‚·‚éƒfƒ‚‚ðØ‚è‘Ö‚¦‚éê‡‚ÍAŽÀs‚µ‚½‚¢ƒfƒ‚ƒXƒPƒbƒ`‚ð"sketch.cpp"‚ÉƒRƒs[•ƒy[ƒXƒg‚µAƒXƒPƒbƒ`‚ðƒrƒ‹ƒh‚µ‚Ä‚­‚¾‚³‚¢B  
-ˆÈ‰º‚ÉAƒfƒ‚ƒXƒPƒbƒ`‚ª”z’u‚³‚ê‚Ä‚¢‚éƒfƒBƒŒƒNƒgƒŠ\‘¢‚ðŽ¦‚µ‚Ü‚·B  
+å®Ÿè¡Œã™ã‚‹ãƒ‡ãƒ¢ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹å ´åˆã¯ã€å®Ÿè¡Œã—ãŸã„ãƒ‡ãƒ¢ã‚¹ã‚±ãƒƒãƒã‚’"sketch.cpp"ã«ã‚³ãƒ”ãƒ¼ï¼†ãƒšãƒ¼ã‚¹ãƒˆã—ã€ã‚¹ã‚±ãƒƒãƒã‚’ãƒ“ãƒ«ãƒ‰ã—ã¦ãã ã•ã„ã€‚  
+ä»¥ä¸‹ã«ã€ãƒ‡ãƒ¢ã‚¹ã‚±ãƒƒãƒãŒé…ç½®ã•ã‚Œã¦ã„ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªæ§‹é€ ã‚’ç¤ºã—ã¾ã™ã€‚  
 
 ```
 rose_sketch/
 |
 |-- ...(SNIPPED)...
 |-- examples/
-|   |-- tcp_talker_besteffort.ino    [TCP/best-effortƒXƒgƒŠ[ƒ€‚Å’ÊM‚·‚éTalkerƒfƒ‚]
+|   |-- tcp_talker_besteffort.ino    [TCP/best-effortã‚¹ãƒˆãƒªãƒ¼ãƒ ã§é€šä¿¡ã™ã‚‹Talkerãƒ‡ãƒ¢]
 |   |
-|   |-- tcp_talker_reliable.ino      [TCP/reliableƒXƒgƒŠ[ƒ€‚Å’ÊM‚·‚éTalkerƒfƒ‚]
+|   |-- tcp_talker_reliable.ino      [TCP/reliableã‚¹ãƒˆãƒªãƒ¼ãƒ ã§é€šä¿¡ã™ã‚‹Talkerãƒ‡ãƒ¢]
 |   |
-|   |-- tcp_listener_besteffort.ino  [TCP/best-effortƒXƒgƒŠ[ƒ€‚Å’ÊM‚·‚éListenerƒfƒ‚]
+|   |-- tcp_listener_besteffort.ino  [TCP/best-effortã‚¹ãƒˆãƒªãƒ¼ãƒ ã§é€šä¿¡ã™ã‚‹Listenerãƒ‡ãƒ¢]
 |   |
-|   |-- tcp_listener_reliable.ino    [TCP/reliableƒXƒgƒŠ[ƒ€‚Å’ÊM‚·‚éListenerƒfƒ‚]
+|   |-- tcp_listener_reliable.ino    [TCP/reliableã‚¹ãƒˆãƒªãƒ¼ãƒ ã§é€šä¿¡ã™ã‚‹Listenerãƒ‡ãƒ¢]
 |   |
-|   |-- udp_talker_besteffort.ino    [UDP/best-effortƒXƒgƒŠ[ƒ€‚Å’ÊM‚·‚éTalkerƒfƒ‚]
+|   |-- udp_talker_besteffort.ino    [UDP/best-effortã‚¹ãƒˆãƒªãƒ¼ãƒ ã§é€šä¿¡ã™ã‚‹Talkerãƒ‡ãƒ¢]
 |   |
-|   |-- udp_talker_reliable.ino      [UDP/reliableƒXƒgƒŠ[ƒ€‚Å’ÊM‚·‚éTalkerƒfƒ‚]
+|   |-- udp_talker_reliable.ino      [UDP/reliableã‚¹ãƒˆãƒªãƒ¼ãƒ ã§é€šä¿¡ã™ã‚‹Talkerãƒ‡ãƒ¢]
 |   |
-|   |-- udp_listener_besteffort.ino  [UDP/best-effortƒXƒgƒŠ[ƒ€‚Å’ÊM‚·‚éListenerƒfƒ‚]
+|   |-- udp_listener_besteffort.ino  [UDP/best-effortã‚¹ãƒˆãƒªãƒ¼ãƒ ã§é€šä¿¡ã™ã‚‹Listenerãƒ‡ãƒ¢]
 |   |
-|   `-- udp_listener_reliable.ino    [UDP/reliableƒXƒgƒŠ[ƒ€‚Å’ÊM‚·‚éListenerƒfƒ‚]
+|   `-- udp_listener_reliable.ino    [UDP/reliableã‚¹ãƒˆãƒªãƒ¼ãƒ ã§é€šä¿¡ã™ã‚‹Listenerãƒ‡ãƒ¢]
 |
 |-- sketch.cpp
 |-- ...(SNIPPED)...
@@ -197,9 +200,9 @@ rose_sketch/
 
 ## Appendix
 
-### ƒvƒƒWƒFƒNƒg‚É‚Â‚¢‚Ä
+### ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã«ã¤ã„ã¦
 
-‚±‚Ìƒfƒ‚‚ÍAGR-ROSEã‚Å“®ì‚³‚¹‚éƒvƒƒWƒFƒNƒg‚ÉˆÈ‰º‚Ìƒ\ƒtƒgƒEƒFƒA‚ðŽg—p‚µ‚Ä‚¢‚Ü‚·B  
+ã“ã®ãƒ‡ãƒ¢ã¯ã€GR-ROSEä¸Šã§å‹•ä½œã•ã›ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã«ä»¥ä¸‹ã®ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ã‚’ä½¿ç”¨ã—ã¦ã„ã¾ã™ã€‚  
 
 * Amazon FreeRTOS  
   https://github.com/renesas-rx/amazon-freertos  
@@ -207,21 +210,21 @@ rose_sketch/
 * Micro-XRCE-DDS-Client v1.0.1  
   https://github.com/eProsima/Micro-XRCE-DDS-Client  
 
-‚È‚¨AGR-ROSEã‚ÌAmazon FreeRTOS‚ÅMicro-XRCE-DDS-Client‚ð“®ì‚³‚¹‚é‚½‚ßAMicro-XRCE-DDS-Client‚ÆAmazon FreeRTOS‚ÉˆÈ‰º‚Ì•ÏX‚ð‰Á‚¦‚Ä‚¢‚Ü‚·B  
+ãªãŠã€GR-ROSEä¸Šã®Amazon FreeRTOSã§Micro-XRCE-DDS-Clientã‚’å‹•ä½œã•ã›ã‚‹ãŸã‚ã€Micro-XRCE-DDS-Clientã¨Amazon FreeRTOSã«ä»¥ä¸‹ã®å¤‰æ›´ã‚’åŠ ãˆã¦ã„ã¾ã™ã€‚  
 
 ```
 rose_sketch/
 |
 |-- arduino/
-|-- examples/                    [Micro-XRCE-DDS-Client‚Ìƒfƒ‚ƒXƒPƒbƒ`]
+|-- examples/                    [Micro-XRCE-DDS-Clientã®ãƒ‡ãƒ¢ã‚¹ã‚±ãƒƒãƒ]
 |-- FreeRTOS/
 |   |-- application_code
 |   |-- config_files/
 |   |   |-- ...(SNIPPED)...
-|   |   |-- FreeRTOSIPConfig.h   [Ý’è‚ð•ÏX]
-|   |   |                         ˆÈ‰º‚Ì‚æ‚¤‚ÉÝ’è‚ð•ÏX‚µ‚Ü‚µ‚½B
-|   |   |                          E DHCPƒT[ƒo‚ðŽg—p‚µ‚È‚¢B
-|   |   |                          E FreeRTOS‚ÌAPI FreeRTOS_inet_addr()‚ðŽg—p‚·‚éB
+|   |   |-- FreeRTOSIPConfig.h   [è¨­å®šã‚’å¤‰æ›´]
+|   |   |                         ä»¥ä¸‹ã®ã‚ˆã†ã«è¨­å®šã‚’å¤‰æ›´ã—ã¾ã—ãŸã€‚
+|   |   |                          ãƒ» DHCPã‚µãƒ¼ãƒã‚’ä½¿ç”¨ã—ãªã„ã€‚
+|   |   |                          ãƒ» FreeRTOSã®API FreeRTOS_inet_addr()ã‚’ä½¿ç”¨ã™ã‚‹ã€‚
 |   |   |-- ...(SNIPPED)...
 |   |
 |   |-- lib/
@@ -230,9 +233,9 @@ rose_sketch/
 |   |   |   |-- FreeRTOS-Plus-TCP/
 |   |   |   |   |-- include/
 |   |   |   |   |   |-- ...(SNIPPED)...
-|   |   |   |   |   |-- FreeRTOS_IP_Private.h  [ƒuƒ[ƒhƒLƒƒƒXƒgƒAƒhƒŒƒX‚ð•ÏX]
-|   |   |   |   |   |                           Micro-XRCE-DDS-Client‚ÌDiscovery(Multicast)‹@”\‚É‘Î‰ž‚·‚é‚½‚ßA
-|   |   |   |   |   |                           ƒuƒ[ƒhƒLƒƒƒXƒgƒAƒhƒŒƒX‚ðDDSƒ}ƒ‹ƒ`ƒLƒƒƒXƒgƒAƒhƒŒƒX‚É•ÏX‚µ‚Ü‚µ‚½B
+|   |   |   |   |   |-- FreeRTOS_IP_Private.h  [ãƒ–ãƒ­ãƒ¼ãƒ‰ã‚­ãƒ£ã‚¹ãƒˆã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å¤‰æ›´]
+|   |   |   |   |   |                           Micro-XRCE-DDS-Clientã®Discovery(Multicast)æ©Ÿèƒ½ã«å¯¾å¿œã™ã‚‹ãŸã‚ã€
+|   |   |   |   |   |                           ãƒ–ãƒ­ãƒ¼ãƒ‰ã‚­ãƒ£ã‚¹ãƒˆã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’DDSãƒžãƒ«ãƒã‚­ãƒ£ã‚¹ãƒˆã‚¢ãƒ‰ãƒ¬ã‚¹ã«å¤‰æ›´ã—ã¾ã—ãŸã€‚
 |   |   |   |   |   |-- ...(SNIPPED)...
 |   |   |   |   |
 |   |   |   |   `-- source/
@@ -253,19 +256,19 @@ rose_sketch/
 |   |           |   `-- transport/
 |   |           |       |-- serial/
 |   |           |       |-- tcp/
-|   |           |       |   |-- tcp_transport_freertos.h       [FreeRTOSˆË‘¶‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ð’Ç‰Á]
+|   |           |       |   |-- tcp_transport_freertos.h       [FreeRTOSä¾å­˜ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ]
 |   |           |       |   |-- tcp_transport_linux.h
 |   |           |       |   |-- tcp_transport_windows.h
 |   |           |       |   `-- tcp_transport.h
 |   |           |       `-- udp/
-|   |           |           |-- udp_transport_freertos.h       [FreeRTOSˆË‘¶‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ð’Ç‰Á]
+|   |           |           |-- udp_transport_freertos.h       [FreeRTOSä¾å­˜ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ]
 |   |           |           |-- udp_transport_linux.h
 |   |           |           |-- udp_transport_windows.h
 |   |           |           `-- udp_transport.h
 |   |           |-- ...(SNIPPED)...
-|   |           |-- config.h                      [config.h.in‚©‚ç¶¬‚³‚ê‚éÝ’èƒtƒ@ƒCƒ‹‚ð’Ç‰Á]
+|   |           |-- config.h                      [config.h.inã‹ã‚‰ç”Ÿæˆã•ã‚Œã‚‹è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ]
 |   |           |-- dll.h
-|   |           |-- transport.h                   [ƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹‚ÌÝ’è‚ð•ÏX]
+|   |           |-- transport.h                   [ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ã®è¨­å®šã‚’å¤‰æ›´]
 |   |           |-- ...(SNIPPED)...
 |   |           `-- config.h.in
 |   |-- src/
@@ -276,32 +279,32 @@ rose_sketch/
 |   |       |   |   |-- transport/
 |   |       |   |   |   |-- udp_transport_datagram_internal.h
 |   |       |   |   |   |-- udp_transport_linux_datagram.c
-|   |       |   |   |   `-- udp_transport_freertos_datagram.c    [FreeRTOSˆË‘¶‚ÌƒR[ƒh‚ð’Ç‰Á]
+|   |       |   |   |   `-- udp_transport_freertos_datagram.c    [FreeRTOSä¾å­˜ã®ã‚³ãƒ¼ãƒ‰ã‚’è¿½åŠ ]
 |   |       |   |   `-- discovery.c
 |   |       |   |-- session/
 |   |       |   `-- transport/
 |   |       |       |-- serial/
 |   |       |       |-- tcp/
-|   |       |       |   |-- tcp_transport_freertos.c    [FreeRTOSˆË‘¶‚ÌƒR[ƒh‚ð’Ç‰Á]
+|   |       |       |   |-- tcp_transport_freertos.c    [FreeRTOSä¾å­˜ã®ã‚³ãƒ¼ãƒ‰ã‚’è¿½åŠ ]
 |   |       |       |   |-- tcp_transport_internal.h
 |   |       |       |   |-- tcp_transport_linux.c
 |   |       |       |   |-- tcp_transport_windows.c
 |   |       |       |   `-- tcp_transport.c
 |   |       |       `-- udp/
-|   |       |           |-- udp_transport_freertos.c    [FreeRTOSˆË‘¶‚ÌƒR[ƒh‚ð’Ç‰Á]
+|   |       |           |-- udp_transport_freertos.c    [FreeRTOSä¾å­˜ã®ã‚³ãƒ¼ãƒ‰ã‚’è¿½åŠ ]
 |   |       |           |-- udp_transport_internal.h
 |   |       |           |-- udp_transport_linux.c
 |   |       |           |-- udp_transport_windows.c
 |   |       |           `-- udp_transport.c
 |   |       |
 |   |       `-- util/
-|   |           `-- time.c   [FreeRTOSˆË‘¶‚ÌƒR[ƒh‚ð’Ç‰Á]
+|   |           `-- time.c   [FreeRTOSä¾å­˜ã®ã‚³ãƒ¼ãƒ‰ã‚’è¿½åŠ ]
 |   |-- thirdparty/
 |   |   `-- microcdr/
 |   |       |-- include/
 |   |       |   `-- ucdr/
 |   |       |       |-- ...(SNIPPED)...
-|   |       |       |-- config.h              [config.h.in‚©‚ç¶¬‚³‚ê‚éÝ’èƒtƒ@ƒCƒ‹‚ð’Ç‰Á]
+|   |       |       |-- config.h              [config.h.inã‹ã‚‰ç”Ÿæˆã•ã‚Œã‚‹è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ]
 |   |       |       |-- ...(SNIPPED)...
 |   |       |       `-- config.h.in
 |   |       |
@@ -309,8 +312,8 @@ rose_sketch/
 |   |
 |   |-- ...(SNIPPED)...
 |
-|-- ros2_msg/                 [ROS2‚ÌƒƒbƒZ[ƒW"std_msgs/String"Œ^‚ð’Ç‰Á]
-|   |                          Micro-XRCE-DDS-Gen‚ª"Ros2String.idl"‚©‚ç¶¬‚µ‚½ƒtƒ@ƒCƒ‹‚Å‚·B
+|-- ros2_msg/                 [ROS2ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸"std_msgs/String"åž‹ã‚’è¿½åŠ ]
+|   |                          Micro-XRCE-DDS-GenãŒ"Ros2String.idl"ã‹ã‚‰ç”Ÿæˆã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã§ã™ã€‚
 |   |-- Ros2String.c
 |   |-- Ros2String.h
 |   `-- Ros2String.idl
@@ -321,17 +324,17 @@ rose_sketch/
 ```
 
 
-## §ŒÀŽ–€
+## åˆ¶é™äº‹é …
 
-* ‚±‚Ìƒfƒ‚‚ÍAMicro-XRCE-DDS-Client‚ÌTCP/UDP’ÊM‚É‘Î‰ž‚µ‚Ä‚¢‚Ü‚·‚ªAƒVƒŠƒAƒ‹’ÊM‚É‚Í‘Î‰ž‚µ‚Ä‚¢‚Ü‚¹‚ñB  
+* ã“ã®ãƒ‡ãƒ¢ã¯ã€Micro-XRCE-DDS-Clientã®TCP/UDPé€šä¿¡ã«å¯¾å¿œã—ã¦ã„ã¾ã™ãŒã€ã‚·ãƒªã‚¢ãƒ«é€šä¿¡ã«ã¯å¯¾å¿œã—ã¦ã„ã¾ã›ã‚“ã€‚  
 
-* GR-ROSE‚©‚çROS2ƒƒbƒZ[ƒW‚ð‘—M‚·‚éÛ‚ÉAŽóM“®ì‚ð“¯Žž‚És‚í‚È‚¢Micro-XRCE-DDS-Client‚ÌAPI uxr_flash_output_streams()‚ÍŽg—p‚Å‚«‚Ü‚¹‚ñB  
+* GR-ROSEã‹ã‚‰ROS2ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ä¿¡ã™ã‚‹éš›ã«ã€å—ä¿¡å‹•ä½œã‚’åŒæ™‚ã«è¡Œã‚ãªã„Micro-XRCE-DDS-Clientã®API uxr_flash_output_streams()ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“ã€‚  
 
-* Hello worldƒfƒ‚‚ÅŠm”F‚µ‚½ƒƒbƒZ[ƒW‚ÌƒTƒCƒY‚ÍƒfƒtƒHƒ‹ƒg20ƒoƒCƒg‚ÅAROS2‚Ì•¶Žš—ñ—pƒƒbƒZ[ƒWŒ^"std_msgs/String"ˆÈŠO‚Ì“®ì‚Í–¢Šm”F‚Å‚·B  
+* Hello worldãƒ‡ãƒ¢ã§ç¢ºèªã—ãŸãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ã‚µã‚¤ã‚ºã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ20ãƒã‚¤ãƒˆã§ã€ROS2ã®æ–‡å­—åˆ—ç”¨ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸åž‹"std_msgs/String"ä»¥å¤–ã®å‹•ä½œã¯æœªç¢ºèªã§ã™ã€‚  
 
 
-## –ÆÓŽ–€
+## å…è²¬äº‹é …
 
-“–ƒfƒ‚‚Ì‚²—˜—pA‚à‚µ‚­‚Í‚²—˜—p‚É‚È‚ê‚È‚¢‚±‚Æ‚É‚æ‚è”­¶‚µ‚½‚¢‚©‚È‚é‘¹ŠQ‚â•s—˜‰v‚É‚Â‚¢‚ÄA“–•û‚ÍˆêØ‚ÌÓ”C‚ð•‰‚¢‚Ü‚¹‚ñBŽ©ŒÈÓ”C‚Ìã‚Å‚²Žg—p‚­‚¾‚³‚¢B  
+å½“ãƒ‡ãƒ¢ã®ã”åˆ©ç”¨ã€ã‚‚ã—ãã¯ã”åˆ©ç”¨ã«ãªã‚Œãªã„ã“ã¨ã«ã‚ˆã‚Šç™ºç”Ÿã—ãŸã„ã‹ãªã‚‹æå®³ã‚„ä¸åˆ©ç›Šã«ã¤ã„ã¦ã€å½“æ–¹ã¯ä¸€åˆ‡ã®è²¬ä»»ã‚’è² ã„ã¾ã›ã‚“ã€‚è‡ªå·±è²¬ä»»ã®ä¸Šã§ã”ä½¿ç”¨ãã ã•ã„ã€‚  
 
 
