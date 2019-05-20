@@ -43,16 +43,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "FreeRTOS_IP.h"
 
 /* Demo includes */
+#ifndef GRROSE
 #include "aws_demo_runner.h"
 #include "aws_clientcredential.h"
-
+#else
+#include <aws_clientcredential.h>
+#endif
 #define mainLOGGING_TASK_STACK_SIZE         ( configMINIMAL_STACK_SIZE * 6 )
 #define mainLOGGING_MESSAGE_QUEUE_LENGTH    ( 15 )
 #define mainTEST_RUNNER_TASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE * 8 )
 
-#ifdef GRROSE
-//#define LOGGING
-#endif
 /* Declare the firmware version structure for all to see. */
 const AppVersion32_t xAppFirmwareVersion = {
    .u.x.ucMajor = APP_VERSION_MAJOR,
@@ -147,7 +147,7 @@ static void prvMiscInitialization( void )
     uart_config();
 #endif
 
-#if defined(GRROSE) && defined(LOGGING)
+#ifndef GRROSE
     /* Start logging task. */
     xLoggingTaskInitialize( mainLOGGING_TASK_STACK_SIZE,
                             tskIDLE_PRIORITY,

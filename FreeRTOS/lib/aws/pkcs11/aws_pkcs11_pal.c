@@ -147,12 +147,30 @@ uint8_t object_handle_dictionary[PKCS_OBJECT_HANDLES_NUM][PKCS_HANDLES_LABEL_MAX
 
 static PKCS_CONTROL_BLOCK pkcs_control_block_data_image;        /* RX65N case: 8KB, RX64M case: 16KB, RX63N case: 8KB */
 
+#if defined(__GNUC__)
+#ifndef USING_UXR
+__attribute__( ( section( "_PKCS11_STORAGE" ) ) )
+static const PKCS_CONTROL_BLOCK pkcs_control_block_data = {PKCS_CONTROL_BLOCK_INITIAL_DATA};
+#else
+static const PKCS_CONTROL_BLOCK pkcs_control_block_data = {PKCS_CONTROL_BLOCK_INITIAL_DATA};
+#endif
+#else
 R_ATTRIB_SECTION_CHANGE(C, _PKCS11_STORAGE, 1)
 static const PKCS_CONTROL_BLOCK pkcs_control_block_data = {PKCS_CONTROL_BLOCK_INITIAL_DATA};
+#endif
 R_ATTRIB_SECTION_CHANGE_END
 
+#if defined(__GNUC__)
+#ifndef USING_UXR
+__attribute__( ( section( "_PKCS11_STORAGE_MIRROR" ) ) )
+static const PKCS_CONTROL_BLOCK pkcs_control_block_data_mirror = {PKCS_CONTROL_BLOCK_INITIAL_DATA};
+#else
+static const PKCS_CONTROL_BLOCK pkcs_control_block_data_mirror = {PKCS_CONTROL_BLOCK_INITIAL_DATA};
+#endif
+#else
 R_ATTRIB_SECTION_CHANGE(C, _PKCS11_STORAGE_MIRROR, 1)
 static const PKCS_CONTROL_BLOCK pkcs_control_block_data_mirror = {PKCS_CONTROL_BLOCK_INITIAL_DATA};
+#endif
 R_ATTRIB_SECTION_CHANGE_END
 
 static void update_dataflash_data_from_image(void);
@@ -453,10 +471,11 @@ static void update_dataflash_data_from_image(void)
     flash_error_code = R_FLASH_Erase((flash_block_address_t)&pkcs_control_block_data, required_dataflash_block_num);
     R_BSP_InterruptsEnable();
 #else
-#if 0 // TODO
+#if 1 // TODO
     configPRINTF(("erase codeflash(main)...\r\n"));
     R_BSP_InterruptsDisable();
-    flash_error_code = R_FLASH_Erase(FLASH_CF_BLOCK_69, 1);
+    flash_error_code = R_FLASH_Erase(FLASH_CF_BLOCK_45, 1);
+    flash_error_code = R_FLASH_Erase(FLASH_CF_BLOCK_44, 1);
     R_BSP_InterruptsEnable();
 #endif
 #endif
@@ -475,7 +494,7 @@ static void update_dataflash_data_from_image(void)
     flash_error_code = R_FLASH_Write((flash_block_address_t)&pkcs_control_block_data_image, (flash_block_address_t)&pkcs_control_block_data, FLASH_DF_BLOCK_SIZE * required_dataflash_block_num);
     R_BSP_InterruptsEnable();
 #else
-#if 0 // TODO
+#if 1 // TODO
     configPRINTF(("write codeflash(main)...\r\n"));
     R_BSP_InterruptsDisable();
     flash_error_code = R_FLASH_Write((flash_block_address_t)&pkcs_control_block_data_image, (flash_block_address_t)&pkcs_control_block_data, sizeof(pkcs_control_block_data_image) + FLASH_CF_MIN_PGM_SIZE - (sizeof(pkcs_control_block_data_image)%FLASH_CF_MIN_PGM_SIZE));
@@ -530,7 +549,7 @@ static void update_dataflash_data_mirror_from_image(void)
     flash_error_code = R_FLASH_Write((flash_block_address_t)&pkcs_control_block_data_image, (flash_block_address_t)&pkcs_control_block_data_mirror, FLASH_DF_BLOCK_SIZE * required_dataflash_block_num);
     R_BSP_InterruptsEnable();
 #else
-#if 0
+#if 1
     configPRINTF(("write codeflash(mirror)...\r\n"));
     R_BSP_InterruptsDisable();
     flash_error_code = R_FLASH_Write((flash_block_address_t)&pkcs_control_block_data_image, (flash_block_address_t)&pkcs_control_block_data_mirror, sizeof(pkcs_control_block_data_image) + FLASH_CF_MIN_PGM_SIZE - (sizeof(pkcs_control_block_data_image)%FLASH_CF_MIN_PGM_SIZE));

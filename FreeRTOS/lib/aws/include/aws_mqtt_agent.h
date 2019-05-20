@@ -32,6 +32,12 @@
 #ifndef _AWS_MQTT_AGENT_H_
 #define _AWS_MQTT_AGENT_H_
 
+#ifdef GRROSE
+#ifdef __cplusplus
+extern "C" {
+#endif
+#endif
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
@@ -355,5 +361,11 @@ MQTTAgentReturnCode_t MQTT_AGENT_Publish( MQTTAgentHandle_t xMQTTHandle,
  */
 MQTTAgentReturnCode_t MQTT_AGENT_ReturnBuffer( MQTTAgentHandle_t xMQTTHandle,
                                                MQTTBufferHandle_t xBufferHandle );
+
+#ifdef GRROSE
+#ifdef __cplusplus
+}
+#endif
+#endif
 
 #endif /* _AWS_MQTT_AGENT_H_ */

@@ -31,7 +31,11 @@
 #include "aws_pkcs11.h"
 #include "aws_pkcs11_config.h"
 #include "task.h"
+#ifndef GRROSE
 #include "aws_clientcredential.h"
+#else
+#include <aws_clientcredential.h>
+#endif
 #include "aws_default_root_certificates.h"
 
 /* mbedTLS includes. */

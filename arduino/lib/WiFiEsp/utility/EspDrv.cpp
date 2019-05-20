@@ -49,7 +49,11 @@ typedef enum
 
 Stream *EspDrv::espSerial;
 
+#ifndef GRROSE
 RingBuffer EspDrv::ringBuf(32);
+#else
+RingBuffer EspDrv::ringBuf(512);
+#endif
 
 // Array of data to cache the information related to the networks discovered
 char 	EspDrv::_networkSsid[][WL_SSID_MAX_LENGTH] = {{"1"},{"2"},{"3"},{"4"},{"5"}};
@@ -155,7 +159,11 @@ bool EspDrv::wifiConnect(const char* ssid, const char* passphrase)
 	// any special characters (',', '"' and '/')
 
     // connect to access point, use CUR mode to avoid connection at boot
+#ifndef GRROSE
 	int ret = sendCmd(F("AT+CWJAP_CUR=\"%s\",\"%s\""), 20000, ssid, passphrase);
+#else
+	int ret = sendCmd(F("AT+CWJAP_CUR=\"%s\",\"%s\""), 10000, ssid, passphrase);
+#endif
 
 	if (ret==TAG_OK)
 	{
@@ -651,7 +659,7 @@ uint8_t EspDrv::getServerState(uint8_t sock)
 
 uint16_t EspDrv::availData(uint8_t connId)
 {
-    //LOGDEBUG(bufPos);
+    //LOGDEBUG(_bufPos);
 
 	// if there is data in the buffer
 	if (_bufPos>0)
@@ -759,7 +767,7 @@ bool EspDrv::getData(uint8_t connId, uint8_t *data, bool peek, bool* connClose)
 	} while(millis() - _startMillis < 2000);
 
     // timed out, reset the buffer
-	LOGERROR1(F("TIMEOUT:"), _bufPos);
+	LOGERROR1(F("GETDATA TIMEOUT:"), _bufPos);
 
     _bufPos = 0;
 	_connId = 0;

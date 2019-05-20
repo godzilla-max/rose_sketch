@@ -299,6 +299,11 @@ void setPinMode(int pin, PinMode mode)
                     setPinModeDac(pin);
                 }
                 goto change;
+            case PinModePpg:
+                if (setPinModePpg != NULL) {
+                    setPinModePpg(pin);
+                }
+                goto change;
             case PinModeOther:
                 if (setPinModeOther != NULL) {
                     setPinModeOther(pin);

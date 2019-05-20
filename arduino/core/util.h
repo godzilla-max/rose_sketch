@@ -139,6 +139,7 @@ typedef enum {
     PinModeTone,
     PinModeServo,
     PinModeDac,
+	PinModePpg,
     PinModeOther,
     PinModeError,
 } PinMode;
@@ -168,6 +169,8 @@ void setPinModeServo(int pin) __attribute__ ((weak));
 void resetPinModeServo(int pin) __attribute__ ((weak));
 void setPinModeDac(int pin) __attribute__ ((weak));
 void resetPinModeDac(int pin) __attribute__ ((weak));
+void setPinModePpg(int pin) __attribute__ ((weak));
+void resetPinModePpg(int pin) __attribute__ ((weak));
 void setPinModeOther(int pin) __attribute__ ((weak));
 void resetPinModeOther(int pin) __attribute__ ((weak));
 void setPinModeHardwarePWM(int pin, int period, int term, unsigned long length);

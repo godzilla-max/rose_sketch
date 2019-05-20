@@ -21,6 +21,9 @@
 
 #include	"Arduino.h"
 #include	"PPG.h"
+extern "C" {
+#include "util.h"
+}
 
 #define	calcTGR(X)	((PCLKA / (1000U * 1000U)) * (X) / cycle_division)
 
@@ -29,12 +32,14 @@ PPGClass::PPGClass()
 	pin[0] = pin[1] = pin[2] = pin[3] = invalidPO;
 	cycle_count = D_MTU_CYCLE;
 	cycle_division = 1;
-	setTrigger(0, cycle_count / 2, cycle_count, false);
-	setTrigger(1, cycle_count / 2, cycle_count, false);
-	setTrigger(2, cycle_count / 2, cycle_count, false);
-	setTrigger(3, cycle_count / 2, cycle_count, false);
+	isRunning = false;
 	r_mtudtc_tgr[MTU_3][TGR_C] = r_mtubuf_tgr[MTU_3][TGR_C] =  (cycle_count - 1U)                         | D_MAGIC_NUM_FOR_MTU;
 	r_mtudtc_tgr[MTU_3][TGR_D] = r_mtubuf_tgr[MTU_3][TGR_D] = ((cycle_count - 1U) - D_PRESET_MTUTGR_TIME) | D_MAGIC_NUM_FOR_MTU;
+	// default setting when user might call start before setTrigger.
+	setTrigger(0, cycle_count / 2, cycle_count);
+	setTrigger(1, cycle_count / 2, cycle_count);
+	setTrigger(2, cycle_count / 2, cycle_count);
+	setTrigger(3, cycle_count / 2, cycle_count);
 }
 
 bool	PPGClass::begin(
@@ -46,10 +51,31 @@ bool	PPGClass::begin(
 	uint8_t		polarity
 )
 {
-	pin[0] = (true == pin0) ? PO0  : invalidPO;
-	pin[1] = (true == pin1) ? PO13 : invalidPO;
-	pin[2] = (true == pin2) ? PO24 : invalidPO;
-	pin[3] = (true == pin3) ? PO10 : invalidPO;
+	if(true == pin0){
+		pin[0] = PO0;
+		setPinMode(D_PIN0_PPG, PinModePpg);
+	} else {
+		pin[0] = invalidPO;
+	}
+	if(true == pin1){
+		pin[1] = PO13;
+		setPinMode(D_PIN1_PPG, PinModePpg);
+	} else {
+		pin[1] = invalidPO;
+	}
+	if(true == pin2){
+		pin[2] = PO24;
+		setPinMode(D_PIN2_PPG, PinModePpg);
+	} else {
+		pin[2] = invalidPO;
+	}
+	if(true == pin3){
+		pin[3] = PO10;
+		setPinMode(D_PIN3_PPG, PinModePpg);
+	} else {
+		pin[3] = invalidPO;
+	}
+
 	//
 #ifdef	USE_PPG_MICROSECOND
 	cycle_count = calcTGR(interval);
@@ -170,6 +196,7 @@ void	PPGClass::stop()
 
 void	PPGClass::enableTrigger()
 {
+	isRunning = true;
 #ifdef	USE_DMA_TGID3
 	DMAC7.DMSAR				= (void *)&r_mtubuf_tgr[0][0];	// Set DMAC7 source address
 	DMAC7.DMDAR				= (void *)&r_mtudtc_tgr[0][0];	// Set DMAC7 destination address
@@ -184,8 +211,7 @@ void	PPGClass::enableTrigger()
 void	PPGClass::setTrigger(
 	uint8_t		phase,
 	uint32_t	tgra,
-	uint32_t	tgrb,
-	bool		isRunning
+	uint32_t	tgrb
 )
 {
 #ifdef	USE_PPG_MICROSECOND

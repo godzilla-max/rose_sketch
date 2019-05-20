@@ -33,9 +33,34 @@
 #include "util.h"
 #endif/*__RX600__*/
 
-static uint8_t analog_reference = DEFAULT;
-static uint16_t table_ansa[NUM_ANALOG_INPUTS] = {10, 11, 12, 13, 6, 7}; // ex A0 = PD2/AN110, A1 = PD3/AN111
+typedef struct AdTableStruct {
+	uint8_t pin;
+	uint8_t port;		// D-> PORTD, E-> PORTE
+	uint8_t ad_unit; 	// 0(S12AD) or 1(S12AD1)
+	uint8_t ad_an;   	// number for ANxxx;
+	uint8_t portbit; 	// in case of PD2, that is 2 used for setting PDR, PMR
 
+} AdTableStruct_t;
+static uint8_t analog_reference = DEFAULT;
+const static AdTableStruct_t table_ad[NUM_ANALOG_INPUTS] = {
+		{PIN_A0, 0xD, 1, 10, 2},
+		{PIN_A1, 0xD, 1, 11, 3},
+		{PIN_A2, 0xD, 1, 12, 4},
+		{PIN_A3, 0xD, 1, 13, 5},
+		{PIN_A4, 0xD, 1, 6, 6},
+		{PIN_A5, 0xD, 1, 7, 7},
+		{PIN_A6, 0xE, 1, 2, 4},
+		{PIN_A7, 0xE, 1, 4, 6},
+		{PIN_A8, 0xE, 1, 5, 7},
+		{PIN_A9, 0xE, 1, 3, 5},
+};
+
+static int pin2AdTable(int pin){
+	for(int i = 0; i < NUM_ANALOG_INPUTS; i++){
+		if(table_ad[i].pin == pin) return i;
+	}
+	return -1;
+}
 void analogReference(uint8_t mode)
 {
 	// can't actually set the register here because the default setting
@@ -47,10 +72,16 @@ void analogReference(uint8_t mode)
 #ifdef __RX600__
 void setPinModeAnalogRead(int pin)
 {
-	int an = pin - PIN_A0;
-	if (an >= 0 && an <= (NUM_ANALOG_INPUTS - 1)) {
-		BCLR(&PORTD.PDR.BYTE, an + 2); // Analog pins are from PD2 to PD7
-		BSET(&PORTD.PMR.BYTE, an + 2);
+	int an;
+	an = pin2AdTable(pin);
+	if(an != -1){
+		if(table_ad[an].port == 0xD){
+			BCLR(&PORTD.PDR.BYTE, table_ad[an].portbit);
+			BSET(&PORTD.PMR.BYTE, table_ad[an].portbit);
+		} else if (table_ad[an].port == 0xE){
+			BCLR(&PORTE.PDR.BYTE, table_ad[an].portbit);
+			BSET(&PORTE.PMR.BYTE, table_ad[an].portbit);
+		}
 		assignPinFunction(pin, 0, 0, 1);
 	}
 }
@@ -121,9 +152,9 @@ int analogRead(uint8_t pin)
 #else /*__RX600__*/
 	volatile uint16_t* adcdr = NULL;
 
-    if (pin < A0) pin += A0; // allow for channel or pin numbers
-
-	if (pin >= A0 && pin <= (A0 + NUM_ANALOG_INPUTS)) {
+	int an;
+	an = pin2AdTable(pin);
+	if(an != -1){
 	    if (getPinMode(pin) != PinModeAnalogRead){
 			setPinMode(pin, PinModeAnalogRead);
 			startModule(MstpIdS12AD1);
@@ -132,10 +163,10 @@ int analogRead(uint8_t pin)
 			S12AD1.ADCER.BIT.ADRFMT = 0;
 			S12AD1.ADCER.BIT.ACE = 0;
 	    }
-		int an = pin - A0; // for setting offset of register address and bit
-		S12AD1.ADANSA0.WORD = 1 << table_ansa[an];
-		adcdr = (volatile uint16_t*)&S12AD1.ADDR0 + table_ansa[an];
+		S12AD1.ADANSA0.WORD = 1 << table_ad[an].ad_an;
+		adcdr = (volatile uint16_t*)&S12AD1.ADDR0 + table_ad[an].ad_an;
 	}
+
 	if (pin == PIN_ANINT) {
 		startModule(MstpIdS12AD1);
 		S12AD1.ADEXICR.BIT.TSSA = 1;
@@ -371,7 +402,15 @@ void analogWrite(uint8_t pin, int val)
 	bool hardPwm = isHardwarePWMPin(pin);
 	int period;
 	int term;
-	if (hardPwm) {
+	bool isPpgUsed = {
+		(getPinMode(PIN_PPG_PH0) == PinModePpg) ||
+		(getPinMode(PIN_PPG_PH1) == PinModePpg) ||
+		(getPinMode(PIN_PPG_PH2) == PinModePpg) ||
+		(getPinMode(PIN_PPG_PH3) == PinModePpg)
+	};
+	bool isAvailableHardwarePwm = (hardPwm && (getPinMode(pin) != PinModePpg) && !isPpgUsed);
+
+	if (isAvailableHardwarePwm) {
 		float m = getPWMClockMultiple(pin);
 		period = (int)(255 * m);
 		term = (int)(val * m);
@@ -384,13 +423,13 @@ void analogWrite(uint8_t pin, int val)
 	}
 	if (getPinMode(pin) != PinModeAnalogWrite) {
 		setPinMode(pin, PinModeAnalogWrite);
-		if (hardPwm) {
+		if (isAvailableHardwarePwm) {
 			setPinModeHardwarePWM(pin, period, term, 0);
 		} else {
 			setPinModeSoftwarePWM(pin, period, term, 0);
 		}
 	} else {
-		if (hardPwm) {
+		if (isAvailableHardwarePwm) {
 			changePinModeHardwarePWM(pin, period, term, 0);
 		} else {
 			changePinModeSoftwarePWM(pin, period, term, 0);

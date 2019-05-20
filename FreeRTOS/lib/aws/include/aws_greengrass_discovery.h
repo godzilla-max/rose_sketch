@@ -31,7 +31,11 @@
 #ifndef _AWS_GREENGRASS_DISCOVERY_H_
 #define _AWS_GREENGRASS_DISCOVERY_H_
 #include "FreeRTOS.h"
+#ifndef GRROSE
 #include "aws_clientcredential.h"
+#else
+#include <aws_clientcredential.h>
+#endif
 #include "aws_secure_sockets.h"
 
 /**

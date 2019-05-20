@@ -36,7 +36,7 @@
 #endif/*__RX600__*/
 
 #define NUM_DIGITAL_PINS            40
-#define NUM_ANALOG_INPUTS           6
+#define NUM_ANALOG_INPUTS           10
 #define analogInputToDigitalPin(p)  ((p < NUM_ANALOG_INPUTS) ? (p) + 14 : -1)
 #define INVALID_IO (-1)
 
@@ -79,6 +79,18 @@
 #define PIN_ANINT     (38)
 #define PIN_ANTMP     (39)
 
+//extra analog pin
+#define PIN_A6        (10)
+#define PIN_A7        (11)
+#define PIN_A8        (12)
+#define PIN_A9        (13)
+//pins for PPG library
+#define PIN_PPG_PH0   (1)
+#define PIN_PPG_PH1   (3)
+#define PIN_PPG_PH2   (5)
+#define PIN_PPG_PH3   (7)
+#define NUM_PPG_PHASE (4)
+
 static const uint8_t SS   = PIN_SPI_SS;
 static const uint8_t MOSI = PIN_SPI_MOSI;
 static const uint8_t MISO = PIN_SPI_MISO;
@@ -93,6 +105,10 @@ static const uint8_t A2 = PIN_A2;
 static const uint8_t A3 = PIN_A3;
 static const uint8_t A4 = PIN_A4;
 static const uint8_t A5 = PIN_A5;
+static const uint8_t A6 = PIN_A6;
+static const uint8_t A7 = PIN_A7;
+static const uint8_t A8 = PIN_A8;
+static const uint8_t A9 = PIN_A9;
 
 #ifndef GRROSE
 #define LED_BUILTIN 13

@@ -33,6 +33,10 @@
 #define		D_MTU_CENTER			(D_MTU_CYCLE / 2)
 #define		D_MAGIC_NUM_FOR_MTU		(0b11)				// for PCLKA != PCLKB
 #define		D_PRESET_MTUTGR_TIME	(64)
+#define		D_PIN0_PPG 				(1)
+#define		D_PIN1_PPG 				(3)
+#define		D_PIN2_PPG 				(5)
+#define		D_PIN3_PPG 				(7)
 
 typedef struct {
 	uint32_t	mra_mrb;
@@ -68,7 +72,7 @@ public:
 	void start();
 	void stop();
 	void enableTrigger(void);
-	void setTrigger(uint8_t phase, uint32_t triggerA_time, uint32_t triggerB_time, bool isRunning = true);
+	void setTrigger(uint8_t phase, uint32_t triggerA_time, uint32_t triggerB_time);
 	//
 	void R_Config_DTC_Create(void);
 	void R_Config_MTU_Create(void);
@@ -100,6 +104,7 @@ private:
 	void R_Config_PPG1_Create(uint8_t pin3, bool pol3);
 	//
 	volatile uint8_t	pin[PPG_NUM_PHASE];
+	bool isRunning;
 };
 #endif
 

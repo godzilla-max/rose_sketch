@@ -373,50 +373,22 @@ SECTIONS
 		KEEP(*(.ofs7))
 	} >OFS
 	
-	.gcc_exc :
+	._PKCS11_STORAGE 0xffec0000 : AT(0xffec0000)
 	{
-		*(.gcc_exc)
-	} >RAMHI
-	.bss :
+		*(_PKCS11_STORAGE)
+	} >ROM
+	._PKCS11_STORAGE_MIRROR 0xffec8000 : AT(0xffec8000)
 	{
-		_bss = .;
-		*(.bss)
-		*(.bss.**)
-		*(COMMON)
-		*(B)
-		*(B_1)
-		*(B_2)
-		_ebss = .;
-		_end = .;
-	} >RAMHI
-		.ustack 0x85FC00 : AT (0x85FC00)
-	{
-		_ustack = .;
-	} >RAMHI
-	.istack 0x860000 : AT (0x860000)
-	{
-		_istack = .;
-	} >RAMHI
-	
-	.data : AT(_mdata)
-	{
-		_data = .;
-		*(.data)
-		*(.data.*)
-		*(PFRAM)
-		*(D)
-		*(D_1)
-		*(D_2)
-		_edata = .;
-	} >RAM
-	
+		*(_PKCS11_STORAGE_MIRROR)
+	} >ROM
+
 	.bss2 (NOLOAD) :
 	{
 		. = ALIGN(1024);
 		_dtc_vector = .;
 		. += 1024;
 		_dtc_vector_end = .;
- 		. = ALIGN(32);
+		. = ALIGN(32);
 		_B_ETHERNET_BUFFERS_1_start = .;
 		*(B_ETHERNET_BUFFERS_1)
 		_B_ETHERNET_BUFFERS_1_end = .;
@@ -429,5 +401,44 @@ SECTIONS
 		___sectop__UCHEAP = .;
 		*(_UCHEAP)
 		___secend__UCHEAP = .;
+	} >RAMHI
+		
+	.ustack 0x85FC00 : AT (0x85FC00)
+	{
+		_ustack = .;
+	} >RAMHI
+	.istack 0x860000 : AT (0x860000)
+	{
+		_istack = .;
+	} >RAMHI
+
+	.data 0x100: AT(_mdata)
+	{
+		_data = .;
+		*(.data)
+		*(.data.*)
+		*(PFRAM)
+		*(D)
+		*(D_1)
+		*(D_2)
+		_edata = .;
+	} >RAM
+	
+	.bss :
+	{
+		_bss = .;
+		*(.bss)
+		*(.bss.**)
+		*(COMMON)
+		*(B)
+		*(B_1)
+		*(B_2)
+		_ebss = .;
+		_end = .;
+	} >RAM
+	
+	.gcc_exc :
+	{
+		*(.gcc_exc)
 	} >RAM
 }

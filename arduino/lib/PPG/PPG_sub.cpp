@@ -28,11 +28,13 @@
 /***********************************************************************************************************************
 Pragma directive
 ***********************************************************************************************************************/
+
 #pragma GCC optimize("O0")
 
 /***********************************************************************************************************************
 Includes
 ***********************************************************************************************************************/
+#include	"iodefine.h"
 #include	"r_cg_macrodriver.h"
 #include	"PPG.h"
 #include	"r_cg_userdefine.h"
@@ -416,6 +418,8 @@ void	PPGClass::R_Config_MTU3_Create(void)
 	MTU3.TIORL.BYTE			= 0x00;
 	MTU3.TGRA				= r_mtudtc_tgr[MTU_3][TGR_A];
 	MTU3.TGRB				= r_mtudtc_tgr[MTU_3][TGR_B];
+	MTU3.TGRC 				= r_mtudtc_tgr[MTU_3][TGR_C];
+	MTU3.TGRD 				= r_mtudtc_tgr[MTU_3][TGR_D];
 	/* Disable read/write to MTU3 registers */
 //	MTU.TRWERA.BIT.RWE		= 0U;
 }
