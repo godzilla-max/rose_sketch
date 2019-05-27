@@ -9,7 +9,7 @@
 ルネサスのRX65Nを使用してMicro-XRCE-DDS-Clientを実装したデモです。ルネサスからニュースリリースされているデモで、ROS2の文字列用メッセージ型"std_msgs/String"の送受信行うものです。
 RX65N用の評価ボードラインアップは以下ですが、ここでは、GR-ROSE上でデモを実行する手順を示します。  
 
-* [GR-ROSE](http://gadget.renesas.com/ja/product/rose.html) (株式会社コアより量産出荷予定)  
+* [GR-ROSE](http://gadget.renesas.com/ja/product/rose.html) ([チップワンストップ様にて販売中](https://www.chip1stop.com/product/detail?partId=COR1-0000004&mpn=GR-ROSE))
 
 ![スライド1](https://user-images.githubusercontent.com/32696676/54973245-6bb10300-4fd2-11e9-843a-045367a17b18.JPG)
 
