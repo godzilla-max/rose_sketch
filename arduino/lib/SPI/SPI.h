@@ -311,10 +311,11 @@ public:
     return (byte)RSPI1.SPDR.LONG;
 #endif //__RX600__
   }
-#ifndef __RX600__
+
   inline static uint16_t transfer16(uint16_t data) {
     union { uint16_t val; struct { uint8_t lsb; uint8_t msb; }; } in, out;
     in.val = data;
+#ifndef __RX600__
     if (!(SPCR & _BV(DORD))) {
       SPDR = in.msb;
       asm volatile("nop"); // See transfer(uint8_t) function
@@ -334,8 +335,22 @@ public:
       while (!(SPSR & _BV(SPIF))) ;
       out.msb = SPDR;
     }
+#else
+    //Add 2019.4.13 Yuuichi Akagawa
+    //MSB first?
+    if(RSPI1.SPCMD0.BIT.LSBF == 0) {
+    	//MSB first transfer
+    	out.msb = transfer(in.msb);
+    	out.lsb = transfer(in.lsb);
+    }else{
+    	//LSB first transfer
+    	out.lsb = transfer(in.lsb);
+    	out.msb = transfer(in.msb);
+    }
+#endif //__RX600__
     return out.val;
   }
+#ifndef __RX600__
   inline static void transfer(void *buf, size_t count) {
     if (count == 0) return;
     uint8_t *p = (uint8_t *)buf;
@@ -412,7 +427,7 @@ public:
     SPCR = (SPCR & ~SPI_MODE_MASK) | dataMode;
 #else
     RSPI1.SPCR.BIT.SPE = 0; //Stop SPI
-    RSPI1.SPCMD0.WORD = (RSPI1.SPCMD0.WORD & ~SPI_MODE_MASK) | ((uint16_t)dataMode);
+    RSPI1.SPCMD0.WORD = (RSPI0.SPCMD0.WORD & ~SPI_MODE_MASK) | ((uint16_t)dataMode);
     RSPI1.SPCR.BIT.SPE = 1; //Start SPI
 #endif
   }

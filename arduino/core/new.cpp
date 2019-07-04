@@ -17,20 +17,39 @@
 */
 
 #include <stdlib.h>
+#ifdef GRROSE
+#include "FreeRTOS.h"
+#endif
 
 void *operator new(size_t size) {
+#ifndef GRROSE
   return malloc(size);
+#else
+  return pvPortMalloc(size);
+#endif
 }
 
 void *operator new[](size_t size) {
+#ifndef GRROSE
   return malloc(size);
+#else
+  return pvPortMalloc(size);
+#endif
 }
 
 void operator delete(void * ptr) {
+#ifndef GRROSE
   free(ptr);
+#else
+  vPortFree(ptr);
+#endif
 }
 
 void operator delete[](void * ptr) {
+#ifndef GRROSE
   free(ptr);
+#else
+  vPortFree(ptr);
+#endif
 }
 
