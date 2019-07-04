@@ -319,7 +319,6 @@ static int InitializeNetwork(void)
     ether_return_t eth_ret;
     BaseType_t return_code = pdFALSE;
     ether_param_t   param;
-#ifndef GRROSE
     uint8_t myethaddr[6] =
     {
         configMAC_ADDR0,
@@ -329,7 +328,6 @@ static int InitializeNetwork(void)
         configMAC_ADDR4,
         configMAC_ADDR5
     }; //XXX Fix me
-#endif
 
     R_ETHER_PinSet_CHANNEL_0();
     R_ETHER_Initial();
@@ -343,11 +341,7 @@ static int InitializeNetwork(void)
         return pdFALSE;
     }
 
-#ifndef GRROSE
     eth_ret = R_ETHER_Open_ZC2(ETHER_CHANNEL_0, myethaddr, ETHER_FLAG_OFF);
-#else
-    eth_ret = R_ETHER_Open_ZC2(ETHER_CHANNEL_0, FreeRTOS_GetMACAddress(), ETHER_FLAG_OFF);
-#endif
 
     if (ETHER_SUCCESS != eth_ret)
     {

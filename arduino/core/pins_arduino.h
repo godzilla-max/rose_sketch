@@ -43,7 +43,7 @@
 #if defined(__AVR_ATmega8__)
 #define digitalPinHasPWM(p)         ((p) == 9 || (p) == 10 || (p) == 11)
 #elif defined(GRROSE)
-#define digitalPinHasPWM(p)         (1)
+#define digitalPinHasPWM(p)         ((p) == 9 || (p) == 10 || (p) == 11)
 #else
 #define digitalPinHasPWM(p)         ((p) == 3 || (p) == 5 || (p) == 6 || (p) == 9 || (p) == 10 || (p) == 11)
 #endif
@@ -116,11 +116,8 @@ static const uint8_t A9 = PIN_A9;
 #define LED_BUILTIN PIN_LED1
 #endif
 
-#ifndef GRROSE
+// TODO : Confirm pins
 #define digitalPinToInterrupt(p)  ((p) == 2 ? 0 : ((p) == 3 ? 1 : NOT_AN_INTERRUPT))
-#else
-#define digitalPinToInterrupt(p)  (p)
-#endif
 
 #ifdef ARDUINO_MAIN
 
