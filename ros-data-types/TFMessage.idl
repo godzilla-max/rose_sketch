@@ -1,0 +1,6 @@
+#include "TransformStamped.idl"
+
+struct TFMessage
+{
+    TransformStamped transforms[4];
+};

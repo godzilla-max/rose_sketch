@@ -1,0 +1,7 @@
+#include "Point.idl"
+#include "Quaternion.idl"
+struct Pose
+{
+    Point position;
+    Quaternion orientation;
+};

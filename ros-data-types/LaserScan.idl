@@ -1,0 +1,17 @@
+#include "Header.idl"
+
+struct LaserScan
+{
+    Header header;
+    float angle_min;
+    float angle_max;
+    float angle_increment;
+    float time_increment;
+    float scan_time;
+    float range_min;
+    float range_max;
+    float ranges[360];
+    unsigned long ranges_size;
+    float intensities[360];
+    unsigned long intensities_size;
+};

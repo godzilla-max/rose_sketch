@@ -1,0 +1,4 @@
+struct Int64
+{
+    long long data;
+};

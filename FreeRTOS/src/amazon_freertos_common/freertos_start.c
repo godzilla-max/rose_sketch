@@ -265,6 +265,7 @@ void vApplicationSetupTimerInterrupt(void)
 
 } /* End of function vApplicationSetupTimerInterrupt() */
 
+#ifndef GRROSE
 /******************************************************************************
 * Function name: sbrk
 * Description  : This implementation prevents using CC-RX's or GNURX+NEWLIB's
@@ -300,7 +301,7 @@ int8_t *_top_of_heap(void)
     return &end;
 }
 #endif
-
+#endif //GRROSE
 /******************************************************************************
 * Function Name: vAssertCalled
 * Description  : This function is used to validate the input parameters.

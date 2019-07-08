@@ -1,0 +1,8 @@
+#include "Header.idl"
+#include "Transform.idl"
+struct TransformStamped
+{
+    Header header;
+    string child_frame_id;
+    Transform transform;
+};

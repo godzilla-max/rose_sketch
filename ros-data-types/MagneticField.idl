@@ -1,0 +1,9 @@
+#include "Header.idl"
+#include "Vector3.idl"
+
+struct MagneticField
+{
+    Header header;
+    Vector3 magnetic_field;
+    double magnetic_field_covariance[9];
+};

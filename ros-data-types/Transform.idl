@@ -1,0 +1,7 @@
+#include "Vector3.idl"
+#include "Quaternion.idl"
+struct Transform
+{
+    Vector3 translation;
+    Quaternion rotation;
+};

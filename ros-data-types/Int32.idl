@@ -1,0 +1,4 @@
+struct UInt32
+{
+    unsigned long data;
+};

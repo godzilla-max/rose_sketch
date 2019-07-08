@@ -1,0 +1,4 @@
+struct Int16
+{
+    short data;
+};

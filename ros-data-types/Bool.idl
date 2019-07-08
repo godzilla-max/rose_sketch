@@ -1,0 +1,4 @@
+struct Bool
+{
+    boolean data;
+};

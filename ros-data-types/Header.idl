@@ -1,0 +1,6 @@
+#include "Time.idl"
+struct Header
+{
+    Time stamp;
+    string frame_id;
+};

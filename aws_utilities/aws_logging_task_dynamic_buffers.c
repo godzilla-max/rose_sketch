@@ -144,7 +144,11 @@ void vLoggingPrintf( const char *pcFormat, ... )
 
     /* The queue is created by xLoggingTaskInitialize().  Check
     xLoggingTaskInitialize() has been called. */
+#ifndef GRROSE
     configASSERT( xQueue );
+#else
+    if(xQueue == NULL) return;
+#endif
 
     /* Allocate a buffer to hold the log message. */
     pcPrintString = pvPortMalloc( configLOGGING_MAX_MESSAGE_LENGTH );

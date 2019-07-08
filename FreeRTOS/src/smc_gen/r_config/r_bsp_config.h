@@ -185,7 +185,11 @@ Configuration Options
       choose 'Contents' in E2Studio. This will present a list of modules that can be included. Uncheck the box for
       stdio.h. 
 */
+#ifndef GRROSE
 #define BSP_CFG_HEAP_BYTES              (0)
+#else
+#define BSP_CFG_HEAP_BYTES              (4 * 1024)
+#endif
 
 #endif /* defined(__CCRX__) || defined(__GNUC__) */
 

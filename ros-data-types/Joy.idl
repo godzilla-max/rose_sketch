@@ -1,0 +1,9 @@
+#include "Header.idl"
+struct Joy
+{
+    Header header;
+    unsigned long axes_size;
+    float axes[8];
+    unsigned long buttons_size;
+    long buttons[11];
+};

@@ -1,0 +1,9 @@
+#include "Header.idl"
+#include "JointTrajectoryPoint.idl"
+
+struct JointTrajectory
+{
+    Header header; 
+    sequence<string> joint_names; 
+    sequence<JointTrajectoryPoint> points; 
+};

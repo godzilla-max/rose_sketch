@@ -1,0 +1,10 @@
+#include "Duration.idl"
+
+struct JointTrajectoryPoint
+{
+    sequence<double> positions; 
+    sequence<double> velocities; 
+    sequence<double> accelerations; 
+    sequence<double> effort; 
+    Duration time_from_start; 
+};

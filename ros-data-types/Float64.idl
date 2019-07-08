@@ -1,0 +1,4 @@
+struct Float64
+{
+    double data;
+};

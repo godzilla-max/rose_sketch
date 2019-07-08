@@ -1,0 +1,5 @@
+struct Duration
+{
+    long sec_; 
+    unsigned long nanosec_; 
+};

@@ -1,0 +1,4 @@
+struct UInt16
+{
+    unsigned short data;
+};

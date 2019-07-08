@@ -1,0 +1,53 @@
+#include "Header.idl"
+
+enum BatteryStatus
+{
+  POWER_SUPPLY_STATUS_UNKNOWN,
+  POWER_SUPPLY_STATUS_CHARGING,
+  POWER_SUPPLY_STATUS_DISCHARGING,
+  POWER_SUPPLY_STATUS_NOT_CHARGING,
+  POWER_SUPPLY_STATUS_FULL
+};
+
+enum BatteryHealth
+{
+  POWER_SUPPLY_HEALTH_UNKNOWN,
+  POWER_SUPPLY_HEALTH_GOOD,
+  POWER_SUPPLY_HEALTH_OVERHEAT,
+  POWER_SUPPLY_HEALTH_DEAD,
+  POWER_SUPPLY_HEALTH_OVERVOLTAGE,
+  POWER_SUPPLY_HEALTH_UNSPEC_FAILURE,
+  POWER_SUPPLY_HEALTH_COLD,
+  POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
+  POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE
+};
+
+enum BatteryTechnology
+{
+  POWER_SUPPLY_TECHNOLOGY_UNKNOWN,
+  POWER_SUPPLY_TECHNOLOGY_NIMH,
+  POWER_SUPPLY_TECHNOLOGY_LION,
+  POWER_SUPPLY_TECHNOLOGY_LIPO,
+  POWER_SUPPLY_TECHNOLOGY_LIFE,
+  POWER_SUPPLY_TECHNOLOGY_NICD,
+  POWER_SUPPLY_TECHNOLOGY_LIMN
+};
+
+struct BatteryState
+{
+    Header header;
+    float voltage;
+    float current;
+    float charge;
+    float capacity;
+    float design_capacity;
+    float percentage;
+    octet power_supply_status;
+    octet power_supply_health;
+    octet power_supply_technology;
+    boolean present;
+    float cell_voltage[10];
+    unsigned long cell_voltage_size;
+    octet location[32];
+    octet serial_number[32];
+};

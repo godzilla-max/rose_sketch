@@ -308,6 +308,12 @@ void delayMicroseconds(unsigned int us)
 #endif/*__RX600__*/
 }
 
+#ifdef GRROSE
+void yield(){
+	delay(1); // switched task by vTaskDelay
+}
+#endif
+
 void init()
 {
 #ifndef __RX600__

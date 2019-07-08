@@ -1,0 +1,5 @@
+struct Time
+{
+    long sec; 
+    unsigned long nanosec; 
+};

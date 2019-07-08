@@ -1,0 +1,10 @@
+#include "Header.idl"
+#include "PoseWithCovariance.idl"
+#include "TwistWithCovariance.idl"
+struct Odometry
+{
+    Header header;
+    string child_frame_id;
+    PoseWithCovariance pose;
+    TwistWithCovariance twist;
+};

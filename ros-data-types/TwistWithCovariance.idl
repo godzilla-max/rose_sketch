@@ -1,0 +1,6 @@
+#include "Twist.idl"
+struct TwistWithCovariance
+{
+    Twist twist;
+    double covariance[36];
+};

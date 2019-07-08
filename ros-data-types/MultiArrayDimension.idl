@@ -1,0 +1,6 @@
+struct MultiArrayDimension
+{
+    string label;
+    unsigned long size;
+    unsigned long stride;
+};
