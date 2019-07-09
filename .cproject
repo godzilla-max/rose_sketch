@@ -336,7 +336,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Micro-XRCE-DDS-Client/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Micro-XRCE-DDS-Client/thirdparty/microcdr/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/aws_utilities}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ros-data-types}&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.cpp.language.446171506" name="Language standard" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.cpp.language" useByScannerDiscovery="true" value="com.renesas.cdt.managedbuild.gcc.core.compiler.cpp.default" valueType="enumerated"/>
 								<option command="-Wa,-a" id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.list.generateListFile.1328999758" name="Generate list file(-Wa,-a)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.list.generateListFile" useByScannerDiscovery="false" value="false" valueType="boolean"/>
