@@ -46,11 +46,12 @@ uxrObjectId datawriter_id;
 uxrStreamId output_stream;
 uxrStreamId input_stream;
 uint32_t count = 0;
+static char agent_ip[32] = {0};
 
 uint8_t output_best_effort_stream_buffer[BUFFER_SIZE];
 uint8_t input_best_effort_stream_buffer[BUFFER_SIZE];
 
-bool on_agent_found(const uxrAgentAddress* address, int64_t timestamp, void* args);
+void on_agent_found(const uxrAgentAddress* address, void* args);
 static void prvUXRManagerTask(void * pvParameters);
 
 void setup() {
@@ -69,9 +70,10 @@ void setup() {
     // Discovery Agent
     Serial.println("Discovery Agent...");
     uxrAgentAddress chosen;
+    chosen.ip = agent_ip;
 
     // Try forever until Agent is found
-    (void) uxr_discovery_agents_multicast(INT_MAX, 1000, on_agent_found, NULL, &chosen);
+    uxr_discovery_agents_default(INT_MAX, 1000, on_agent_found, &chosen);
 
     Serial.print("Chosen agent => ip: ");
     Serial.print(chosen.ip);
@@ -157,14 +159,16 @@ void loop() {
     vTaskDelay(10000);
 }
 
-bool on_agent_found(const uxrAgentAddress* address, int64_t timestamp, void* args) {
-    (void) timestamp; (void) args;
+void on_agent_found(const uxrAgentAddress* address, void* args) {
+    uxrAgentAddress* agent = (uxrAgentAddress*)args;
 
     Serial.print("Found agent => ip: ");
     Serial.print(address->ip);
     Serial.print(", port: ");
     Serial.println(address->port);
-    return true;
+
+    memcpy((void*)(agent->ip), address->ip, 32);
+    agent->port = address->port;
 }
 
 static void prvUXRManagerTask(void * pvParameters) {

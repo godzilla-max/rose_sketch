@@ -1,4 +1,6 @@
 #include "output_best_effort_stream_internal.h"
+
+#include "../submessage_internal.h"
 #include "seq_num_internal.h"
 
 #include <ucdr/microcdr.h>
@@ -18,15 +20,18 @@ void uxr_init_output_best_effort_stream(uxrOutputBestEffortStream* stream, uint8
 void uxr_reset_output_best_effort_stream(uxrOutputBestEffortStream* stream)
 {
     stream->writer = stream->offset;
-    stream->last_send = UINT16_MAX;
+    stream->last_send = SEQ_NUM_MAX;
 }
 
-bool uxr_prepare_best_effort_buffer_to_write(uxrOutputBestEffortStream* stream, size_t size, ucdrBuffer* mb)
+bool uxr_prepare_best_effort_buffer_to_write(uxrOutputBestEffortStream* stream, size_t size, ucdrBuffer* ub)
 {
-    bool available_to_write = stream->writer + size <= stream->size;
+
+    size_t current_padding = uxr_submessage_padding(stream->writer);
+    size_t future_length = stream->writer + current_padding + size;
+    bool available_to_write = future_length <= stream->size;
     if(available_to_write)
     {
-        ucdr_init_buffer_offset(mb, stream->buffer, (uint32_t)(stream->writer + size), (uint32_t)stream->writer);
+        ucdr_init_buffer_offset(ub, stream->buffer, (uint32_t)future_length, (uint32_t)(stream->writer + current_padding));
         stream->writer += size;
     }
 

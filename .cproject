@@ -191,10 +191,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Micro-XRCE-DDS-Client|FreeRTOS|arduino" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="FreeRTOS" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FreeRTOS"/>
-						<entry excluding="cmake/|docs/|examples/|src/c/profile/discovery/transport/udp_transport_linux_datagram.c|src/c/profile/transport/tcp/tcp_transport_linux.c|src/c/profile/transport/tcp/tcp_transport_windows.c|src/c/profile/transport/udp/udp_transport_linux.c|src/c/profile/transport/udp/udp_transport_windows.c|thirdparty/microcdr/cmake/|thirdparty/microcdr/examples/|thirdparty/microcdr/test/|thirdparty/microcdr/.gitignore|thirdparty/microcdr/CMakeLists.txt|thirdparty/microcdr/CTestJenkins.cmake|thirdparty/microcdr/LICENSE|thirdparty/microcdr/README.md|thirdparty/microcdr/valgrind.supp|toolchains/|.gitignore|.gitmodules|client.config|CMakeLists.txt|CTestJenkins.cmake|LICENSE|README.md|valgrind.supp|src/c/profile/transport/serial/|test/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Micro-XRCE-DDS-Client"/>
-						<entry excluding="lib/PPG/sc_config/Config_DTC_TGIB3.cpp|lib/PPG/sc_config/Config_DTC_TGIB2.cpp|lib/PPG/sc_config/Config_DTC_TGIB1.cpp|lib/PPG/sc_config/Config_DTC_TGIB0.cpp|lib/PPG/sc_config/Config_DTC_TGIA3.cpp|lib/PPG/sc_config/Config_DTC_TGIA2.cpp|lib/PPG/sc_config/Config_DTC_TGIA1.cpp|lib/PPG/sc_config/Config_DTC_TGIA0.cpp|lib/PPG/sc_config/Config_PPG0.cpp|lib/PPG/sc_config/Config_PPG1.cpp|lib/PPG/sc_config/Config_MTU3.cpp|lib/PPG/sc_config/Config_MTU2.cpp|lib/PPG/sc_config/Config_MTU1.cpp|lib/PPG/sc_config/Config_MTU0.cpp|lib/PPG/sc_config/Config_PORT.cpp|lib/PPG/sc_config/Config_ICU.cpp|rx65n/hwinit.c|core/main.cpp|rx65n/vects.c|rx65n/start.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="arduino"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -393,10 +391,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="common_demos|Micro-XRCE-DDS-Client|FreeRTOS|arduino" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="common_demos|FreeRTOS" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FreeRTOS"/>
-						<entry excluding="cmake/|docs/|examples/|src/c/profile/discovery/transport/udp_transport_linux_datagram.c|src/c/profile/transport/tcp/tcp_transport_linux.c|src/c/profile/transport/tcp/tcp_transport_windows.c|src/c/profile/transport/udp/udp_transport_linux.c|src/c/profile/transport/udp/udp_transport_windows.c|thirdparty/microcdr/cmake/|thirdparty/microcdr/examples/|thirdparty/microcdr/test/|thirdparty/microcdr/.gitignore|thirdparty/microcdr/CMakeLists.txt|thirdparty/microcdr/CTestJenkins.cmake|thirdparty/microcdr/LICENSE|thirdparty/microcdr/README.md|thirdparty/microcdr/valgrind.supp|toolchains/|.gitignore|.gitmodules|client.config|CMakeLists.txt|CTestJenkins.cmake|LICENSE|README.md|valgrind.supp|src/c/profile/transport/serial/|test/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Micro-XRCE-DDS-Client"/>
-						<entry excluding="lib/PPG/sc_config/Config_DTC_TGIB3.cpp|lib/PPG/sc_config/Config_DTC_TGIB2.cpp|lib/PPG/sc_config/Config_DTC_TGIB1.cpp|lib/PPG/sc_config/Config_DTC_TGIB0.cpp|lib/PPG/sc_config/Config_DTC_TGIA3.cpp|lib/PPG/sc_config/Config_DTC_TGIA2.cpp|lib/PPG/sc_config/Config_DTC_TGIA1.cpp|lib/PPG/sc_config/Config_DTC_TGIA0.cpp|lib/PPG/sc_config/Config_PPG0.cpp|lib/PPG/sc_config/Config_PPG1.cpp|lib/PPG/sc_config/Config_MTU3.cpp|lib/PPG/sc_config/Config_MTU2.cpp|lib/PPG/sc_config/Config_MTU1.cpp|lib/PPG/sc_config/Config_MTU0.cpp|lib/PPG/sc_config/Config_PORT.cpp|lib/PPG/sc_config/Config_ICU.cpp|rx65n/hwinit.c|core/main.cpp|rx65n/vects.c|rx65n/start.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="arduino"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -409,9 +405,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="ReleaseBin">
-			<resource resourceType="PROJECT" workspacePath="/rose_sketch"/>
-		</configuration>
+		<configuration configurationName="ReleaseBin"/>
 		<configuration configurationName="release_bin">
 			<resource resourceType="PROJECT" workspacePath="/rose_sketch"/>
 		</configuration>

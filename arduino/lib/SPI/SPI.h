@@ -427,7 +427,7 @@ public:
     SPCR = (SPCR & ~SPI_MODE_MASK) | dataMode;
 #else
     RSPI1.SPCR.BIT.SPE = 0; //Stop SPI
-    RSPI1.SPCMD0.WORD = (RSPI0.SPCMD0.WORD & ~SPI_MODE_MASK) | ((uint16_t)dataMode);
+    RSPI1.SPCMD0.WORD = (RSPI1.SPCMD0.WORD & ~SPI_MODE_MASK) | ((uint16_t)dataMode);
     RSPI1.SPCR.BIT.SPE = 1; //Start SPI
 #endif
   }

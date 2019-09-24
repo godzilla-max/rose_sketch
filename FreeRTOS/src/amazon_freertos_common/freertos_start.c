@@ -42,7 +42,10 @@ Includes   <System Includes> , "Project Includes"
 #elif defined(ENABLE_UNIT_TESTS)
 #include "unity.h"
 #endif
-
+#if (MY_BSP_CFG_OTA_ENABLE == 1)
+#include "r_usb_basic_if.h"
+#include "r_usb_cstd_rtos.h"
+#endif /* MY_BSP_CFG_OTA_ENABLE == 1 */
 
 #if (BSP_CFG_RTOS_USED == 1)
 /******************************************************************************
@@ -58,7 +61,14 @@ Exported global variables (to be accessed by other files)
 ******************************************************************************/
 
 /************* semaphore initialization *****************/
-
+static QueueHandle_t g_apl_mbx_hdl;
+/******************************************************************************
+Exported global variables (to be accessed by other files)
+******************************************************************************/
+QueueHandle_t *g_apl_mbx_table[] =
+{
+    &g_apl_mbx_hdl,
+};
 
 /************* mutex initialization *********************/
 
@@ -265,43 +275,6 @@ void vApplicationSetupTimerInterrupt(void)
 
 } /* End of function vApplicationSetupTimerInterrupt() */
 
-#ifndef GRROSE
-/******************************************************************************
-* Function name: sbrk
-* Description  : This implementation prevents using CC-RX's or GNURX+NEWLIB's
-*                malloc() and calloc() which are not thread safe.
-* Arguments    : size - not used
-* Return value : -1 (failure) but vAssertCalled() may not return
-******************************************************************************/
-#if defined(__CCRX__) || defined(__GNUC__)
-extern int8_t *sbrk(size_t size);
-int8_t *sbrk(size_t size)
-{
-    R_INTERNAL_NOT_USED(size);
-    vAssertCalled();
-    return (int8_t *) - 1;
-}
-#endif
-
-/******************************************************************************
-* Function name: _top_of_heap
-* Description  : This implementation prevents using GNURX+OPTLIB's
-*                malloc() and calloc() which are not thread safe.
-* Arguments    : none
-* Return value : end (failure) but vAssertCalled() may not return
-******************************************************************************/
-#if defined(__GNUC__)
-extern int8_t end;
-int8_t *_heap_of_memory = (int8_t *)&end;
-int8_t *_last_heap_object = (int8_t *)&end;
-extern int8_t *_top_of_heap(void);
-int8_t *_top_of_heap(void)
-{
-    vAssertCalled();
-    return &end;
-}
-#endif
-#endif //GRROSE
 /******************************************************************************
 * Function Name: vAssertCalled
 * Description  : This function is used to validate the input parameters.
@@ -440,6 +413,28 @@ void vApplicationStackOverflowHook(TaskHandle_t pxTask, signed char *pcTaskName)
 void Processing_Before_Start_Kernel(void)
 {
     BaseType_t ret;
+
+#if (MY_BSP_CFG_OTA_ENABLE == 1)
+    /************** mailbox creation *************************/
+    g_apl_mbx_hdl = xQueueCreate(QUEUE_SIZE, sizeof(void *));
+    if (NULL == g_apl_mbx_hdl)
+    {
+        while(1)
+        {
+            /* Failed! The mailbox for the application can not be created. */
+        }
+    }
+
+    /** USB RTOS Configuration **/
+    usb_rtos_err_t err = usb_rtos_configuration();
+    if (UsbRtos_Success != err)
+    {
+        while(1)
+        {
+            /** Failure of UsbRtos Configuration **/
+        }
+    }
+#endif /* MY_BSP_CFG_OTA_ENABLE == 1 */
 
     /************** task creation ****************************/
     /* Main task. */

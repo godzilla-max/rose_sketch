@@ -1,5 +1,5 @@
 /*
- * Amazon FreeRTOS V1.4.6
+ * Amazon FreeRTOS V1.4.7
  * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -38,19 +38,19 @@
  *
  * This gives the user flexibility of registering a callback per topic.
  */
-#define mqttconfigENABLE_SUBSCRIPTION_MANAGEMENT            ( 1 )
+#define mqttconfigENABLE_SUBSCRIPTION_MANAGEMENT            (1)
 
 /**
  * @brief Maximum length of the topic which can be stored in subscription
  * manager.
  */
-#define mqttconfigSUBSCRIPTION_MANAGER_MAX_TOPIC_LENGTH     ( 128 )
+#define mqttconfigSUBSCRIPTION_MANAGER_MAX_TOPIC_LENGTH     (128)
 
 /**
  * @brief Maximum number of subscriptions which can be stored in subscription
  * manager.
  */
-#define mqttconfigSUBSCRIPTION_MANAGER_MAX_SUBSCRIPTIONS    ( 8 )
+#define mqttconfigSUBSCRIPTION_MANAGER_MAX_SUBSCRIPTIONS    (8)
 
 /*
  * Uncomment the following two lines to enable asserts.

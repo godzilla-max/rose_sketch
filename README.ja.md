@@ -34,7 +34,7 @@ https://www.renesas.com/jp/ja/products/microcontrollers-microprocessors/rx/rx600
 作成したイメージが動作するターゲットボードです。  
 
 (2) Linux PC  
-ROS2 Bouncy Bolson、Micro-XRCE-DDS-Agentがインストールされている必要があります。  
+ROS2 Dashing Diademata、Micro-XRCE-DDS-Agentがインストールされている必要があります。  
 
 (3) Windows PC  
 GR-ROSEにスケッチを書き込むために必要です。  
@@ -70,7 +70,7 @@ A(オス) - MicroB(オス)タイプのUSBケーブルです。GR-ROSEとWindows 
 
 以下のソフトウェアがインストールされている必要があります。  
 
-(1) ROS2 (Bouncy Bolson)  
+(1) ROS2 (Dashing Diademata)  
 インストール方法についてはWebページ上のドキュメントを参照してください。  
 https://index.ros.org/doc/ros2/Installation/  
 
@@ -78,7 +78,7 @@ https://index.ros.org/doc/ros2/Installation/
 以下からダウンロードします。インストール方法についてはWebページ上のドキュメントを参照してください。  
 https://github.com/eProsima/Micro-XRCE-DDS-Agent  
 
-動作確認を行ったバージョンは「v1.0.1」です。  
+動作確認を行ったバージョンは「v1.1.0」です。  
 
 #### Windows PC
 
@@ -88,7 +88,7 @@ https://github.com/eProsima/Micro-XRCE-DDS-Agent
 以下からダウンロードします。インストール方法についてはWebページ上のドキュメントを参照してください。  
 https://www.renesas.com/jp/ja/products/software-tools/tools/ide/e2studio.html  
 
-動作確認を行ったバージョンは「V.7.0.0」です。  
+動作確認を行ったバージョンは「V.7.5.0」です。  
 
 (2) GCC for Renesas 4.8.4.201801-GNURX Windows Toolchain(ELF)  
 以下からダウンロードします。インストール方法についてはWebページ上のドキュメントを参照してください。  
@@ -137,7 +137,7 @@ Enter 'q' for exit
 
 ```
 $ cd <ROS2をビルドしたワークスペース>
-$ source install/setup.bash
+$ source install/setup.bash      //表示と一緒だったか確認
 $ ros2 run demo_nodes_cpp listener
 ```
 
@@ -207,7 +207,7 @@ rose_sketch/
 * Amazon FreeRTOS  
   https://github.com/renesas-rx/amazon-freertos  
 
-* Micro-XRCE-DDS-Client v1.0.1  
+* Micro-XRCE-DDS-Client v1.1.1  
   https://github.com/eProsima/Micro-XRCE-DDS-Client  
 
 なお、GR-ROSE上のAmazon FreeRTOSでMicro-XRCE-DDS-Clientを動作させるため、Micro-XRCE-DDS-ClientとAmazon FreeRTOSに以下の変更を加えています。  
@@ -252,7 +252,6 @@ rose_sketch/
 |   |           |-- core/
 |   |           |-- profile/
 |   |           |   |-- discovery/
-|   |           |   |-- session/
 |   |           |   `-- transport/
 |   |           |       |-- serial/
 |   |           |       |-- tcp/
@@ -267,8 +266,8 @@ rose_sketch/
 |   |           |           `-- udp_transport.h
 |   |           |-- ...(SNIPPED)...
 |   |           |-- config.h                      [config.h.inから生成される設定ファイルを追加]
-|   |           |-- dll.h
 |   |           |-- transport.h                   [インクルードファイルの設定を変更]
+|   |           |-- visibility.h
 |   |           |-- ...(SNIPPED)...
 |   |           `-- config.h.in
 |   |-- src/
@@ -277,28 +276,23 @@ rose_sketch/
 |   |       |-- profile/
 |   |       |   |-- discovery/
 |   |       |   |   |-- transport/
-|   |       |   |   |   |-- udp_transport_datagram_internal.h
-|   |       |   |   |   |-- udp_transport_linux_datagram.c
-|   |       |   |   |   `-- udp_transport_freertos_datagram.c    [FreeRTOS依存のコードを追加]
+|   |       |   |   |   |-- udp_transport_datagram_freertos.c    [FreeRTOS依存のコードを追加]
+|   |       |   |   |   `-- udp_transport_datagram_internal.h
 |   |       |   |   `-- discovery.c
-|   |       |   |-- session/
 |   |       |   `-- transport/
 |   |       |       |-- serial/
 |   |       |       |-- tcp/
 |   |       |       |   |-- tcp_transport_freertos.c    [FreeRTOS依存のコードを追加]
 |   |       |       |   |-- tcp_transport_internal.h
-|   |       |       |   |-- tcp_transport_linux.c
-|   |       |       |   |-- tcp_transport_windows.c
 |   |       |       |   `-- tcp_transport.c
 |   |       |       `-- udp/
 |   |       |           |-- udp_transport_freertos.c    [FreeRTOS依存のコードを追加]
 |   |       |           |-- udp_transport_internal.h
-|   |       |           |-- udp_transport_linux.c
-|   |       |           |-- udp_transport_windows.c
 |   |       |           `-- udp_transport.c
 |   |       |
 |   |       `-- util/
-|   |           `-- time.c   [FreeRTOS依存のコードを追加]
+|   |           |-- time.c   [FreeRTOS依存のコードを追加]
+|   |           `-- time_internal.h
 |   |-- thirdparty/
 |   |   `-- microcdr/
 |   |       |-- include/
@@ -327,8 +321,6 @@ rose_sketch/
 ## 制限事項
 
 * このデモは、Micro-XRCE-DDS-ClientのTCP/UDP通信に対応していますが、シリアル通信には対応していません。  
-
-* GR-ROSEからROS2メッセージを送信する際に、受信動作を同時に行わないMicro-XRCE-DDS-ClientのAPI uxr_flash_output_streams()は使用できません。  
 
 * Hello worldデモで確認したメッセージのサイズはデフォルト20バイトで、ROS2の文字列用メッセージ型"std_msgs/String"以外の動作は未確認です。  
 

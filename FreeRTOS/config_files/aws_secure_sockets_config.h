@@ -1,5 +1,5 @@
 /*
- * Amazon FreeRTOS V1.4.6
+ * Amazon FreeRTOS V1.4.7
  * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -36,16 +36,16 @@
  *
  * Valid values are pdLITTLE_ENDIAN and pdBIG_ENDIAN.
  */
-#define socketsconfigBYTE_ORDER              pdLITTLE_ENDIAN
+#define socketsconfigBYTE_ORDER              pdLITTLE_ENDIAN                  
 
 /**
  * @brief Default socket send timeout.
  */
-#define socketsconfigDEFAULT_SEND_TIMEOUT    ( 10000 )
+#define socketsconfigDEFAULT_SEND_TIMEOUT    (10000)
 
 /**
  * @brief Default socket receive timeout.
  */
-#define socketsconfigDEFAULT_RECV_TIMEOUT    ( 10000 )
+#define socketsconfigDEFAULT_RECV_TIMEOUT    (10000)
 
 #endif /* _AWS_SECURE_SOCKETS_CONFIG_H_ */

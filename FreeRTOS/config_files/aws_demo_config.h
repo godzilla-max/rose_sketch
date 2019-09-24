@@ -1,5 +1,5 @@
 /*
- * Amazon FreeRTOS V1.4.6
+ * Amazon FreeRTOS V1.4.7
  * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -36,7 +36,7 @@
 
 /* IoT simple subscribe/publish example task parameters. */
 #define democonfigMQTT_SUB_PUB_TASK_STACK_SIZE            ( configMINIMAL_STACK_SIZE * 5 )
-#define democonfigMQTT_SUB_PUB_TASK_PRIORITY              ( tskIDLE_PRIORITY )
+#define democonfigMQTT_SUB_PUB_TASK_PRIORITY              ( tskIDLE_PRIORITY + 5 )
 
 /* Greengrass discovery example task parameters. */
 #define democonfigGREENGRASS_DISCOVERY_TASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE * 16 )
@@ -73,7 +73,7 @@ negotiation. */
 
 /* Timeout used when performing MQTT operations that do not need extra time
 to perform a TLS negotiation. */
-#define democonfigMQTT_TIMEOUT						pdMS_TO_TICKS( 2500 )
+#define democonfigMQTT_TIMEOUT						pdMS_TO_TICKS( 3000 )
 
 /* Send AWS IoT MQTT traffic encrypted. */
 #define democonfigMQTT_AGENT_CONNECT_FLAGS          	     ( mqttagentREQUIRE_TLS )

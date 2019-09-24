@@ -3,6 +3,8 @@
 #if defined(PLATFORM_NAME_FREERTOS)
 #include "FreeRTOS.h"
 #include "task.h"
+extern unsigned long ulGetRunTimeCounterValue( void );
+
 #else
 #include <time.h>
 #endif
@@ -15,6 +17,11 @@
 //                             PUBLIC
 //==================================================================
 int64_t uxr_millis(void)
+{
+    return uxr_nanos() / 1000000;
+}
+
+int64_t uxr_nanos(void)
 {
 #if defined(PLATFORM_NAME_FREERTOS)
     TimeOut_t tick_count;
@@ -30,8 +37,7 @@ int64_t uxr_millis(void)
     total_tick <<= 32;
 #endif
     total_tick |= (int64_t) tick_count.xTimeOnEntering;
-
-    return (total_tick / (int64_t) portTICK_PERIOD_MS);
+    return ( ( total_tick / (int64_t) portTICK_PERIOD_MS ) * 1000000 );
 #else
 #ifdef WIN32
     SYSTEMTIME epoch_tm = {1970, 1, 4, 1, 0, 0, 0, 0};
@@ -45,11 +51,11 @@ int64_t uxr_millis(void)
     SystemTimeToFileTime(&tm, &ft);
     uint64_t current_time = (((uint64_t) ft.dwHighDateTime) << 32) + ft.dwLowDateTime;
 
-    return (current_time - epoch_time) / 10000;
+    return (current_time - epoch_time) * 100;
 #else
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);
-    return (((int64_t)ts.tv_sec) * 1000) + (ts.tv_nsec / 1000000);
+    return (((int64_t)ts.tv_sec) * 1000000000) + ts.tv_nsec;
 #endif
 #endif
 }

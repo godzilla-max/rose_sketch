@@ -249,7 +249,7 @@ uint8_t Sd2Card::init(uint8_t sckRateID, uint8_t chipSelectPin) {
   // set pin modes
 #if defined(__RX600__)
   if (chipSelectPin_ != SS){
-      RSPI0.SPCR.BIT.SPMS = 1; // 3-line mode
+      RSPI1.SPCR.BIT.SPMS = 1; // 3-line mode
   }
 #endif
 
