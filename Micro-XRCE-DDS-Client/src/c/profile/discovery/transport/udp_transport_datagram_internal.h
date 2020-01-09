@@ -77,6 +77,10 @@ void uxr_bytes_to_ip(
         const uint8_t* bytes,
         char* ip);
 
+
+void uxr_choose_ethernet(
+        bool use_ethernet);
+
 #ifdef __cplusplus
 }
 #endif

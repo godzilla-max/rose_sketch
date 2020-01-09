@@ -1,6 +1,6 @@
 [English version](./README.md)
 
-このリポジトリは、[ルネサスMCU RX65NにインプリされるAWS FreeRTOS](https://github.com/renesas-rx/amazon-freertos/tree/master/demos/renesas)上にeProsima製の[Micro-XRCE-DDS-Client](https://github.com/eProsima/Micro-XRCE-DDS-Client)を実装し、DDS-XRCE通信を実現するものです。
+このリポジトリは、[ルネサスMCU RX65NにインプリメントされるAWS FreeRTOS](https://github.com/renesas-rx/amazon-freertos/tree/master/demos/renesas)上にeProsima製の[Micro-XRCE-DDS-Client](https://github.com/eProsima/Micro-XRCE-DDS-Client)を実装し、DDS-XRCE通信を実現するものです。  
 
 # Micro-XRCE-DDS-Clientを使用したルネサスRX65NへのROS2実装デモ
 
@@ -18,7 +18,7 @@ RX65N用の評価ボードラインアップは以下ですが、ここでは、
 
 参考：  
 ルネサスニュースリリース  
-一家に１台サービスロボットが普及する時代に向けて、RX65Nマイコンが、ロボット用フレームワーク「ROS 2」向け通信規格DDS-XRCEをサポート  
+一家に1台サービスロボットが普及する時代に向けて、RX65Nマイコンが、ロボット用フレームワーク「ROS 2」向け通信規格DDS-XRCEをサポート  
 https://www.renesas.com/jp/ja/about/press-center/news/2018/news20181029.html  
 RX65Nマイコンホームページ  
 https://www.renesas.com/jp/ja/products/microcontrollers-microprocessors/rx/rx600/rx65n-651.html  
@@ -40,15 +40,20 @@ ROS2 Dashing Diademata、Micro-XRCE-DDS-Agentがインストールされてい�
 GR-ROSEにスケッチを書き込むために必要です。  
 また、Windows PCで起動したターミナルソフトでGR-ROSEのログ出力を行います。  
 
-(4) Ethernetケーブル 1本  
-GR-ROSEとLinux PCを接続するために必要です。  
+(4) Ethernetケーブル  
+Ethernet接続時、GR-ROSEとLinux PCを接続するために必要です。   
+Wi-Fi接続時、Wi-FiルーターとLinux PCをEthernet接続するために必要です。  
 
-(5) USBケーブル 1本  
+(5) Wi-Fiルーター  
+Wi-Fi接続時、GR-ROSEとLinux PCをWi-Fi接続するために必要です。  
+
+(6) USBケーブル 1本  
 A(オス) - MicroB(オス)タイプのUSBケーブルです。GR-ROSEとWindows PCを接続するために必要です。  
 
 このデモでは、上記(1)～(5)の機器は以下のように接続します。  
 
 ```
+Ethernet接続
 
            192.168.2.101                                192.168.2.52
        +-------------------+        Ethernet       +-------------------+
@@ -63,6 +68,21 @@ A(オス) - MicroB(オス)タイプのUSBケーブルです。GR-ROSEとWindows 
 
 ```
 
+```
+Wi-Fi接続
+
+           192.168.2.101     Ethernet                              IPアドレス自動取得
+       +-------------------+   or Wi-Fi  +--------------+ Wi-Fi +-------------------+
+       |      Linux PC     +-------------+ Wi-Fiルーター +-------+      GR-ROSE      |
+       +-------------------+             +--------------+       +-------------------+
+                                                                          |
+                                                                          | USB
+                                                                          |
+                                                                +---------+---------+
+                                                                |     Windows PC    |
+                                                                +-------------------+ 
+
+```
 
 ### [ソフトウェア]
 
@@ -90,11 +110,11 @@ https://www.renesas.com/jp/ja/products/software-tools/tools/ide/e2studio.html
 
 動作確認を行ったバージョンは「V.7.5.0」です。  
 
-(2) GCC for Renesas 4.8.4.201801-GNURX Windows Toolchain(ELF)  
+(2) GCC for Renesas 4.8.4.201902-SPI1-GNURX Windows Toolchain(ELF)  
 以下からダウンロードします。インストール方法についてはWebページ上のドキュメントを参照してください。  
 https://gcc-renesas.com/ja/rx-download-toolchains/  
 
-動作確認を行ったバージョンは「4.8.4.201801」です。  
+動作確認を行ったバージョンは「4.8.4.201902」です。  
 
 
 ## デモ実行手順
@@ -103,11 +123,47 @@ https://gcc-renesas.com/ja/rx-download-toolchains/
 
 [Clone or download]から[Download ZIP]を選択してzipファイルをダウンロードしてください。  
 
-### [スケッチのビルド]
+### [スケッチの変更]    
 
 (1) e2studioの「ファイル」メニューの「インポート」から、zipファイルをインポートしてください。  
 
-(2) プロジェクトをビルドしてください。ReleaseBinフォルダにrose_sketch.binが生成されます。  
+(2) examplesフォルダ内にあるtcp_talker_besteffort.inoの内容をsketch.cppにコピー＆ペーストしてください。  
+
+(3) 以下の[Ethernet/Wi-Fi通信切り替え]に従って、デモスケッチの通信方式を設定している箇所を変更してください。  
+
+### [Ethernet/Wi-Fi通信切り替え]
+
+Wi-Fi通信を行う場合：  
+(1) Wi-Fi通信への切り替え  
+デモスケッチの通信方式を設定している箇所を変更してください。  
+変数（use_ethernet）をfalseに設定してください。変更箇所の例を以下に記載します。  
+```
+rose_sketch/sketch.cpp
+
+static bool use_ethernet = false;
+```
+
+(2) 接続先Wi-FiルーターのSSIDとKEYの設定  
+デモスケッチのSSIDとKEYを設定している箇所（ssid, pass）を変更してください。  
+変更箇所の例を以下に記載します。  
+```
+rose_sketch/sketch.cpp
+
+char ssid[] = "SSID";           // your network SSID (name)
+char pass[] = "PASSWORD";       // your network password  
+```
+Ethernet通信を行う場合：  
+デモスケッチの通信方式を設定している箇所を変更してください。  
+変数（use_ethernet）をtrueに設定してください。変更箇所の例を以下に記載します。  
+```
+rose_sketch/sketch.cpp
+
+static bool use_ethernet = true;
+```
+
+### [スケッチのビルド]
+
+(1) プロジェクトのビルドをしてください。ReleaseBinフォルダにrose_sketch.binが生成されます。  
 
 ### [スケッチの書き込み]
 
@@ -123,25 +179,26 @@ https://gcc-renesas.com/ja/rx-download-toolchains/
 
 ```
 $ cd <Micro-XRCE-DDS-Agentのbuildディレクトリ>
-$ ./MicroXRCEAgent tcp 2020
+$ ./MicroXRCEAgent tcp -p 2020 -d
 ```
 
 Micro-XRCE-DDS-Agentのログが以下のように表示されます。  
 
 ```
-TCP agent initialization... OK
 Enter 'q' for exit
+[1567490860.309055] info     | TCPServerLinux.cpp | init                     | running...             | port: 2020
+[1567490860.309423] info     | DiscoveryServerLinux.cpp | init                     | running...             | Port: 7400
 ```
 
 (2) Linux PC上のROS2付属デモlistenerを起動します。Linux PCで別のターミナルを起動し、以下のコマンドを実行してください。  
 
 ```
 $ cd <ROS2をビルドしたワークスペース>
-$ source install/setup.bash      //表示と一緒だったか確認
+$ source install/setup.bash      //表示と一緒であるかを確認
 $ ros2 run demo_nodes_cpp listener
 ```
 
-Listenerのメッセージが以下のように表示されます。  
+GR-ROSEに接続されているUSBケーブルを抜き差ししてGR-ROSEを起動させてください。listenerのメッセージが以下のように表示されます。  
 
 ```
 [INFO] [listener]: I heard: [Hello DDS world!: 0]
@@ -149,13 +206,13 @@ Listenerのメッセージが以下のように表示されます。
 [INFO] [listener]: I heard: [Hello DDS world!: 2]
 [INFO] [listener]: I heard: [Hello DDS world!: 3]
 [INFO] [listener]: I heard: [Hello DDS world!: 4]
-....(SNIPPED)....
+...(SNIPPED)...
 ```
 
 (3) GR-ROSEに接続されたPCでターミナルソフトを起動すると、Talkerのメッセージが以下のように表示されます。  
 
 ```
-....(SNIPPED)....
+...(SNIPPED)...
 Found agent => ip: 192.168.2.101, port: 2020
 Chosen agent => ip: 192.168.2.101, port: 2020
  Sent topic: Hello DDS world!: 0
@@ -163,13 +220,13 @@ Chosen agent => ip: 192.168.2.101, port: 2020
  Sent topic: Hello DDS world!: 2
  Sent topic: Hello DDS world!: 3
  Sent topic: Hello DDS world!: 4
-....(SNIPPED)....
+...(SNIPPED)...
 ```
 
 
 ## デモの切り替え方法
 
-実行するデモを切り替える場合は、実行したいデモスケッチを"sketch.cpp"にコピー＆ペーストし、スケッチをビルドしてください。  
+実行するデモを切り替える場合は、実行したいデモスケッチを"sketch.cpp"にコピー＆ペーストし、スケッチのビルドをしてください。  
 以下に、デモスケッチが配置されているディレクトリ構造を示します。  
 
 ```
@@ -210,12 +267,24 @@ rose_sketch/
 * Micro-XRCE-DDS-Client v1.1.1  
   https://github.com/eProsima/Micro-XRCE-DDS-Client  
 
-なお、GR-ROSE上のAmazon FreeRTOSでMicro-XRCE-DDS-Clientを動作させるため、Micro-XRCE-DDS-ClientとAmazon FreeRTOSに以下の変更を加えています。  
+* WiFiEsp  
+  https://github.com/godzilla-max/rose_sketch/tree/master/arduino/lib/WiFiEsp
+
+
+なお、GR-ROSE上のAmazon FreeRTOSでMicro-XRCE-DDS-Clientを動作させ、GR-ROSEをWi-Fi通信に対応させるため、以下の変更を加えています。 
 
 ```
 rose_sketch/
 |
 |-- arduino/
+|   |-- lib/
+|   |   |-- WiFiEsp/
+|   |   |   |-- WiFiEspServerClientWrapper.cpp   [Wi-Fi通信依存のコードを追加]
+|   |   |   |-- WiFiEspServerClientWrapper.h     [Wi-Fi通信依存のコードを追加]
+|   |   |   |-- ...(SNIPPED)...
+|   |   |-- ...(SNIPPED)...
+|   |-- ...(SNIPPED)...
+|
 |-- examples/                    [Micro-XRCE-DDS-Clientのデモスケッチ]
 |-- FreeRTOS/
 |   |-- application_code
@@ -252,20 +321,21 @@ rose_sketch/
 |   |           |-- core/
 |   |           |-- profile/
 |   |           |   |-- discovery/
+|   |           |       `-- discovery.h           [通信方式APIを追加]
 |   |           |   `-- transport/
 |   |           |       |-- serial/
 |   |           |       |-- tcp/
-|   |           |       |   |-- tcp_transport_freertos.h       [FreeRTOS依存のヘッダファイルを追加]
+|   |           |       |   |-- tcp_transport_freertos.h       [FreeRTOS依存のヘッダファイルを追加]/[通信方式APIを追加]
 |   |           |       |   |-- tcp_transport_linux.h
 |   |           |       |   |-- tcp_transport_windows.h
 |   |           |       |   `-- tcp_transport.h
 |   |           |       `-- udp/
-|   |           |           |-- udp_transport_freertos.h       [FreeRTOS依存のヘッダファイルを追加]
+|   |           |           |-- udp_transport_freertos.h       [FreeRTOS依存のヘッダファイルを追加]/[通信方式APIを追加]
 |   |           |           |-- udp_transport_linux.h
 |   |           |           |-- udp_transport_windows.h
 |   |           |           `-- udp_transport.h
 |   |           |-- ...(SNIPPED)...
-|   |           |-- config.h                      [config.h.inから生成される設定ファイルを追加]
+|   |           |-- config.h                      [config.h.inから生成される設定ファイルを追加]/[Wi-Fi通信依存のコードを追加]
 |   |           |-- transport.h                   [インクルードファイルの設定を変更]
 |   |           |-- visibility.h
 |   |           |-- ...(SNIPPED)...
@@ -276,17 +346,20 @@ rose_sketch/
 |   |       |-- profile/
 |   |       |   |-- discovery/
 |   |       |   |   |-- transport/
-|   |       |   |   |   |-- udp_transport_datagram_freertos.c    [FreeRTOS依存のコードを追加]
-|   |       |   |   |   `-- udp_transport_datagram_internal.h
-|   |       |   |   `-- discovery.c
+|   |       |   |   |   |-- udp_transport_datagram_freertos.c               [FreeRTOS依存のコードを追加]
+|   |       |   |   |   |-- udp_transport_datagram_freertos_esp8266_wifi.c  [Wi-Fi通信依存のコードを追加]
+|   |       |   |   |   `-- udp_transport_datagram_internal.h               [Wi-Fi通信依存のコードを追加]
+|   |       |   |   `-- discovery.c           [通信方式APIを追加]
 |   |       |   `-- transport/
 |   |       |       |-- serial/
 |   |       |       |-- tcp/
-|   |       |       |   |-- tcp_transport_freertos.c    [FreeRTOS依存のコードを追加]
+|   |       |       |   |-- tcp_transport_freertos.c               [FreeRTOS依存のコードを追加]
+|   |       |       |   |-- tcp_transport_freertos_esp8266_wifi.c  [Wi-Fi通信依存のコードを追加]
 |   |       |       |   |-- tcp_transport_internal.h
 |   |       |       |   `-- tcp_transport.c
 |   |       |       `-- udp/
-|   |       |           |-- udp_transport_freertos.c    [FreeRTOS依存のコードを追加]
+|   |       |           |-- udp_transport_freertos.c               [FreeRTOS依存のコードを追加]
+|   |       |           |-- udp_transport_freertos_esp8266_wifi.c  [Wi-Fi通信依存のコードを追加]
 |   |       |           |-- udp_transport_internal.h
 |   |       |           `-- udp_transport.c
 |   |       |
@@ -324,6 +397,7 @@ rose_sketch/
 
 * Hello worldデモで確認したメッセージのサイズはデフォルト20バイトで、ROS2の文字列用メッセージ型"std_msgs/String"以外の動作は未確認です。  
 
+* TCP/reliableストリームでWi-Fi通信するデモは動作しません。  
 
 ## 免責事項
 

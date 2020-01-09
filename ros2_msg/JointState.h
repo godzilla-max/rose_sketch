@@ -38,14 +38,18 @@ extern "C"
 typedef struct JointState
 {
     Header header;
-    uint8_t name[10][32];
     uint32_t name_size;
-    double position[10];
+    char name[10][32];
+
     uint32_t position_size;
-    double velocity[10];
+    double position[10];
+
     uint32_t velocity_size;
-    double effort[10];
+    double velocity[10];
+
     uint32_t effort_size;
+    double effort[10];
+
 } JointState;
 
 struct ucdrBuffer;

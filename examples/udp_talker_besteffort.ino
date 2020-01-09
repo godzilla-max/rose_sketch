@@ -14,6 +14,7 @@
 // limitations under the License.
 
 #include <Arduino.h>
+#include <WiFiEsp.h>
 #include <Ethernet.h>
 #include <stdio.h>
 #include <string.h>
@@ -36,6 +37,9 @@ extern "C" {
 
 #define BUFFER_SIZE     UXR_CONFIG_UDP_TRANSPORT_MTU
 
+char ssid[] = "SSID";                 // your network SSID (name)
+char pass[] = "PASSWORD";             // your network password
+int status = WL_IDLE_STATUS;          // the Wifi radio's status
 byte mac[] = { 0x74, 0x90, 0x50, 0x00, 0x79, 0x03 };
 IPAddress ip(192, 168, 2, 52);
 
@@ -51,6 +55,8 @@ static char agent_ip[32] = {0};
 uint8_t output_best_effort_stream_buffer[BUFFER_SIZE];
 uint8_t input_best_effort_stream_buffer[BUFFER_SIZE];
 
+static bool use_ethernet = false;
+
 void on_agent_found(const uxrAgentAddress* address, void* args);
 static void prvUXRManagerTask(void * pvParameters);
 
@@ -58,11 +64,42 @@ void setup() {
     // Initialize the LED pin
     pinMode(PIN_LED1, OUTPUT);
 
-    // Serial output to USB
-    Serial.begin(9600);
+    if(!use_ethernet)
+    {
+        // initialize serial for debugging
+        Serial.begin(115200);
+        // initialize serial for ESP module
+        Serial6.begin(115200);
+        // initialize ESP module
+        WiFi.init(&Serial6);
+    }
+    else
+    {
+        // Serial output to USB
+        Serial.begin(9600);
+    }
 
-    // Setting IP
-    Ethernet.begin(mac, ip);
+    if(!use_ethernet)
+    {
+        // check for the presence of the shield
+        if (WiFi.status() == WL_NO_SHIELD) {
+            Serial.println("WiFi shield not present");
+            // don't continue
+            while (true);
+        }
+        // attempt to connect to WiFi network
+        while ( status != WL_CONNECTED) {
+            Serial.print("Attempting to connect to WPA SSID: ");
+            Serial.println(ssid);
+            // Connect to WPA/WPA2 network
+            status = WiFi.begin(ssid, pass);
+        }
+    }
+    else
+    {
+        // Setting IP
+        Ethernet.begin(mac, ip);
+    }
 
     // Wait for network configuration
     vTaskDelay(5000);
@@ -71,6 +108,9 @@ void setup() {
     Serial.println("Discovery Agent...");
     uxrAgentAddress chosen;
     chosen.ip = agent_ip;
+
+    // Choose Ethernet or WiFi
+    uxr_discovery_choose_ethernet(use_ethernet);
 
     // Try forever until Agent is found
     uxr_discovery_agents_default(INT_MAX, 1000, on_agent_found, &chosen);
@@ -81,6 +121,7 @@ void setup() {
     Serial.println(chosen.port);
 
     // Transport
+    udp_platform.use_ethernet = use_ethernet;
     if (!uxr_init_udp_transport(&transport, &udp_platform, chosen.ip, chosen.port))
     {
         Serial.println("Error at create transport.");
@@ -184,7 +225,7 @@ static void prvUXRManagerTask(void * pvParameters) {
         uxr_prepare_output_stream(&session, output_stream, datawriter_id, &mb, topic_size);
         Ros2String_serialize_topic(&mb, &topic);
 
-        // Set timeout period to 0ms in order to send messages every 10ms
+        /* Set timeout period to 0s. */
         (void) uxr_run_session_time(&session, 0);
         Serial.print("Sent topic: ");
         Serial.println(topic.data);
@@ -192,6 +233,7 @@ static void prvUXRManagerTask(void * pvParameters) {
         // Toggle the heartbeat LED
         digitalWrite(PIN_LED1, !digitalRead(PIN_LED1));
 
+        /* Set timeout period to 1s. */
         vTaskDelay(1000);
     }
 

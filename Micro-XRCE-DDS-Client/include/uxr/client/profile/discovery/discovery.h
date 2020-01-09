@@ -66,6 +66,13 @@ UXRDLLAPI void uxr_discovery_agents(
         const uxrAgentAddress* agent_list,
         size_t agent_list_size);
 
+/**
+ * @brief Chooses Ethernet or WiFi.
+ * @param use_ethernet  Set `true` if the user chooses Ethernet. Set `false` in case of WiFi.
+ */
+UXRDLLAPI void uxr_discovery_choose_ethernet(
+        bool use_ethernet);
+
 #ifdef __cplusplus
 }
 #endif

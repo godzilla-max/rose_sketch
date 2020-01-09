@@ -19,6 +19,8 @@
 #include <errno.h>
 #include <string.h>
 
+#ifndef USING_WIFI
+
 bool uxr_init_udp_transport_datagram(uxrUDPTransportDatagram* transport)
 {
     bool rv = false;
@@ -101,3 +103,5 @@ void uxr_bytes_to_ip(const uint8_t* bytes, char* ip)
     addr = (uint32_t)(*bytes + (*(bytes + 1) << 8) + (*(bytes + 2) << 16) + (*(bytes + 3) << 24));
     FreeRTOS_inet_ntoa(addr, ip);
 }
+
+#endif

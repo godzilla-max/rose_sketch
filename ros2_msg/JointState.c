@@ -27,24 +27,32 @@
 bool JointState_serialize_topic(ucdrBuffer* writer, const JointState* topic)
 {
     (void) Header_serialize_topic(writer, &topic->header);
-    for(int i2 = 0; i2 < sizeof(topic->name) / sizeof(topic->name[0]); ++i2)
+    (void) ucdr_serialize_uint32_t(writer, topic->name_size);
+    for(int i = 0; i < topic->name_size; ++i)
     {
-        (void) ucdr_serialize_array_uint8_t(writer, topic->name[i2], sizeof(topic->name[i2]) / sizeof(uint8_t));
+        (void) ucdr_serialize_string(writer, topic->name[i]);
     }
 
-    (void) ucdr_serialize_uint32_t(writer, topic->name_size);
-
-    (void) ucdr_serialize_array_double(writer, topic->position, sizeof(topic->position) / sizeof(double));
-
+#ifdef NEVER
+    (void) ucdr_serialize_sequence_double(writer, topic->position, topic->position_size);
+#else
     (void) ucdr_serialize_uint32_t(writer, topic->position_size);
+    ucdr_array_to_buffer(writer, &topic->position[0], sizeof(double) * topic->position_size, sizeof(double) * topic->position_size);
+#endif
 
-    (void) ucdr_serialize_array_double(writer, topic->velocity, sizeof(topic->velocity) / sizeof(double));
-
+#ifdef NEVER
+    (void) ucdr_serialize_sequence_double(writer, topic->velocity, topic->velocity_size);
+#else
     (void) ucdr_serialize_uint32_t(writer, topic->velocity_size);
+    ucdr_array_to_buffer(writer, &topic->velocity[0], sizeof(double) * topic->velocity_size, sizeof(double) * topic->velocity_size);
+#endif
 
-    (void) ucdr_serialize_array_double(writer, topic->effort, sizeof(topic->effort) / sizeof(double));
-
+#ifdef NEVER
+    (void) ucdr_serialize_sequence_double(writer, topic->effort, topic->effort_size);
+#else
     (void) ucdr_serialize_uint32_t(writer, topic->effort_size);
+    ucdr_array_to_buffer(writer, &topic->effort[0], sizeof(double) * topic->effort_size, sizeof(double) * topic->effort_size);
+#endif
 
     return !writer->error;
 }
@@ -52,24 +60,39 @@ bool JointState_serialize_topic(ucdrBuffer* writer, const JointState* topic)
 bool JointState_deserialize_topic(ucdrBuffer* reader, JointState* topic)
 {
     (void) Header_deserialize_topic(reader, &topic->header);
-    for(int i2 = 0; i2 < sizeof(topic->name) / sizeof(topic->name[0]); ++i2)
+    (void) ucdr_deserialize_uint32_t(reader, &topic->name_size);
+    if(topic->name_size > 10)
     {
-        (void) ucdr_deserialize_array_uint8_t(reader, topic->name[i2], sizeof(topic->name[i2]) / sizeof(uint8_t));
+        reader->error = true;
+    }
+    else
+    {
+        for(int i = 0; i < topic->name_size; ++i)
+        {
+            (void) ucdr_deserialize_string(reader, topic->name[i], 32);
+        }
     }
 
-    (void) ucdr_deserialize_uint32_t(reader, &topic->name_size);
-
-    (void) ucdr_deserialize_array_double(reader, topic->position, sizeof(topic->position) / sizeof(double));
-
+#ifdef NEVER
+    (void) ucdr_deserialize_sequence_double(reader, topic->position, 10, &topic->position_size);
+#else
     (void) ucdr_deserialize_uint32_t(reader, &topic->position_size);
+    ucdr_buffer_to_array(reader, topic->position, sizeof(double) * topic->position_size, sizeof(double) * topic->position_size);
+#endif
 
-    (void) ucdr_deserialize_array_double(reader, topic->velocity, sizeof(topic->velocity) / sizeof(double));
-
+#ifdef NEVER
+    (void) ucdr_deserialize_sequence_double(reader, topic->velocity, 10, &topic->velocity_size);
+#else
     (void) ucdr_deserialize_uint32_t(reader, &topic->velocity_size);
+    ucdr_buffer_to_array(reader, topic->velocity, sizeof(double) * topic->position_size, sizeof(double) * topic->velocity_size);
+#endif
 
-    (void) ucdr_deserialize_array_double(reader, topic->effort, sizeof(topic->effort) / sizeof(double));
-
+#ifdef NEVER
+    (void) ucdr_deserialize_sequence_double(reader, topic->effort, 10, &topic->effort_size);
+#else
     (void) ucdr_deserialize_uint32_t(reader, &topic->effort_size);
+    ucdr_buffer_to_array(reader, topic->effort, sizeof(double) * topic->position_size, sizeof(double) * topic->effort_size);
+#endif
 
     return !reader->error;
 }
@@ -78,24 +101,20 @@ uint32_t JointState_size_of_topic(const JointState* topic, uint32_t size)
 {
     uint32_t previousSize = size;
     size += Header_size_of_topic(&topic->header, size);
-    for(int i2 = 0; i2 < sizeof(topic->name) / sizeof(topic->name[0]); ++i2)
+    size += ucdr_alignment(size, 4) + 4;
+    for(int i = 0; i < topic->name_size; ++i)
     {
-        size += ucdr_alignment(size, 1) + sizeof(topic->name[i2]);
+        size += ucdr_alignment(size, 4) + 4 + (uint32_t)strlen(topic->name[i]) + 1;
     }
 
     size += ucdr_alignment(size, 4) + 4;
-
-    size += ucdr_alignment(size, 8) + sizeof(topic->position);
-
-    size += ucdr_alignment(size, 4) + 4;
-
-    size += ucdr_alignment(size, 8) + sizeof(topic->velocity);
+    size += ucdr_alignment(size, 8) + topic->position_size * 8;
 
     size += ucdr_alignment(size, 4) + 4;
-
-    size += ucdr_alignment(size, 8) + sizeof(topic->effort);
+    size += ucdr_alignment(size, 8) + topic->velocity_size * 8;
 
     size += ucdr_alignment(size, 4) + 4;
+    size += ucdr_alignment(size, 8) + topic->effort_size * 8;
 
     return size - previousSize;
 }

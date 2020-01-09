@@ -29,7 +29,7 @@ typedef struct uxrTCPPlatform
     struct freertos_sockaddr remote_addr;
     SocketSet_t poll_fd;
     Socket_t fd;
-
+    uint8_t use_ethernet;
 } uxrTCPPlatform;
 
 #ifdef __cplusplus

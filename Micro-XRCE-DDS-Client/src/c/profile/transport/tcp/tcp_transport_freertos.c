@@ -20,6 +20,8 @@
 #include <string.h>
 #include <errno.h>
 
+#ifndef USING_WIFI
+
 bool uxr_init_tcp_platform(struct uxrTCPPlatform* platform, const char* ip, uint16_t port)
 {
     bool rv = false;
@@ -134,3 +136,5 @@ void uxr_disconnect_tcp_platform(struct uxrTCPPlatform* platform)
     platform->fd = FREERTOS_INVALID_SOCKET;
     platform->poll_fd = NULL;
 }
+
+#endif

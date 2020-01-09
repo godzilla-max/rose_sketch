@@ -20,6 +20,8 @@
 #include <string.h>
 #include <errno.h>
 
+#ifndef USING_WIFI
+
 bool uxr_init_udp_platform(uxrUDPPlatform* platform, const char* ip, uint16_t port)
 {
     bool rv = false;
@@ -100,3 +102,5 @@ size_t uxr_read_udp_data_platform(uxrUDPPlatform* platform, uint8_t* buf, size_t
 
     return rv;
 }
+
+#endif

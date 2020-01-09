@@ -35,7 +35,7 @@ bool Header_serialize_topic(ucdrBuffer* writer, const Header* topic)
 bool Header_deserialize_topic(ucdrBuffer* reader, Header* topic)
 {
     (void) Time_deserialize_topic(reader, &topic->stamp);
-    (void) ucdr_deserialize_string(reader, topic->frame_id, 255);
+    (void) ucdr_deserialize_string(reader, topic->frame_id, 64);
 
     return !reader->error;
 }

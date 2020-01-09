@@ -88,6 +88,12 @@ void uxr_discovery_agents(
     }
 }
 
+void uxr_discovery_choose_ethernet(bool use_ethernet)
+{
+    uxr_choose_ethernet(use_ethernet);
+}
+
+
 //==================================================================
 //                             INTERNAL
 //==================================================================

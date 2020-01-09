@@ -38,7 +38,7 @@ extern "C"
 typedef struct Header
 {
     Time stamp;
-    char frame_id[255];
+    char frame_id[64];
 
 } Header;
 
