@@ -95,7 +95,9 @@ typedef struct BULK_IN
 * Variables
 ***********************************************************************************/
 /*Data Bufer for SET_CONTROL_LINE_STATE data*/
-static uint8_t g_SET_CONTROL_LINE_STATE_DATA_Buffer[SET_CONTROL_LINE_STATE_DATA_SIZE];
+//static uint8_t g_SET_CONTROL_LINE_STATE_DATA_Buffer[SET_CONTROL_LINE_STATE_DATA_SIZE];
+uint8_t g_SET_CONTROL_LINE_STATE_DATA_Buffer[SET_CONTROL_LINE_STATE_DATA_SIZE];
+uint16_t setupPacketwValue;
 
 /*GET_LINE_CODING data response*/
 /*Note: These values are not relevant for a virtual COM port.*/
@@ -108,7 +110,7 @@ static const uint8_t g_LineCoding[LINE_CODING_DATA_SIZE] =
 };
 
 /*Data structure for SET_CONTROL_LINE_STATE*/
-static SET_CONTROL_LINE_STATE_DATA g_SetControlLineData;
+SET_CONTROL_LINE_STATE_DATA g_SetControlLineData;
 
 /*Connected flag*/
 static volatile bool g_bConnected = false;
@@ -693,7 +695,11 @@ static USB_ERR ProcessClassSetupPacket(SetupPacket* _pSetupPacket,
 
             /*Data IN response */
             *_pNumBytes = LINE_CODING_DATA_SIZE;
+#if 0
             *_ppBuffer = (uint8_t*)g_LineCoding;
+#endif
+            *_ppBuffer = g_SET_CONTROL_LINE_STATE_DATA_Buffer;
+
             break;
         }
         case SET_LINE_CODING: /*(Required for hyperterminal)*/
@@ -711,6 +717,7 @@ static USB_ERR ProcessClassSetupPacket(SetupPacket* _pSetupPacket,
             /*No action required for this request.*/
             /*No data response */
             *_pNumBytes = 0;
+            setupPacketwValue = _pSetupPacket->wValue;
             break;
         }
         default:

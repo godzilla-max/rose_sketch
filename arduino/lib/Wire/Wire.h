@@ -89,6 +89,9 @@ class TwoWire : public Stream
     virtual int peek(void);
     virtual void flush(void);
     void setFrequency(int freq);
+    void setChannel(int ch);
+    void setPin(int sda, int scl);
+    void setSoftWire(int sda, int scl);
 #ifdef HAVE_RIIC
     void onReceive( void (*)(int) );
     void onRequest( void (*)(void) );

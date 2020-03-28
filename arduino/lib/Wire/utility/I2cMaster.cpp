@@ -17,6 +17,7 @@
  * along with the Arduino I2cMaster Library.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
+ *   Modified for GR-ROSE, 28 Jan 2020 by Yuuki Okamiya.
  *   Modified for GR-SAKURA 3 May 2014 by Yuuki Okamiya.
  *   Modified 10 Jun 2014 by Nozomu Fujita : SoftI2cMaster::setFrequency(int) 追加
  *   Modified 30 Jul 2014 by Yuuki Okamiya
@@ -41,6 +42,7 @@ SoftI2cMaster::SoftI2cMaster(uint8_t sdaPin, uint8_t sclPin) {
   sclPin_ = sclPin;
   pinMode(sclPin_, OUTPUT_OPENDRAIN);
   digitalWrite(sclPin_, HIGH);
+  delayClock = 4;
 }
 //------------------------------------------------------------------------------
 /** Read a byte and send Ack if more reads follow else Nak to terminate read.
@@ -55,24 +57,31 @@ uint8_t SoftI2cMaster::read(uint8_t last) {
   // make sure pull-up enabled
   pinMode(sdaPin_, INPUT_PULLUP);
   // read byte
-  delayMicroseconds(10); //TODO
   for (uint8_t i = 0; i < 8; i++) {
     // don't change this loop unless you verify the change with a scope
     b <<= 1;
-    delayMicroseconds(3); //TODO
+    delayMicroseconds(delayClock);
     digitalWrite(sclPin_, HIGH);
-    delayMicroseconds(15); //TODO
+    pinMode(sclPin_, INPUT_PULLUP);
+    while(digitalRead(sclPin_) == LOW); // wait for bus open
+    pinMode(sclPin_, OUTPUT_OPENDRAIN);
+    delayMicroseconds(delayClock);
     if (digitalRead(sdaPin_)) b |= 1;
     digitalWrite(sclPin_, LOW);
   }
+
   // send Ack or Nak
+  delayMicroseconds(delayClock);
   pinMode(sdaPin_, OUTPUT_OPENDRAIN);
   digitalWrite(sdaPin_, last);
   delayMicroseconds(delayClock);
+  digitalWrite(sclPin_, HIGH); // wait bus open
+  pinMode(sclPin_, INPUT_PULLUP);
+  while(digitalRead(sclPin_) == LOW);
+  pinMode(sclPin_, OUTPUT_OPENDRAIN); // output SCL HIGH
   digitalWrite(sclPin_, HIGH);
   delayMicroseconds(delayClock);
   digitalWrite(sclPin_, LOW);
-  digitalWrite(sdaPin_, LOW);
   return b;
 }
 //------------------------------------------------------------------------------
@@ -125,26 +134,28 @@ bool SoftI2cMaster::write(uint8_t data) {
 
   for (uint8_t m = 0x80; m != 0; m >>= 1) {
     // don't change this loop unless you verify the change with a scope
-    delayMicroseconds(3); //TODO
-    delayMicroseconds(3); //TODO
     digitalWrite(sdaPin_, !((m & data) == 0));
-    delayMicroseconds(3); //TODO
+    delayMicroseconds(delayClock);
     digitalWrite(sclPin_, HIGH);
-    delayMicroseconds(3); //TODO
+    delayMicroseconds(delayClock);
     digitalWrite(sclPin_, LOW);
   }
 
   // get Ack or Nak
   pinMode(sdaPin_, INPUT_PULLUP);
-  delayMicroseconds(3); //TODO
   digitalWrite(sclPin_, HIGH);
-  delayMicroseconds(3); //TODO
+  pinMode(sclPin_, INPUT_PULLUP);
+  while(digitalRead(sclPin_) == LOW); // wait for bus open
+  digitalWrite(sclPin_, HIGH);
+  pinMode(sclPin_, OUTPUT_OPENDRAIN);
+  delayMicroseconds(delayClock);
   uint8_t rtn = digitalRead(sdaPin_);
   digitalWrite(sclPin_, LOW);
-  pinMode(sdaPin_, OUTPUT_OPENDRAIN);
+  delayMicroseconds(delayClock);
   digitalWrite(sdaPin_, HIGH);
-  delayMicroseconds(20); //TODO
-  return rtn == 0;
+  pinMode(sdaPin_, OUTPUT_OPENDRAIN);
+  delayMicroseconds(delayClock);
+  return (rtn == 0);
 }
 //------------------------------------------------------------------------------
 /**
@@ -158,7 +169,22 @@ void SoftI2cMaster::setFrequency(int freq)
 {
     // TODO to implement
     if (freq > 0) {
-//        delayClock = (1000 + (2 * freq) - 1) / (2 * freq);
-        delayClock = 10;
+    	if(freq > 200000){
+    		delayClock = 1; // about 220kHz
+    	} else if(freq > 150000){
+            delayClock = 2; // about 160kHz
+    	} else if(freq > 100000){
+            delayClock = 3; // about 120kHz
+    	} else if(freq > 90000){
+            delayClock = 4; // about 100kHz
+    	} else {
+    		delayClock = 8;
+    	}
     }
+}
+
+void SoftI2cMaster::setWirePin(int sda, int scl){
+	sdaPin_ = sda;
+	sclPin_ = scl;
+
 }

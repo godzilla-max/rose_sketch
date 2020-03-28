@@ -196,8 +196,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="common_demos|FreeRTOS" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FreeRTOS"/>
+						<entry excluding="common_demos" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -412,15 +411,17 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="ReleaseBin"/>
+		<configuration configurationName="ReleaseBin">
+			<resource resourceType="PROJECT" workspacePath="/rose_sketch_v106"/>
+		</configuration>
 		<configuration configurationName="release_bin">
-			<resource resourceType="PROJECT" workspacePath="/rose_sketch"/>
+			<resource resourceType="PROJECT" workspacePath="/rose_sketch_v106"/>
 		</configuration>
 		<configuration configurationName="HardwareDebug">
-			<resource resourceType="PROJECT" workspacePath="/rose_sketch"/>
+			<resource resourceType="PROJECT" workspacePath="/rose_sketch_v106"/>
 		</configuration>
 		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/rose_sketch"/>
+			<resource resourceType="PROJECT" workspacePath="/rose_sketch_v106"/>
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">

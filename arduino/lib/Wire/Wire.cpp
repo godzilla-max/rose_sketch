@@ -64,7 +64,7 @@ static uint8_t i2c_rxBuffer[IIC_CHANNEL_NUM][BUFFER_LENGTH];
 static uint8_t i2c_txBuffer[IIC_CHANNEL_NUM][BUFFER_LENGTH];
 
 #if defined(GRROSE)
-static SoftI2cMaster wire(13, 12);
+static SoftI2cMaster wire(21, 20);
 static const uint8_t g_sci_i2c_channel_table[IIC_CHANNEL_NUM] = {0, 2, 1};
 static bool g_sci_i2c_channel_inRepStart[IIC_CHANNEL_NUM] = { false };
 #else
@@ -408,11 +408,20 @@ void TwoWire::setFrequency(int freq){
     } else {
         twi_rx_setFrequency(wire_channel, wire_frequency);
     }
-
-
-
 }
 
+void TwoWire::setChannel(int ch){
+	wire_channel = ch;
+}
+
+void TwoWire::setPin(int sda, int scl){
+	wire.setWirePin(sda, scl);
+}
+
+void TwoWire::setSoftWire(int sda, int scl){
+	setChannel(0);
+	wire.setWirePin(sda, scl);
+}
 
 #ifdef HAVE_RIIC
 /* static member function for RIIC

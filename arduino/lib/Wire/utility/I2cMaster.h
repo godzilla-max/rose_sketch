@@ -72,7 +72,7 @@ uint8_t const TWSR_MRX_ADR_ACK = 0x40;
  */
 class I2cMasterBase {
  public:
-        virtual ~I2cMasterBase(){};// added to remove warning in GRSAKURA
+  virtual ~I2cMasterBase(){};// added to remove warning in GRSAKURA
   /** Read a byte
    * \param[in] last send Ack if last is false else Nak to terminate read
    * \return byte read from I2C bus
@@ -109,6 +109,10 @@ class SoftI2cMaster : public I2cMasterBase {
   void stop(void);
   bool write(uint8_t b);
   void setFrequency(int freq);
+#ifdef GRROSE
+  // set pin for added
+  void setWirePin(int sda, int scl);
+#endif
  private:
   int delayClock;
   uint8_t sdaPin_;

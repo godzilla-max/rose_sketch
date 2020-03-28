@@ -37,6 +37,19 @@
 #include "usb_hal.h"
 #include "usb_cdc.h"
 #include "util.h"
+extern "C"{
+typedef struct SET_CONTROL_LINE_STATE_DATA
+{
+    uint32_t dwDTERate;
+    uint8_t bCharFormat;
+    uint8_t bParityType;
+    uint8_t bDataBits;
+}SET_CONTROL_LINE_STATE_DATA;
+extern SET_CONTROL_LINE_STATE_DATA g_SetControlLineData;
+extern uint8_t g_SET_CONTROL_LINE_STATE_DATA_Buffer[];
+extern uint16_t setupPacketwValue;
+}
+
 /// For USB receive /////////////////////////////
 /// The definitions are copied from usb_hal.c ///
 #include "iodefine.h"
@@ -492,6 +505,12 @@ void HardwareSerial::begin(unsigned long baud, byte config)
     		delay(100);
     		digitalWrite(PIN_ESP_EN, HIGH);
       }
+	  // for initialization for RS-485
+      if(_serial_channel == 7){
+          ICU.GENBL1.LONG |= (1 << 24); // TEND interrupt for switching input.
+          digitalWrite(PIN_RS485_DIR, LOW);
+          pinMode(PIN_RS485_DIR, OUTPUT);
+      }
     }
     break;
 #endif
@@ -624,11 +643,10 @@ void HardwareSerial::direction(uint8_t dir){
 		break;
 	case 7 :
 		if(dir == OUTPUT){
-			pinMode(PIN_RS485_DIR, OUTPUT);
-			digitalWrite(PIN_RS485_DIR, HIGH);
+          	PORTC.PODR.BIT.B5 = HIGH; // Switch direction of RS-485 to OUTPUT
 		} else {
 			while(!_sci->SSR.BIT.TEND);
-			pinMode(PIN_RS485_DIR, INPUT); // pull-down by hardware
+          	PORTC.PODR.BIT.B5 = LOW; // Switch direction of RS-485 to INPUT
 		}
 		break;
 	default :
@@ -796,6 +814,9 @@ size_t HardwareSerial::write(uint8_t c)
         _tx_buffer_head = i;
 
         if (!_sending) {
+          if(_serial_channel == 7){ // for switching direction
+          	PORTC.PODR.BIT.B5 = HIGH; // Switch direction of RS-485 to OUTPUT
+          }
           bool di = isNoInterrupts();
           noInterrupts();
           _sending = true;
@@ -819,6 +840,47 @@ size_t HardwareSerial::write(uint8_t c)
 #endif/*__RX600__*/
 }
 
+#ifdef GRROSE
+int HardwareSerial::getDteRate(void){
+	return (int)g_SetControlLineData.dwDTERate;
+}
+int HardwareSerial::getDteDataBits(void){
+	return (int)g_SetControlLineData.bDataBits;
+}
+int HardwareSerial::getDteParityType(void){
+	return (int)g_SetControlLineData.bParityType;
+}
+int HardwareSerial::getDteCharFormat(void){
+	return (int)g_SetControlLineData.bCharFormat;
+}
+bool HardwareSerial::getDteState(void){
+	return ((setupPacketwValue & 0x0001U) != 0);
+}
+uint8_t HardwareSerial::getDteConfig(void){
+	uint8_t res = 0;
+
+	if(getDteDataBits() == 8){
+		res |= 0b00000110;
+	} else if(getDteDataBits() == 7){
+		res |= 0b00000100;
+	}
+
+	if(getDteCharFormat() == 2){
+		res |= 0b00001000;
+	}
+
+	if(getDteParityType() == 1){ // odd
+		res |= 0b00110000;
+	} else if(getDteParityType() == 2){ // even
+		res |= 0b00100000;
+	}
+	return res;
+}
+bool HardwareSerial::isConnected(void){
+	return (getDteState() && USB0.INTSTS0.BIT.DVSQ);
+}
+
+#endif
 #endif // whole file
 
 #ifdef HAVE_HWSERIAL0
@@ -1047,6 +1109,7 @@ extern "C"
 void isr_serial7_transmit() __attribute__((interrupt(".rvectors", VECT(SCI8, TXI8)), used));
 void isr_serial7_transmit()
 {
+  SCI8.SCR.BIT.TEIE = 1; // for TEND interrupt to switch the direction of RS-485 from OUTPUT to INPUT
   Serial7._tx_udr_empty_irq();
 }
 
@@ -1056,9 +1119,14 @@ bool Serial7_available() {
 
 #endif/*HAVE_HWSERIAL7*/
 
+void (*hook_bl0_handler)();
+void (*hook_bl1_handler)();
 extern "C"
 void group_bl0_handler_isr(void) __attribute__((interrupt(".rvectors", VECT(ICU, GROUPBL0)), used));
 void group_bl0_handler_isr(void){
+	if(hook_bl0_handler != NULL){
+		(*hook_bl0_handler)();
+	}
     if(ICU.GRPBL0.BIT.IS1 == 1){
         SCI0.SSR.BYTE &= 0b11000111;
     }
@@ -1088,6 +1156,13 @@ void group_bl0_handler_isr(void){
 extern "C"
 void group_bl1_handler_isr(void) __attribute__((interrupt(".rvectors", VECT(ICU, GROUPBL1)), used));
 void group_bl1_handler_isr(void){
+	if(hook_bl1_handler != NULL){
+		(*hook_bl1_handler)();
+	}
+    if(ICU.GRPBL1.BIT.IS24 == 1){ // TEND interrupt for switching input.
+    	PORTC.PODR.BIT.B5 = LOW; // Switch direction of RS-485 to INPUT
+		SCI8.SCR.BIT.TEIE = 0;
+    }
     if(ICU.GRPBL1.BIT.IS25 == 1){
         SCI8.SSR.BYTE &= 0b11000111;
     }

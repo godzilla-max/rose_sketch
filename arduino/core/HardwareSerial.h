@@ -146,6 +146,15 @@ class HardwareSerial : public Stream
     using Print::write; // pull in write(str) and write(buf, size) from Print
     operator bool() { return true; }
 
+#ifdef GRROSE
+    int getDteRate(void);
+    int getDteDataBits(void);
+    int getDteParityType(void);
+    int getDteCharFormat(void);
+    bool getDteState(void);
+    bool isConnected();
+    uint8_t getDteConfig();
+#endif
     // Interrupt handlers - Not intended to be called externally
 #ifndef __RX600__
     inline void _rx_complete_irq(void);
